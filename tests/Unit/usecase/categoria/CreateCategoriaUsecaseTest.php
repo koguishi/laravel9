@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\unit\usecase\categoria;
+namespace tests\Unit\usecase\categoria;
 
 use core\domain\entity\Categoria;
 use core\domain\repository\CategoriaRepositoryInterface;
@@ -10,7 +10,6 @@ use core\usecase\categoria\CreateCategoriaUsecase;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
 use stdClass;
 
 class CreateCategoriaUsecaseTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\unit\domain\entity;
+namespace tests\Unit\domain\entity;
 
 use core\domain\entity\Categoria;
 use core\domain\exception\EntityValidationException;

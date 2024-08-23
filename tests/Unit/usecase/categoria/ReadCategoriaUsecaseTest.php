@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\unit\usecase\categoria;
+namespace tests\Unit\usecase\categoria;
 
 use core\domain\entity\Categoria;
 use core\domain\repository\CategoriaRepositoryInterface;
