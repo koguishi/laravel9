@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit\usecase\categoria;
+namespace Tests\Unit\usecase\categoria;
 
 use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\PaginationInterface;
