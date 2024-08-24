@@ -4,6 +4,7 @@ namespace app\repository\eloquent;
 
 use App\Models\Categoria as CategoriaModel;
 use core\domain\entity\Categoria as CategoriaEntity;
+use core\domain\exception\NotFoundException;
 use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\PaginationInterface;
 
@@ -39,7 +40,11 @@ class CategoriaRepository implements CategoriaRepositoryInterface
     
     public function read(string $id): CategoriaEntity
     {
-        return new CategoriaEntity();
+        $categoria = $this->model->find($id);
+        if (! $categoria) {
+            throw new NotFoundException('Categoria não encontrada');
+        }
+        return $this->toEntity($categoria);
     }
 
     public function update(CategoriaEntity $categoria): CategoriaEntity
