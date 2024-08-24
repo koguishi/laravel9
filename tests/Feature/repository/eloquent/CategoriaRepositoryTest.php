@@ -12,24 +12,26 @@ use Tests\TestCase;
 
 class CategoriaRepositoryTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
+    protected $repository;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->repository = new CategoriaRepository(new CategoriaModel());
+    }    
+
     public function testCreate()
     {
-        $repository = new CategoriaRepository(new CategoriaModel());
-
         $entity = New CategoriaEntity(
             nome: 'ÁÉÊ Çção',
             descricao: 'é nóis ...',
             ativo: true,
         );
         
-        $response = $repository->create($entity);
+        $response = $this->repository->create($entity);
 
-        $this->assertInstanceOf(CategoriaRepositoryInterface::class, $repository);
+        $this->assertInstanceOf(CategoriaRepositoryInterface::class, $this->repository);
         $this->assertInstanceOf(CategoriaEntity::class, $response);
         $this->assertDatabaseHas('categorias', [
             'nome' => $entity->nome,
