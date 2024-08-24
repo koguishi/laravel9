@@ -24,7 +24,7 @@ class CategoriaRepositoryTest extends TestCase
         $entity = New CategoriaEntity(
             nome: 'ÁÉÊ Çção',
             descricao: 'é nóis ...',
-            ativo: false,
+            ativo: true,
         );
         
         $response = $repository->create($entity);
@@ -35,7 +35,7 @@ class CategoriaRepositoryTest extends TestCase
             'nome' => $entity->nome,
             'descricao' => $entity->descricao,
             'ativo' => $entity->ativo,
-            'criadoEm' => '',
+            'created_at' => $entity->criadoEm(),
         ]);
     }
 }

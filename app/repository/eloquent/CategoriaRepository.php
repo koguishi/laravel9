@@ -15,16 +15,26 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         $this->model = $model;
     }
 
-    public function create(CategoriaEntity $categoria): CategoriaEntity
-    {
-        $this->model->create([
-            'id' => $categoria->id(),
-            'nome' => $categoria->nome,
-            'descricao' => $categoria->descricao,
-            'ativo' => $categoria->ativo,
-        ]);
+    private function toEntity(object $object): CategoriaEntity {
+        $entity = new CategoriaEntity(
+            id: $object->id,
+            nome: $object->nome,
+            descricao: $object->descricao,
+        );
+        ((bool) $object->ativo) ? $entity->ativar() : $entity->desativar();
 
-        return $categoria;
+        return $entity;
+    }
+
+    public function create(CategoriaEntity $entity): CategoriaEntity
+    {
+        $categoria = $this->model->create([
+            'id' => $entity->id(),
+            'nome' => $entity->nome,
+            'descricao' => $entity->descricao,
+            'ativo' => $entity->ativo,
+        ]);
+        return $this->toEntity($categoria);
     }
     
     public function read(string $id): CategoriaEntity
