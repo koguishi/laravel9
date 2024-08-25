@@ -108,4 +108,19 @@ class CategoriaRepositoryTest extends TestCase
         ]);
     }
 
+    public function testUpdateNotFound()
+    {
+        $entity = New CategoriaEntity(
+            nome: 'uma categoria qq ...',
+        );
+        try {
+            $this->repository->update($entity);
+
+            $this->assertTrue(false);
+        } catch (Throwable $th) {
+            $this->assertInstanceOf(NotFoundException::class, $th);
+        }
+    }
+
+
 }
