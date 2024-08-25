@@ -76,6 +76,36 @@ class CategoriaRepositoryTest extends TestCase
         } catch (Throwable $th) {
             $this->assertInstanceOf(NotFoundException::class, $th);
         }
-    }    
+    }
+
+    public function testUpdate()
+    {
+        $categoriaA = CategoriaModel::factory()->create();
+        $this->assertDatabaseHas('categorias', [
+            'nome' => $categoriaA->nome,
+            'descricao' => $categoriaA->descricao,
+            'ativo' => $categoriaA->ativo,
+            'created_at' => $categoriaA->created_at,
+        ]);
+
+        $responseA = $this->repository->read($categoriaA->id);
+        $responseA->alterar(
+            $responseA->nome . 'ALTERADO',
+            $responseA->descricao . 'ALTERADO',
+        );
+        $this->repository->update($responseA);
+        $this->assertDatabaseHas('categorias', [
+            'nome' => $responseA->nome,
+            'descricao' => $responseA->descricao,
+            'ativo' => $responseA->ativo,
+        ]);
+
+        $this->assertDatabaseMissing('categorias', [
+            'nome' => $categoriaA->nome,
+        ]);
+        $this->assertDatabaseMissing('categorias', [
+            'descricao' => $categoriaA->descricao,
+        ]);
+    }
 
 }
