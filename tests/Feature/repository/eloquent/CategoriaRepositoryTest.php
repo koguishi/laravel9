@@ -5,10 +5,12 @@ namespace Tests\Feature\repository\eloquent;
 use App\Models\Categoria as CategoriaModel;
 use app\repository\eloquent\CategoriaRepository;
 use core\domain\entity\Categoria as CategoriaEntity;
+use core\domain\exception\NotFoundException;
 use core\domain\repository\CategoriaRepositoryInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Throwable;
 
 class CategoriaRepositoryTest extends TestCase
 {
@@ -64,4 +66,16 @@ class CategoriaRepositoryTest extends TestCase
             'created_at' => $categoriaB->created_at,
         ]);
     }
+
+    public function testReadNotFound()
+    {
+        try {
+            $this->repository->read('fakeValue');
+
+            $this->assertTrue(false);
+        } catch (Throwable $th) {
+            $this->assertInstanceOf(NotFoundException::class, $th);
+        }
+    }    
+
 }
