@@ -29,27 +29,40 @@ class CategoriaRepository implements CategoriaRepositoryInterface
 
     public function create(CategoriaEntity $entity): CategoriaEntity
     {
-        $categoria = $this->model->create([
+        $categoriaDb = $this->model->create([
             'id' => $entity->id(),
             'nome' => $entity->nome,
             'descricao' => $entity->descricao,
             'ativo' => $entity->ativo,
         ]);
-        return $this->toEntity($categoria);
+        return $this->toEntity($categoriaDb);
     }
     
     public function read(string $id): CategoriaEntity
     {
-        $categoria = $this->model->find($id);
-        if (! $categoria) {
+        $categoriaDb = $this->model->find($id);
+        if (! $categoriaDb) {
             throw new NotFoundException('Categoria não encontrada');
         }
-        return $this->toEntity($categoria);
+        return $this->toEntity($categoriaDb);
     }
 
-    public function update(CategoriaEntity $categoria): CategoriaEntity
+    public function update(CategoriaEntity $entity): CategoriaEntity
     {
-        return $categoria;
+        $categoriaDb = $this->model->find($entity->id());
+        if (! $categoriaDb) {
+            throw new NotFoundException('Categoria não encontrada');
+        }        
+
+        $categoriaDb->update([
+            'nome' => $entity->nome,
+            'descricao' => $entity->descricao,
+            'ativo' => $entity->ativo,
+        ]);
+
+        $categoriaDb->refresh();
+
+        return $this->toEntity($categoriaDb);        
     }
 
     public function delete(string $id): bool
