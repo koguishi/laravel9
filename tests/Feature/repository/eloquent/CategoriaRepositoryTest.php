@@ -122,5 +122,22 @@ class CategoriaRepositoryTest extends TestCase
         }
     }
 
+    public function testDelete()
+    {
+        $categoriaA = CategoriaModel::factory()->create();
+        $this->assertDatabaseHas('categorias', [
+            'nome' => $categoriaA->nome,
+            'descricao' => $categoriaA->descricao,
+            'ativo' => $categoriaA->ativo,
+            'created_at' => $categoriaA->created_at,
+        ]);
 
+        $this->repository->delete($categoriaA->id);
+        $this->assertDatabaseMissing('categorias', [
+            'nome' => $categoriaA->nome,
+        ]);
+        $this->assertDatabaseMissing('categorias', [
+            'descricao' => $categoriaA->descricao,
+        ]);
+    }
 }
