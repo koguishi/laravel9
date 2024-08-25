@@ -67,7 +67,11 @@ class CategoriaRepository implements CategoriaRepositoryInterface
 
     public function delete(string $id): bool
     {
-        return true;
+        $categoriaDb = $this->model->find($id);
+        if (! $categoriaDb) {
+            throw new NotFoundException('Categoria não encontrada');
+        }        
+        return $categoriaDb->delete();
     }
 
     public function readAll(string $filter = '', string $order = 'DESC'): array
