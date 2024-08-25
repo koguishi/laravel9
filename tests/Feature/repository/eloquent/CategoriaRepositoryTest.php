@@ -43,40 +43,25 @@ class CategoriaRepositoryTest extends TestCase
 
     public function testRead()
     {
-        $categoria1 = New CategoriaEntity(
-            nome: 'Treinos',
-            descricao: 'Vídeo de treinos',
-            ativo: true,
-        );
-        $this->repository->create($categoria1);
-        $categoria2 = New CategoriaEntity(
-            nome: 'Competições',
-            descricao: 'Vídeo de competições',
-            ativo: true,
-        );
-        $this->repository->create($categoria2);
+        $categoriaA = CategoriaModel::factory()->create();
+        $categoriaB = CategoriaModel::factory()->create();
 
+        $responseA = $this->repository->read($categoriaA->id);
+        $this->assertInstanceOf(CategoriaEntity::class, $responseA);
         $this->assertDatabaseHas('categorias', [
-            'nome' => $categoria1->nome,
-            'descricao' => $categoria1->descricao,
-            'ativo' => $categoria1->ativo,
-            'created_at' => $categoria1->criadoEm(),
+            'nome' => $categoriaA->nome,
+            'descricao' => $categoriaA->descricao,
+            'ativo' => $categoriaA->ativo,
+            'created_at' => $categoriaA->created_at,
         ]);
-        $this->assertDatabaseHas('categorias', [
-            'nome' => $categoria2->nome,
-            'descricao' => $categoria2->descricao,
-            'ativo' => $categoria2->ativo,
-            'created_at' => $categoria2->criadoEm(),
-        ]);
-        $response = $this->repository->read($categoria1->id);
 
-        $this->assertInstanceOf(CategoriaEntity::class, $response);
+        $responseB = $this->repository->read($categoriaB->id);
+        $this->assertInstanceOf(CategoriaEntity::class, $responseB);
         $this->assertDatabaseHas('categorias', [
-            'nome' => $categoria1->nome,
-            'descricao' => $categoria1->descricao,
-            'ativo' => $categoria1->ativo,
-            'created_at' => $categoria1->criadoEm(),
+            'nome' => $categoriaB->nome,
+            'descricao' => $categoriaB->descricao,
+            'ativo' => $categoriaB->ativo,
+            'created_at' => $categoriaB->created_at,
         ]);
     }
-
 }
