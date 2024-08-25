@@ -140,4 +140,16 @@ class CategoriaRepositoryTest extends TestCase
             'descricao' => $categoriaA->descricao,
         ]);
     }
+
+    public function testDeleteNotFound()
+    {
+        try {
+            $this->repository->delete('fakeValue');
+
+            $this->assertTrue(false);
+        } catch (Throwable $th) {
+            $this->assertInstanceOf(NotFoundException::class, $th);
+        }
+    }
+
 }
