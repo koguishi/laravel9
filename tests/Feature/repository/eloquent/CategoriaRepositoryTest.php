@@ -152,4 +152,18 @@ class CategoriaRepositoryTest extends TestCase
         }
     }
 
+    public function testReadAll()
+    {
+        $categorias = CategoriaModel::factory()->count(20)->create();
+        $response = $this->repository->readAll(
+            arrOrder: [
+                'careated_at' => 'desc',
+                'descricao' => 'desc',
+                'nome' => 'asc',
+            ],
+        );
+        $this->assertEquals(count($categorias), count($response));
+        // TODO: checar o conteudo de $categorias e $response
+    }
+
 }
