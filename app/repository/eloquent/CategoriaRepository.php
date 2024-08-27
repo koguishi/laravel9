@@ -74,9 +74,26 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         return $categoriaDb->delete();
     }
 
-    public function readAll(string $filter = '', string $order = 'DESC'): array
+    public function readAll(
+        string $filter = '',
+        array $arrOrder = []
+    ): array
     {
-        return [];
+        $builder = $this->model->where(
+            function ($query) use ($filter) {
+                if ($filter) {
+                    $query->where('nome', 'LIKE', "%{$filter}%");
+                    $query->orWhere('descricao', 'LIKE', "%{$filter}%");
+                }
+            }
+        );
+
+        foreach ($arrOrder as $column => $direction) {
+            $builder->orderBy($column, $direction);
+        }
+
+        $categorias = $builder->get();
+        return $categorias->toArray();        
     }
 
     public function paginate(

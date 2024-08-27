@@ -6,6 +6,6 @@ class ReadAllCategoriasInput
 {
     public function __construct(
         public string $filter = '',
-        public string $order = 'ASC',
+        public array $arrOrder = [],
     ) { }
 }

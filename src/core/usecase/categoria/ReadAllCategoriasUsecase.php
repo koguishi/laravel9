@@ -17,7 +17,7 @@ class ReadAllCategoriasUsecase
     {
         $categorias = $this->repository->readAll(
             filter: $input->filter,
-            order: $input->order,
+            arrOrder: $input->arrOrder,
         );
 
         return new ReadAllCategoriasOutput(
