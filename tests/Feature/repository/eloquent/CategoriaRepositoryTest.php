@@ -155,15 +155,27 @@ class CategoriaRepositoryTest extends TestCase
     public function testReadAll()
     {
         $categorias = CategoriaModel::factory()->count(20)->create();
-        $response = $this->repository->readAll(
-            arrOrder: [
-                'careated_at' => 'desc',
-                'descricao' => 'desc',
-                'nome' => 'asc',
-            ],
-        );
+        $response = $this->repository->readAll();
         $this->assertEquals(count($categorias), count($response));
         // TODO: checar o conteudo de $categorias e $response
     }
 
+    public function testReadAllOrderByNomeAsc()
+    {
+        $categoriasModel = CategoriaModel::factory()->count(20)->create();
+        $arrCategorias = $this->repository->readAll(
+            arrOrder: [ 'nome' => 'asc' ],
+        );
+        $this->assertEquals(count($categoriasModel), count($arrCategorias));
+
+        $arrNomes = [];
+        foreach ($categoriasModel as $key => $categoriaModel) {
+            array_push($arrNomes, $categoriaModel->nome);
+        }
+        sort($arrNomes);
+
+        foreach ($arrCategorias as $key => $arrCategoria) {
+            $this->assertEquals($arrNomes[$key], $arrCategorias[$key]['nome']);
+        }
+    }
 }
