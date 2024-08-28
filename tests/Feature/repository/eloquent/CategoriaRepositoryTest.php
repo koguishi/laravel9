@@ -178,4 +178,66 @@ class CategoriaRepositoryTest extends TestCase
             $this->assertEquals($arrNomes[$key], $arrCategorias[$key]['nome']);
         }
     }
+
+    public function testReadAllFilterByNome()
+    {
+        $categoriasModel = CategoriaModel::factory()->count(50)->create();
+
+        $arrCategorias = $this->repository->readAll(
+            filter: $categoriasModel[0]->nome
+        );
+        $this->assertGreaterThanOrEqual(1, count($arrCategorias));
+        foreach ($arrCategorias as $key => $arrCategoria) {
+            $this->assertEquals($categoriasModel[0]->nome, $arrCategorias[$key]['nome']);
+        }
+
+        $arrCategorias = $this->repository->readAll(
+            filter: $categoriasModel[count($categoriasModel)-1]->nome
+        );
+        $this->assertGreaterThanOrEqual(1, count($arrCategorias));
+        foreach ($arrCategorias as $key => $arrCategoria) {
+            $this->assertEquals(
+                $categoriasModel[count($categoriasModel)-1]->nome,
+                $arrCategorias[$key]['nome'],
+            );
+        }
+    }
+
+
+    public function testReadAllFilterByDescricao()
+    {
+        $categoriasModel = CategoriaModel::factory()->count(50)->create();
+
+        $arrCategorias = $this->repository->readAll(
+            filter: $categoriasModel[0]->descricao
+        );
+        $this->assertGreaterThanOrEqual(1, count($arrCategorias));
+        foreach ($arrCategorias as $key => $arrCategoria) {
+            $this->assertEquals(
+                $categoriasModel[0]->descricao,
+                $arrCategorias[$key]['descricao'],
+            );
+        }
+
+        $arrCategorias = $this->repository->readAll(
+            filter: $categoriasModel[count($categoriasModel)-1]->descricao
+        );
+        $this->assertGreaterThanOrEqual(1, count($arrCategorias));
+        foreach ($arrCategorias as $key => $arrCategoria) {
+            $this->assertEquals(
+                $categoriasModel[count($categoriasModel)-1]->descricao,
+                $arrCategorias[$key]['descricao'],
+            );
+        }
+    }
+
+    public function testReadAllFilterNotFound()
+    {
+        $categoriasModel = CategoriaModel::factory()->count(50)->create();
+        $arrCategorias = $this->repository->readAll(
+            filter: 'xyz'
+        );
+        $this->assertEquals(0, count($arrCategorias));
+    }
+
 }
