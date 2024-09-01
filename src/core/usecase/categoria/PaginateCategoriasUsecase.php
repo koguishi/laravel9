@@ -17,7 +17,7 @@ class PaginateCategoriasUsecase
     {
         $categorias = $this->repository->paginate(
             filter: $input->filter,
-            order: $input->order,
+            arrOrder: $input->arrOrder,
             page: $input->page,
             totalPage: $input->totalPage,
         );

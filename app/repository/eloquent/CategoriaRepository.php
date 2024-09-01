@@ -3,6 +3,7 @@
 namespace app\repository\eloquent;
 
 use App\Models\Categoria as CategoriaModel;
+use App\repository\PaginationPresenter;
 use core\domain\entity\Categoria as CategoriaEntity;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\CategoriaRepositoryInterface;
@@ -98,11 +99,20 @@ class CategoriaRepository implements CategoriaRepositoryInterface
 
     public function paginate(
         string $filter = '',
-        string $order = 'DESC',
+        array $arrOrder = [],
         int $page = 1,
         int $totalPage = 15
     ): PaginationInterface
     {
-        return new PaginationInterface();
+        $query = $this->model;
+        if ($filter) {
+            $query = $query->where('name', 'LIKE', "%{$filter}%");
+        }
+        foreach ($arrOrder as $column => $direction) {
+            $query->orderBy($column, $direction);
+        }
+        $paginator = $query->paginate();
+
+        return new PaginationPresenter($paginator);
     }    
 }

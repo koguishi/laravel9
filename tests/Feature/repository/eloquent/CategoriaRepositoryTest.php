@@ -7,6 +7,7 @@ use app\repository\eloquent\CategoriaRepository;
 use core\domain\entity\Categoria as CategoriaEntity;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\CategoriaRepositoryInterface;
+use core\domain\repository\PaginationInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -239,5 +240,23 @@ class CategoriaRepositoryTest extends TestCase
         );
         $this->assertEquals(0, count($arrCategorias));
     }
+
+    public function testPaginate()
+    {
+        CategoriaModel::factory()->count(20)->create();
+
+        $response = $this->repository->paginate();
+
+        $this->assertInstanceOf(PaginationInterface::class, $response);
+        $this->assertCount(15, $response->items());
+    }
+
+    public function testPaginateWithout()
+    {
+        $response = $this->repository->paginate();
+
+        $this->assertInstanceOf(PaginationInterface::class, $response);
+        $this->assertCount(0, $response->items());
+    }    
 
 }
