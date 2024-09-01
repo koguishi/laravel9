@@ -251,7 +251,7 @@ class CategoriaRepositoryTest extends TestCase
         $this->assertCount(15, $response->items());
     }
 
-    public function testPaginateWithout()
+    public function testPaginateEmpty()
     {
         $response = $this->repository->paginate();
 
