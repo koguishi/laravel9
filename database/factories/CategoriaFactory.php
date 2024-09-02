@@ -17,10 +17,12 @@ class CategoriaFactory extends Factory
      */
     public function definition()
     {
+        $descricao = $this->faker->sentence(10);
         return [
             'id' => (string) Str::uuid(),
             'nome' => $this->faker->name(),
-            'descricao' => $this->faker->sentence(10),
-            'ativo' => true,        ];
+            'descricao' => substr($descricao, 0, 255),
+            'ativo' => true,
+        ];
     }
 }
