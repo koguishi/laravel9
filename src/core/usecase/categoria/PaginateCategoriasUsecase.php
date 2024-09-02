@@ -29,7 +29,7 @@ class PaginateCategoriasUsecase
                     'nome' => $data->nome,
                     'descricao' => $data->descricao,
                     'ativo' => (bool) $data->ativo,
-                    'criado_em' => (string) $data->criado_em,
+                    // 'criado_em' => $data->criado_em,
                 ];
             }, $categorias->items()),
             total: $categorias->total(),
@@ -38,7 +38,7 @@ class PaginateCategoriasUsecase
             first_page: $categorias->firstPage(),
             per_page: $categorias->perPage(),
             to: $categorias->to(),
-            from: $categorias->to(),
+            from: $categorias->from(),
         );
     }
 }

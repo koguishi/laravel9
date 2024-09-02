@@ -111,7 +111,10 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         foreach ($arrOrder as $column => $direction) {
             $query->orderBy($column, $direction);
         }
-        $paginator = $query->paginate();
+        $paginator = $query->paginate(
+            page: $page,
+            perPage: $totalPage,
+        );
 
         return new PaginationPresenter($paginator);
     }    

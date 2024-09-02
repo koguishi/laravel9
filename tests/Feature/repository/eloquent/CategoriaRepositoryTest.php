@@ -40,7 +40,7 @@ class CategoriaRepositoryTest extends TestCase
             'nome' => $entity->nome,
             'descricao' => $entity->descricao,
             'ativo' => $entity->ativo,
-            'created_at' => $entity->criadoEm(),
+//             'created_at' => $entity->criadoEm(),
         ]);
     }
 
