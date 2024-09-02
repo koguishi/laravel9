@@ -54,7 +54,6 @@ class PaginateCategoriasUsecaseTest extends TestCase
                 totalPage: 7
             )
         );
-        dump($responseUseCase);
         $this->assertInstanceOf(PaginateCategoriasOutput::class, $responseUseCase);
         $this->assertEquals(3, $responseUseCase->current_page);
         $this->assertEquals(15, $responseUseCase->to);

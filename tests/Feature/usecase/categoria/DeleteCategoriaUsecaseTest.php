@@ -35,9 +35,10 @@ class DeleteCategoriaUsecaseTest extends TestCase
         $this->assertInstanceOf(DeleteCategoriaOutput::class, $responseUseCase);
         $this->assertTrue($responseUseCase->sucesso);
 
-        $this->assertDatabaseMissing('categorias', [
-            'id' => $categoriaModel->id,
-        ]);
+        $this->assertSoftDeleted($categoriaModel);
+        // $this->assertDatabaseMissing('categorias', [
+        //     'id' => $categoriaModel->id,
+        // ]);
     }
 
     public function testDeleteNotFound()

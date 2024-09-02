@@ -134,12 +134,13 @@ class CategoriaRepositoryTest extends TestCase
         ]);
 
         $this->repository->delete($categoriaA->id);
-        $this->assertDatabaseMissing('categorias', [
-            'nome' => $categoriaA->nome,
-        ]);
-        $this->assertDatabaseMissing('categorias', [
-            'descricao' => $categoriaA->descricao,
-        ]);
+        $this->assertSoftDeleted($categoriaA);
+        // $this->assertDatabaseMissing('categorias', [
+        //     'nome' => $categoriaA->nome,
+        // ]);
+        // $this->assertDatabaseMissing('categorias', [
+        //     'descricao' => $categoriaA->descricao,
+        // ]);
     }
 
     public function testDeleteNotFound()
