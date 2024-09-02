@@ -32,6 +32,9 @@ class UpdateCategoriaUsecaseTest extends TestCase
         );
         $this->assertInstanceOf(UpdateCategoriaOutput::class, $responseUseCase);
 
+        $this->assertEquals('nome alterado', $responseUseCase->nome);
+        $this->assertEquals($categoriaModel->descricao, $responseUseCase->descricao);
+
         $this->assertDatabaseMissing('categorias', [
             'nome' => $categoriaModel->nome,
         ]);
@@ -42,7 +45,7 @@ class UpdateCategoriaUsecaseTest extends TestCase
 
     }
 
-    public function testReadNotFound()
+    public function testUpdateNotFound()
     {
         try {
             $repository = new CategoriaRepository(new Model());
