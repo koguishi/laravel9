@@ -19,6 +19,17 @@ class CategoriaController extends Controller
         );
         $response = $usecase->execute(input: $usecaseInput);
 
-        return CategoriaResource::collection(collect($response->items));
+        return CategoriaResource::collection(collect($response->items))
+            ->additional([
+                'meta' => [
+                    'total' => $response->total,
+                    'current_page' => $response->currentPage,
+                    'last_page' => $response->lastPage,
+                    'first_page' => $response->firstPage,
+                    'per_page' => $response->perPage,
+                    'to' => $response->to,
+                    'from' => $response->from,
+                ],
+            ]);
     }
 }

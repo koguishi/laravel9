@@ -29,10 +29,10 @@ class CategoriaControllerTest extends TestCase
         $mockRequest->shouldReceive('get')->andReturn('teste');
         $mockRequest->shouldReceive('input')->andReturn($inputDto);
 
-        $mockOutputDto = Mockery::mock(ReadAllCategoriasOutput::class, [
-            [], 1, 1, 1, 1, 1, 1, 1,
-        ]);
-        $mockOutputDto = new ReadAllCategoriasOutput([]);
+        // $mockOutputDto = Mockery::mock(ReadAllCategoriasOutput::class, [
+        //     [], 1, 1, 1, 1, 1, 1, 1,
+        // ]);
+        $mockOutputDto = new ReadAllCategoriasOutput([], 1, 1, 1, 1, 1, 1, 1);
 
         /**
          * @var ReadAllCategoriasUsecase|MockInterface
@@ -42,8 +42,6 @@ class CategoriaControllerTest extends TestCase
 
         $controller = new CategoriaController();
         $response = $controller->index($mockRequest, $mockUsecase);
-
-        dump($response);
 
         $this->assertInstanceOf(AnonymousResourceCollection::class, $response);
 
