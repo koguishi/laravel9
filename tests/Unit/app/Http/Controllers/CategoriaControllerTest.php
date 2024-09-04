@@ -48,6 +48,6 @@ class CategoriaControllerTest extends TestCase
         $this->assertInstanceOf(AnonymousResourceCollection::class, $response);
 
         $this->assertIsObject($response->resource);
-        // $this->assertArrayHasKey('meta', $response->additional);        
+        $this->assertArrayHasKey('meta', $response->additional);        
     }
 }
