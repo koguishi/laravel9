@@ -3,13 +3,12 @@
 namespace Tests\Feature\http\controllers;
 
 use App\Http\Controllers\CategoriaController;
+
+use App\Http\Requests\CategoriaStoreRequest;
 use App\Models\Categoria as CategoriaModel;
 use app\repository\eloquent\CategoriaRepository;
 use core\usecase\categoria\CreateCategoriaUsecase;
 use core\usecase\categoria\PaginateCategoriasUsecase;
-use core\usecase\categoria\ReadAllCategoriasUsecase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -46,7 +45,7 @@ class CategoriaControllerTest extends TestCase
     {
         $useCase = new CreateCategoriaUsecase($this->repository);
 
-        $request = new StoreCategoryRequest();
+        $request = new CategoriaStoreRequest();
 
         $response = $this->controller->store($request, $useCase);
 

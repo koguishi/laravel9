@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoriaResource;
+use core\usecase\categoria\CreateCategoriaUsecase;
 use core\usecase\categoria\PaginateCategoriasInput;
 use core\usecase\categoria\PaginateCategoriasUsecase;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
@@ -31,5 +33,12 @@ class CategoriaController extends Controller
                     'from' => $response->from,
                 ],
             ]);
+    }
+    
+    public function store(Request $request, CreateCategoriaUsecase $usecase)
+    {
+        return new JsonResponse(
+            status: 201
+        );
     }
 }
