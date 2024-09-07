@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoriaResource;
-use core\usecase\categoria\ReadAllCategoriasInput;
-use core\usecase\categoria\ReadAllCategoriasUsecase;
+use core\usecase\categoria\PaginateCategoriasInput;
+use core\usecase\categoria\PaginateCategoriasUsecase;
 use Illuminate\Http\Request;
 
 class CategoriaController extends Controller
 {
-    public function index(Request $request, ReadAllCategoriasUsecase $usecase)
+    public function index(Request $request, PaginateCategoriasUsecase $usecase)
     {
-        $usecaseInput = new ReadAllCategoriasInput(
-            filter: $request->input()->filter,
-            arrOrder: $request->input()->arrOrder,
-            page: (int) $request->input()->page,
-            totalPage: (int) $request->input()->totalPage,
+        $usecaseInput = new PaginateCategoriasInput(
+            filter: $request->get('filter', '') ,
+            arrOrder: $request->get('arrOrder', []),
+            page: (int) $request->get('page', 1),
+            totalPage: (int) $request->get('totalPage', 15),
         );
         $response = $usecase->execute(input: $usecaseInput);
 
@@ -23,10 +23,10 @@ class CategoriaController extends Controller
             ->additional([
                 'meta' => [
                     'total' => $response->total,
-                    'current_page' => $response->currentPage,
-                    'last_page' => $response->lastPage,
-                    'first_page' => $response->firstPage,
-                    'per_page' => $response->perPage,
+                    'current_page' => $response->current_page,
+                    'last_page' => $response->last_page,
+                    'first_page' => $response->first_page,
+                    'per_page' => $response->per_page,
                     'to' => $response->to,
                     'from' => $response->from,
                 ],
