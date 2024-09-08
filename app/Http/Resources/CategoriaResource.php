@@ -12,8 +12,18 @@ class CategoriaResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+    // public function toArray($request)
+    // {
+    //     return parent::toArray($request);
+    // }
     public function toArray($request)
     {
-        return parent::toArray($request);
-    }
+        return [
+            'id' => $this->id,
+            'nome' => $this->nome,
+            'descricao' => $this->descricao,
+            'ativo' => $this->ativo,
+            // 'created_at' => Carbon::make($this->created_at)->format('Y-m-d H:i:s'),
+        ];
+    }    
 }
