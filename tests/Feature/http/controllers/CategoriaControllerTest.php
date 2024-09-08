@@ -10,6 +10,7 @@ use app\repository\eloquent\CategoriaRepository;
 use core\usecase\categoria\CreateCategoriaUsecase;
 use core\usecase\categoria\PaginateCategoriasUsecase;
 use core\usecase\categoria\ReadCategoriaUsecase;
+use core\usecase\categoria\UpdateCategoriaUsecase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -52,7 +53,7 @@ class CategoriaControllerTest extends TestCase
         $request->headers->set('content-type', 'application/json');
         $request->setJson(new ParameterBag([
             'nome' => $nomeDaCategoria,
-        ]));        
+        ]));
 
         $response = $this->controller->create($request, $useCase);
 
@@ -83,5 +84,32 @@ class CategoriaControllerTest extends TestCase
         $content = json_decode($response->getContent());
         $categoria = $content->data;
         $this->assertEquals($categoria->nome, $categoria->nome);
-    }    
+    }
+
+    public function test_update()
+    {
+        $categoria = CategoriaModel::factory()->create();
+        $useCase = new UpdateCategoriaUsecase($this->repository);
+        $nomeAlterado = 'ALTERADO ' . $categoria->nome;
+
+        $request = new CategoriaUpdateRequest();
+        $request->headers->set('content-type', 'application/json');
+        $request->setJson(new ParameterBag([
+            'id' => $categoria->id,
+            'nome' => $nomeAlterado,
+            'descricao' => $categoria->descricao,
+            'ativo' => $categoria->ativo,
+        ]));
+
+        $response = $this->controller->update($request, $useCase);
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(Response::HTTP_CREATED, $response->status());
+
+        // ???
+        // é necessário ?
+        $content = json_decode($response->getContent());
+        $categoria = $content->data;
+        $this->assertEquals($nomeAlterado, $categoria->nome);
+    }
 }
