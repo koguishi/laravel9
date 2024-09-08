@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoriaCreateRequest;
+use App\Http\Requests\CategoriaUpdateRequest;
 use App\Http\Resources\CategoriaResource;
 use core\usecase\categoria\CreateCategoriaInput;
 use core\usecase\categoria\CreateCategoriaUsecase;
@@ -10,6 +11,8 @@ use core\usecase\categoria\PaginateCategoriasInput;
 use core\usecase\categoria\PaginateCategoriasUsecase;
 use core\usecase\categoria\ReadCategoriaInput;
 use core\usecase\categoria\ReadCategoriaUsecase;
+use core\usecase\categoria\UpdateCategoriaInput;
+use core\usecase\categoria\UpdateCategoriaUsecase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -79,4 +82,26 @@ class CategoriaController extends Controller
         // );
     }
 
+    public function update(CategoriaUpdateRequest $request, UpdateCategoriaUsecase $usecase)
+    {
+        $input = new UpdateCategoriaInput(
+            id: $request->id,
+            nome: $request->nome,
+            descricao: $request->descricao,
+            ativo: $request->ativo,
+        );
+        $response = $usecase->execute($input);
+        // dump($response); die;
+        $resource = new CategoriaResource($response);
+        // dump($resource); die;
+
+        return ($resource)
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
+        // é o mesmo que:
+        // return new JsonResponse(
+        //     data: $resource,
+        //     status: Response::HTTP_CREATED,
+        // );
+    }
 }

@@ -5,6 +5,7 @@ namespace Tests\Feature\http\controllers;
 use App\Http\Controllers\CategoriaController;
 
 use App\Http\Requests\CategoriaCreateRequest;
+use App\Http\Requests\CategoriaUpdateRequest;
 use App\Models\Categoria as CategoriaModel;
 use app\repository\eloquent\CategoriaRepository;
 use core\usecase\categoria\CreateCategoriaUsecase;
@@ -104,7 +105,7 @@ class CategoriaControllerTest extends TestCase
         $response = $this->controller->update($request, $useCase);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_CREATED, $response->status());
+        $this->assertEquals(Response::HTTP_OK, $response->status());
 
         // ???
         // é necessário ?
