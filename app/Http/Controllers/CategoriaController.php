@@ -68,20 +68,11 @@ class CategoriaController extends Controller
 
     public function read(string $id, ReadCategoriaUsecase $usecase)
     {
-        $input = new ReadCategoriaInput(id: $id);
-        $response = $usecase->execute($input);
-        // dump($response); die;
-        $resource = new CategoriaResource($response);
-        // dump($resource); die;
+        $response = $usecase->execute(new ReadCategoriaInput(id: $id));
 
-        return ($resource)
+        return (new CategoriaResource($response))
             ->response()
             ->setStatusCode(Response::HTTP_OK);
-        // é o mesmo que:
-        // return new JsonResponse(
-        //     data: $resource,
-        //     status: Response::HTTP_CREATED,
-        // );
     }
 
     public function update(CategoriaUpdateRequest $request, UpdateCategoriaUsecase $usecase)
