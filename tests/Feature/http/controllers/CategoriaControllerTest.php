@@ -96,13 +96,11 @@ class CategoriaControllerTest extends TestCase
         $request = new CategoriaUpdateRequest();
         $request->headers->set('content-type', 'application/json');
         $request->setJson(new ParameterBag([
-            'id' => $categoria->id,
             'nome' => $nomeAlterado,
-            'descricao' => $categoria->descricao,
-            'ativo' => $categoria->ativo,
         ]));
 
-        $response = $this->controller->update($useCase, $request);
+        // ??? não poderia passar o id no request ?
+        $response = $this->controller->update($useCase, $categoria->id, $request);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(Response::HTTP_OK, $response->status());

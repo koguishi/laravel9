@@ -77,28 +77,22 @@ class CategoriaController extends Controller
 
     public function update(
         UpdateCategoriaUsecase $usecase,
+        string $id,
         CategoriaUpdateRequest $request,
     )
     {
         $input = new UpdateCategoriaInput(
-            id: $request->id,
+            id: $id,
             nome: $request->nome,
             descricao: $request->descricao,
             ativo: $request->ativo,
         );
         $response = $usecase->execute($input);
-        // dump($response); die;
         $resource = new CategoriaResource($response);
-        // dump($resource); die;
 
         return ($resource)
             ->response()
             ->setStatusCode(Response::HTTP_OK);
-        // é o mesmo que:
-        // return new JsonResponse(
-        //     data: $resource,
-        //     status: Response::HTTP_CREATED,
-        // );
     }
 
     public function delete(DeleteCategoriaUsecase $usecase, string $id)
