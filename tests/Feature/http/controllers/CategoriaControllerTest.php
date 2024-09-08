@@ -9,6 +9,7 @@ use App\Http\Requests\CategoriaUpdateRequest;
 use App\Models\Categoria as CategoriaModel;
 use app\repository\eloquent\CategoriaRepository;
 use core\usecase\categoria\CreateCategoriaUsecase;
+use core\usecase\categoria\DeleteCategoriaUsecase;
 use core\usecase\categoria\PaginateCategoriasUsecase;
 use core\usecase\categoria\ReadCategoriaUsecase;
 use core\usecase\categoria\UpdateCategoriaUsecase;
@@ -112,5 +113,24 @@ class CategoriaControllerTest extends TestCase
         $content = json_decode($response->getContent());
         $categoria = $content->data;
         $this->assertEquals($nomeAlterado, $categoria->nome);
+    }
+
+    public function test_delete()
+    {
+        $categoria = CategoriaModel::factory()->create();
+
+        $response = $this->controller->delete(
+            id: $categoria->id,
+            usecase: new DeleteCategoriaUsecase($this->repository),
+        );        
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(Response::HTTP_OK, $response->status());
+
+        // ???
+        // é necessário ?
+        // $content = json_decode($response->getContent());
+        // $categoria = $content->data;
+        // $this->assertEquals($nomeAlterado, $categoria->nome);
     }
 }
