@@ -71,11 +71,17 @@ class CategoriaControllerTest extends TestCase
         $categoria = CategoriaModel::factory()->create();
 
         $response = $this->controller->read(
-            usecase: new ReadCategoriaUsecase($this->repository),
             id: $categoria->id,
+            usecase: new ReadCategoriaUsecase($this->repository),
         );
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(Response::HTTP_OK, $response->status());
+
+        // ???
+        // é necessário ?
+        $content = json_decode($response->getContent());
+        $categoria = $content->data;
+        $this->assertEquals($categoria->nome, $categoria->nome);
     }    
 }

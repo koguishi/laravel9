@@ -8,6 +8,8 @@ use core\usecase\categoria\CreateCategoriaInput;
 use core\usecase\categoria\CreateCategoriaUsecase;
 use core\usecase\categoria\PaginateCategoriasInput;
 use core\usecase\categoria\PaginateCategoriasUsecase;
+use core\usecase\categoria\ReadCategoriaInput;
+use core\usecase\categoria\ReadCategoriaUsecase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -58,4 +60,23 @@ class CategoriaController extends Controller
         //     status: Response::HTTP_CREATED,
         // );
     }
+
+    public function read(string $id, ReadCategoriaUsecase $usecase)
+    {
+        $input = new ReadCategoriaInput(id: $id);
+        $response = $usecase->execute($input);
+        // dump($response); die;
+        $resource = new CategoriaResource($response);
+        // dump($resource); die;
+
+        return ($resource)
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
+        // é o mesmo que:
+        // return new JsonResponse(
+        //     data: $resource,
+        //     status: Response::HTTP_CREATED,
+        // );
+    }
+
 }
