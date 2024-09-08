@@ -46,9 +46,9 @@ class CategoriaControllerTest extends TestCase
 
         $controller = new CategoriaController();
         $response = $controller->index(
+            $mockUsecase,
             // $mockRequest,
             new Request(),
-            $mockUsecase
         );
 
         $this->assertInstanceOf(AnonymousResourceCollection::class, $response);
@@ -62,9 +62,9 @@ class CategoriaControllerTest extends TestCase
         $mockUseCaseSpy = Mockery::spy(PaginateCategoriasUsecase::class);
         $mockUseCaseSpy->shouldReceive('execute')->andReturn($mockOutputDto);
         $controller->index(
+            $mockUseCaseSpy,
             // $mockRequest,
             new Request(),
-            $mockUseCaseSpy
         );
         $mockUseCaseSpy->shouldHaveReceived('execute');
 

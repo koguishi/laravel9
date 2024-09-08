@@ -38,9 +38,8 @@ class CategoriaControllerTest extends TestCase
 
     public function test_index()
     {
-        $useCase = new PaginateCategoriasUsecase($this->repository);
-
-        $response = $this->controller->index(new Request(), $useCase);
+        $usecase = new PaginateCategoriasUsecase($this->repository);
+        $response = $this->controller->index($usecase, new Request());
 
         $this->assertInstanceOf(AnonymousResourceCollection::class, $response);
         $this->assertArrayHasKey('meta', $response->additional);
@@ -57,7 +56,7 @@ class CategoriaControllerTest extends TestCase
             'nome' => $nomeDaCategoria,
         ]));
 
-        $response = $this->controller->create($request, $useCase);
+        $response = $this->controller->create($useCase, $request);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(Response::HTTP_CREATED, $response->status());
@@ -103,7 +102,7 @@ class CategoriaControllerTest extends TestCase
             'ativo' => $categoria->ativo,
         ]));
 
-        $response = $this->controller->update($request, $useCase);
+        $response = $this->controller->update($useCase, $request);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(Response::HTTP_OK, $response->status());

@@ -20,7 +20,7 @@ use Illuminate\Http\Response;
 
 class CategoriaController extends Controller
 {
-    public function index(Request $request, PaginateCategoriasUsecase $usecase)
+    public function index(PaginateCategoriasUsecase $usecase, Request $request)
     {
         $usecaseInput = new PaginateCategoriasInput(
             filter: $request->get('filter', '') ,
@@ -44,7 +44,7 @@ class CategoriaController extends Controller
             ]);
     }
     
-    public function create(CategoriaCreateRequest $request, CreateCategoriaUsecase $usecase)
+    public function create(CreateCategoriaUsecase $usecase, CategoriaCreateRequest $request)
     {
         $input = new CreateCategoriaInput(
             nome: $request->nome,
@@ -66,7 +66,7 @@ class CategoriaController extends Controller
         // );
     }
 
-    public function read(string $id, ReadCategoriaUsecase $usecase)
+    public function read(ReadCategoriaUsecase $usecase, string $id)
     {
         $response = $usecase->execute(new ReadCategoriaInput(id: $id));
 
@@ -75,7 +75,10 @@ class CategoriaController extends Controller
             ->setStatusCode(Response::HTTP_OK);
     }
 
-    public function update(CategoriaUpdateRequest $request, UpdateCategoriaUsecase $usecase)
+    public function update(
+        UpdateCategoriaUsecase $usecase,
+        CategoriaUpdateRequest $request,
+    )
     {
         $input = new UpdateCategoriaInput(
             id: $request->id,
@@ -98,7 +101,7 @@ class CategoriaController extends Controller
         // );
     }
 
-    public function delete(string $id, DeleteCategoriaUsecase $usecase)
+    public function delete(DeleteCategoriaUsecase $usecase, string $id)
     {
         $usecase->execute(new DeleteCategoriaInput(id: $id));
         return response()->noContent();        
