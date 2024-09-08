@@ -4,7 +4,7 @@ namespace Tests\Feature\http\controllers;
 
 use App\Http\Controllers\CategoriaController;
 
-use App\Http\Requests\CategoriaStoreRequest;
+use App\Http\Requests\CategoriaCreateRequest;
 use App\Models\Categoria as CategoriaModel;
 use app\repository\eloquent\CategoriaRepository;
 use core\usecase\categoria\CreateCategoriaUsecase;
@@ -42,18 +42,18 @@ class CategoriaControllerTest extends TestCase
         $this->assertArrayHasKey('meta', $response->additional);
     }
 
-    public function test_store()
+    public function test_create()
     {
         $nomeDaCategoria = 'Teste de Categoria';
         $useCase = new CreateCategoriaUsecase($this->repository);
 
-        $request = new CategoriaStoreRequest();
+        $request = new CategoriaCreateRequest();
         $request->headers->set('content-type', 'application/json');
         $request->setJson(new ParameterBag([
             'nome' => $nomeDaCategoria,
         ]));        
 
-        $response = $this->controller->store($request, $useCase);
+        $response = $this->controller->create($request, $useCase);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(Response::HTTP_CREATED, $response->status());

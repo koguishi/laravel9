@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoriaStoreRequest;
+use App\Http\Requests\CategoriaCreateRequest;
 use App\Http\Resources\CategoriaResource;
 use core\usecase\categoria\CreateCategoriaInput;
 use core\usecase\categoria\CreateCategoriaUsecase;
@@ -37,7 +37,7 @@ class CategoriaController extends Controller
             ]);
     }
     
-    public function store(CategoriaStoreRequest $request, CreateCategoriaUsecase $usecase)
+    public function create(CategoriaCreateRequest $request, CreateCategoriaUsecase $usecase)
     {
         $input = new CreateCategoriaInput(
             nome: $request->nome,
