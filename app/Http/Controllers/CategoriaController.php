@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoriaStoreRequest;
 use App\Http\Resources\CategoriaResource;
+use core\usecase\categoria\CreateCategoriaInput;
 use core\usecase\categoria\CreateCategoriaUsecase;
 use core\usecase\categoria\PaginateCategoriasInput;
 use core\usecase\categoria\PaginateCategoriasUsecase;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CategoriaController extends Controller
 {
@@ -35,10 +37,25 @@ class CategoriaController extends Controller
             ]);
     }
     
-    public function store(Request $request, CreateCategoriaUsecase $usecase)
+    public function store(CategoriaStoreRequest $request, CreateCategoriaUsecase $usecase)
     {
-        return new JsonResponse(
-            status: 201
+        $input = new CreateCategoriaInput(
+            nome: $request->nome,
+            descricao: $request->descricao,
+            ativo: $request->ativo,
         );
+        $response = $usecase->execute($input);
+        // dump($response);
+        $resource = new CategoriaResource($response);
+        // dump($resource);
+
+        return ($resource)
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
+        // é o mesmo que:
+        // return new JsonResponse(
+        //     data: $resource,
+        //     status: Response::HTTP_CREATED,
+        // );
     }
 }
