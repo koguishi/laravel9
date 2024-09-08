@@ -124,13 +124,6 @@ class CategoriaControllerTest extends TestCase
             usecase: new DeleteCategoriaUsecase($this->repository),
         );        
 
-        $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_OK, $response->status());
-
-        // ???
-        // é necessário ?
-        // $content = json_decode($response->getContent());
-        // $categoria = $content->data;
-        // $this->assertEquals($nomeAlterado, $categoria->nome);
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->status());
     }
 }

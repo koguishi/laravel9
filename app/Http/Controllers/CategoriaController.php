@@ -7,6 +7,8 @@ use App\Http\Requests\CategoriaUpdateRequest;
 use App\Http\Resources\CategoriaResource;
 use core\usecase\categoria\CreateCategoriaInput;
 use core\usecase\categoria\CreateCategoriaUsecase;
+use core\usecase\categoria\DeleteCategoriaInput;
+use core\usecase\categoria\DeleteCategoriaUsecase;
 use core\usecase\categoria\PaginateCategoriasInput;
 use core\usecase\categoria\PaginateCategoriasUsecase;
 use core\usecase\categoria\ReadCategoriaInput;
@@ -103,5 +105,11 @@ class CategoriaController extends Controller
         //     data: $resource,
         //     status: Response::HTTP_CREATED,
         // );
+    }
+
+    public function delete(string $id, DeleteCategoriaUsecase $usecase)
+    {
+        $usecase->execute(new DeleteCategoriaInput(id: $id));
+        return response()->noContent();        
     }
 }
