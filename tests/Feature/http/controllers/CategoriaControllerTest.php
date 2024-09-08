@@ -9,6 +9,7 @@ use App\Models\Categoria as CategoriaModel;
 use app\repository\eloquent\CategoriaRepository;
 use core\usecase\categoria\CreateCategoriaUsecase;
 use core\usecase\categoria\PaginateCategoriasUsecase;
+use core\usecase\categoria\ReadCategoriaUsecase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -63,6 +64,18 @@ class CategoriaControllerTest extends TestCase
         $content = json_decode($response->getContent());
         $categoria = $content->data;
         $this->assertEquals($nomeDaCategoria, $categoria->nome);
-    }    
+    }
 
+    public function test_read()
+    {
+        $categoria = CategoriaModel::factory()->create();
+
+        $response = $this->controller->read(
+            usecase: new ReadCategoriaUsecase($this->repository),
+            id: $categoria->id,
+        );
+
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(Response::HTTP_OK, $response->status());
+    }    
 }
