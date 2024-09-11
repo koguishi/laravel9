@@ -18,6 +18,16 @@ class CategoriaResource extends JsonResource
     // }
     public function toArray($request)
     {
+        if (is_array($this->resource)) {
+            return [
+                'id' => $this['id'],
+                'nome' => $this['nome'],
+                'descricao' => $this['descricao'],
+                'ativo' => $this['ativo'],
+                // 'created_at' => Carbon::make($this->created_at)->format('Y-m-d H:i:s'),
+            ];
+        }
+
         return [
             'id' => $this->id,
             'nome' => $this->nome,
@@ -25,5 +35,5 @@ class CategoriaResource extends JsonResource
             'ativo' => $this->ativo,
             // 'created_at' => Carbon::make($this->created_at)->format('Y-m-d H:i:s'),
         ];
-    }    
+    }
 }
