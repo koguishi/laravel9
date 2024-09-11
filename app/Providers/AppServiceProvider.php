@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use app\repository\eloquent\CategoriaRepository;
+use core\domain\repository\CategoriaRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->bindRepositories();
     }
 
     /**
@@ -25,4 +27,15 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
+    private function bindRepositories()
+    {
+        /**
+         * Repositories
+         */
+        $this->app->singleton(
+            CategoriaRepositoryInterface::class,
+            CategoriaRepository::class
+        );
+    }    
 }
