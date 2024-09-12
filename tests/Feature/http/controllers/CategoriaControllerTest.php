@@ -56,7 +56,7 @@ class CategoriaControllerTest extends TestCase
             'nome' => $nomeDaCategoria,
         ]));
 
-        $response = $this->controller->create($useCase, $request);
+        $response = $this->controller->store($useCase, $request);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(Response::HTTP_CREATED, $response->status());
@@ -72,7 +72,7 @@ class CategoriaControllerTest extends TestCase
     {
         $categoria = CategoriaModel::factory()->create();
 
-        $response = $this->controller->read(
+        $response = $this->controller->show(
             id: $categoria->id,
             usecase: new ReadCategoriaUsecase($this->repository),
         );
@@ -116,7 +116,7 @@ class CategoriaControllerTest extends TestCase
     {
         $categoria = CategoriaModel::factory()->create();
 
-        $response = $this->controller->delete(
+        $response = $this->controller->destroy(
             id: $categoria->id,
             usecase: new DeleteCategoriaUsecase($this->repository),
         );        
