@@ -106,7 +106,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
     {
         $query = $this->model;
         if ($filter) {
-            $query = $query->where('name', 'LIKE', "%{$filter}%");
+            $query = $query->where('nome', 'LIKE', "%{$filter}%");
         }
         foreach ($arrOrder as $column => $direction) {
             $query->orderBy($column, $direction);
