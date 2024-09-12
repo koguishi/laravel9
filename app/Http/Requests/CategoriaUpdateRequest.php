@@ -13,7 +13,7 @@ class CategoriaUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class CategoriaUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nome' => [
+                'required',
+                'min:3',
+                'max:255',
+            ],
         ];
     }
 }
