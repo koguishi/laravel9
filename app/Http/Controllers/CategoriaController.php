@@ -45,7 +45,7 @@ class CategoriaController extends Controller
         return $resource;
     }
     
-    public function create(CreateCategoriaUsecase $usecase, CategoriaCreateRequest $request)
+    public function store(CreateCategoriaUsecase $usecase, CategoriaCreateRequest $request)
     {
         $input = new CreateCategoriaInput(
             nome: $request->nome,
@@ -67,7 +67,7 @@ class CategoriaController extends Controller
         // );
     }
 
-    public function read(ReadCategoriaUsecase $usecase, string $id)
+    public function show(ReadCategoriaUsecase $usecase, string $id)
     {
         $response = $usecase->execute(new ReadCategoriaInput(id: $id));
 
@@ -96,7 +96,7 @@ class CategoriaController extends Controller
             ->setStatusCode(Response::HTTP_OK);
     }
 
-    public function delete(DeleteCategoriaUsecase $usecase, string $id)
+    public function destroy(DeleteCategoriaUsecase $usecase, string $id)
     {
         $usecase->execute(new DeleteCategoriaInput(id: $id));
         return response()->noContent();        
