@@ -8,8 +8,6 @@ use core\domain\entity\Categoria as CategoriaEntity;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\PaginationInterface;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Throwable;
 
@@ -250,6 +248,20 @@ class CategoriaRepositoryTest extends TestCase
 
         $this->assertInstanceOf(PaginationInterface::class, $response);
         $this->assertCount(15, $response->items());
+    }
+
+    public function testPaginateWithFilter()
+    {
+        CategoriaModel::factory()->count(20)->create();
+        $categoria = CategoriaModel::factory()->create();
+
+        $response = $this->repository->paginate(
+            filter: $categoria->nome
+        );
+
+        $this->assertInstanceOf(PaginationInterface::class, $response);
+        $this->assertCount(1, $response->items());
+        $this->assertEquals($categoria->nome, $response->items()[0]->nome);
     }
 
     public function testPaginateEmpty()
