@@ -176,7 +176,7 @@ class CategoriaApiTest extends TestCase
                 str_repeat('Abcde', 10) . ' ' . // 51
                 str_repeat('Qwert', 20) . ' ' . // 101
                 str_repeat('Zxcvb', 20) . ' ' . // 101 => 253
-                '456'
+                '456' // total de 256
             ,
         ];
 
@@ -189,11 +189,25 @@ class CategoriaApiTest extends TestCase
                 'descricao',
             ],
         ]);
-
-        dump($response['errors']);
     }
 
+    public function test_create_validate_ativo()
+    {
+        $data = [
+            'nome' => 'valid name',
+            'ativo' => 'string'
+        ];
 
+        $response = $this->postJson($this->endpoint, $data);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonStructure([
+            'message',
+            'errors' => [
+                'ativo',
+            ],
+        ]);
+    }
 
     public function test_create()
     {
