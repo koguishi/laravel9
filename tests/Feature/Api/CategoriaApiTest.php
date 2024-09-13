@@ -4,6 +4,7 @@ namespace Tests\Feature\Api;
 
 use App\Models\Categoria;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class CategoriaApiTest extends TestCase
@@ -135,7 +136,7 @@ class CategoriaApiTest extends TestCase
     public function test_create_validate_nome_max()
     {
         $data = [
-            'nome' => str_repeat('Abcde', 10) . ' ' . str_repeat('Fghij', 10),
+            'nome' => Str::random(101),
         ];
 
         $response = $this->postJson($this->endpoint, $data);
@@ -172,12 +173,7 @@ class CategoriaApiTest extends TestCase
     {
         $data = [
             'nome' => 'valid name',
-            'descricao' =>
-                str_repeat('Abcde', 10) . ' ' . // 51
-                str_repeat('Qwert', 20) . ' ' . // 101
-                str_repeat('Zxcvb', 20) . ' ' . // 101 => 253
-                '456' // total de 256
-            ,
+            'descricao' => Str::random(256),
         ];
 
         $response = $this->postJson($this->endpoint, $data);
