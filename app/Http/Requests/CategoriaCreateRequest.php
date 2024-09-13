@@ -27,7 +27,7 @@ class CategoriaCreateRequest extends FormRequest
             'nome' => [
                 'required',
                 'min:3',
-                'max:255',
+                'max:100',
             ],
             'descricao' => [
                 'nullable',

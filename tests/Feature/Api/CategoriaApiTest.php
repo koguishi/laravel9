@@ -3,8 +3,6 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Categoria;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
@@ -101,7 +99,7 @@ class CategoriaApiTest extends TestCase
         $this->assertEquals($category->id, $response['data']['id']);
     }
 
-    public function test_validations_create()
+    public function test_create_validate_nome_required()
     {
         $data = [];
 
@@ -115,6 +113,87 @@ class CategoriaApiTest extends TestCase
             ],
         ]);
     }
+
+    public function test_create_validate_nome_min()
+    {
+        $data = [
+            'nome' => 'AB',
+        ];
+
+        $response = $this->postJson($this->endpoint, $data);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonStructure([
+            'message',
+            'errors' => [
+                'nome',
+            ],
+        ]);
+    }
+
+
+    public function test_create_validate_nome_max()
+    {
+        $data = [
+            'nome' => str_repeat('Abcde', 10) . ' ' . str_repeat('Fghij', 10),
+        ];
+
+        $response = $this->postJson($this->endpoint, $data);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonStructure([
+            'message',
+            'errors' => [
+                'nome',
+            ],
+        ]);
+    }
+
+
+    public function test_create_validate_description_min()
+    {
+        $data = [
+            'nome' => 'valid name',
+            'descricao' => 'AB',
+        ];
+
+        $response = $this->postJson($this->endpoint, $data);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonStructure([
+            'message',
+            'errors' => [
+                'descricao',
+            ],
+        ]);
+    }
+
+    public function test_create_validate_description_max()
+    {
+        $data = [
+            'nome' => 'valid name',
+            'descricao' =>
+                str_repeat('Abcde', 10) . ' ' . // 51
+                str_repeat('Qwert', 20) . ' ' . // 101
+                str_repeat('Zxcvb', 20) . ' ' . // 101 => 253
+                '456'
+            ,
+        ];
+
+        $response = $this->postJson($this->endpoint, $data);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonStructure([
+            'message',
+            'errors' => [
+                'descricao',
+            ],
+        ]);
+
+        dump($response['errors']);
+    }
+
+
 
     public function test_create()
     {
