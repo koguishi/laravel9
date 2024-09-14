@@ -22,9 +22,12 @@ class CategoriaController extends Controller
 {
     public function index(PaginateCategoriasUsecase $usecase, Request $request)
     {
+        $ordem = $request->get('arrOrder', '');
+        $arrOrdem = json_decode($ordem);
+
         $usecaseInput = new PaginateCategoriasInput(
             filter: $request->get('filter', '') ,
-            arrOrder: $request->get('arrOrder', []),
+            order: $arrOrdem,
             page: (int) $request->get('page', 1),
             totalPage: (int) $request->get('totalPage', 15),
         );

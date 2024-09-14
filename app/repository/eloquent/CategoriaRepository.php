@@ -99,7 +99,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
 
     public function paginate(
         string $filter = '',
-        array $arrOrder = [],
+        string $order = '',
         int $page = 1,
         int $totalPage = 15
     ): PaginationInterface
@@ -108,6 +108,8 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         if ($filter) {
             $query = $query->where('nome', 'LIKE', "%{$filter}%");
         }
+        $var = json_decode($order);
+        dd($var);
         foreach ($arrOrder as $column => $direction) {
             $query->orderBy($column, $direction);
         }
