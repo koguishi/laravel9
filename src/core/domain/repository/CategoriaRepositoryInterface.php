@@ -14,7 +14,7 @@ interface CategoriaRepositoryInterface
     public function readAll(string $filter = '', array $arrOrder = []): array;
     public function paginate(
         string $filter = '',
-        array $arrOrder = [],
+        string $order = '',
         int $page = 1,
         int $totalPage = 15
     ): PaginationInterface;

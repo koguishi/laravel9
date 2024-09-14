@@ -87,7 +87,7 @@ class PaginateCategoriasUsecaseTest extends TestCase
         // $mockInputDto = Mockery::mock(ListCategoriesInputDto::class, ['filter', 'desc']);
         $input = new PaginateCategoriasInput(
             filter: 'filter',
-            arrOrder: ['id' => 'desc'],
+            order: "[{'id' => 'desc'}]",
         );
 
         $useCase = new PaginateCategoriasUseCase($mockRepo);
