@@ -77,7 +77,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
 
     public function readAll(
         string $filter = '',
-        array $arrOrder = []
+        string $order = ''
     ): array
     {
         $builder = $this->model->where(
@@ -89,8 +89,11 @@ class CategoriaRepository implements CategoriaRepositoryInterface
             }
         );
 
-        foreach ($arrOrder as $column => $direction) {
-            $builder->orderBy($column, $direction);
+        if (!empty($order)) {
+            $arrOrder = json_decode($order, true);
+            foreach ($arrOrder as $column => $direction) {
+                $builder->orderBy($column, $direction);
+            }
         }
 
         $categorias = $builder->get();
@@ -108,11 +111,14 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         if ($filter) {
             $query = $query->where('nome', 'LIKE', "%{$filter}%");
         }
-        $var = json_decode($order);
-        dd($var);
-        foreach ($arrOrder as $column => $direction) {
-            $query->orderBy($column, $direction);
+
+        if (!empty($order)) {
+            $arrOrder = json_decode($order);
+            foreach ($arrOrder as $column => $direction) {
+                $query->orderBy($column, $direction);
+            }
         }
+
         $paginator = $query->paginate(
             page: $page,
             perPage: $totalPage,
