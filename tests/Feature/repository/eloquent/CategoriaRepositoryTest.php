@@ -270,6 +270,24 @@ class CategoriaRepositoryTest extends TestCase
 
         $this->assertInstanceOf(PaginationInterface::class, $response);
         $this->assertCount(0, $response->items());
-    }    
+    }
 
+    public function testPaginateOrderByNomeAsc()
+    {
+        $categoriasModel = CategoriaModel::factory()->count(20)->create();
+        $arrCategorias = $this->repository->paginate(
+            order: '{"nome": "asc"}',
+        );
+
+        $arrNomes = [];
+        foreach ($categoriasModel as $key => $categoriaModel) {
+            array_push($arrNomes, $categoriaModel->nome);
+        }
+        sort($arrNomes);
+
+        foreach ($arrCategorias->items() as $key => $categoria) {
+            dump($categoria->nome);
+            $this->assertEquals($arrNomes[$key], $categoria->nome);
+        }
+    }
 }
