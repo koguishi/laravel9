@@ -164,7 +164,7 @@ class CategoriaRepositoryTest extends TestCase
     {
         $categoriasModel = CategoriaModel::factory()->count(20)->create();
         $arrCategorias = $this->repository->readAll(
-            arrOrder: [ 'nome' => 'asc' ],
+            order: '{"nome": "asc"}',
         );
         $this->assertEquals(count($categoriasModel), count($arrCategorias));
 

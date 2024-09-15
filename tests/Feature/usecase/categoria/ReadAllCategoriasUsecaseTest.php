@@ -82,7 +82,7 @@ class ReadAllCategoriasUsecaseTest extends TestCase
         $useCase = new ReadAllCategoriasUsecase($repository);
         $responseUseCase = $useCase->execute(
             new ReadAllCategoriasInput(
-                arrOrder: ['nome' => 'ASC'],
+                order: '{"nome": "ASC"}',
             )
         );
 
