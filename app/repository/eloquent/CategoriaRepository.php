@@ -115,7 +115,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         if (!empty($order)) {
             $arrOrder = json_decode($order);
             foreach ($arrOrder as $column => $direction) {
-                $query->orderBy($column, $direction);
+                $query = $query->orderBy($column, $direction);
             }
         }
 
