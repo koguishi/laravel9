@@ -60,4 +60,20 @@ class AtletaTest extends TestCase
             $this->assertEquals("Nome deve ter no mínimo 3 caracteres", $th->getMessage());
         }
     }
+
+    public function testExceptionNomeMaiorQue100()
+    {
+        try {
+            new Atleta(
+                nome: random_bytes(101),
+                dtNascimento: new DateTime(),
+            );
+
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("Nome deve ter no máximo 100 caracteres", $th->getMessage());
+        }
+    }
+
 }
