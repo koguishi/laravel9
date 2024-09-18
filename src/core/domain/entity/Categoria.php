@@ -27,11 +27,11 @@ class Categoria
     private function validate()
     {
         $nomeMinLen = 3;
-        DomainValidation::strMinLen($this->nome, $nomeMinLen, 'Nome deve ter no mínimo {$nomeMinLen} caracteres');
+        DomainValidation::strMinLen($this->nome, $nomeMinLen, "Nome deve ter no mínimo {$nomeMinLen} caracteres");
         $nomeMaxLen = 100;
-        DomainValidation::strMaxLen($this->nome, $nomeMaxLen, 'Nome deve ter no máximo {$nomeMaxLen} caracteres');
+        DomainValidation::strMaxLen($this->nome, $nomeMaxLen, "Nome deve ter no máximo {$nomeMaxLen} caracteres");
         $descricaoMaxLen = 255;
-        DomainValidation::strCanNullButMaxLen($this->descricao, $descricaoMaxLen, 'Descrição deve ter no máximo {$descricaoMaxLen} caracteres');
+        DomainValidation::strCanNullButMaxLen($this->descricao, $descricaoMaxLen, "Descrição deve ter no máximo {$descricaoMaxLen} caracteres");
     }
 
     public function desativar()
