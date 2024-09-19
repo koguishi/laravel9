@@ -76,7 +76,7 @@ class AtletaTest extends TestCase
         }
     }
     
-    public function testExceptionDtNascimentoHojeEmDiante()
+    public function testExceptionDtNascimentoMaiorQueHoje()
     {
         try {
             $atleta = new Atleta(
@@ -91,7 +91,7 @@ class AtletaTest extends TestCase
         }
     }
 
-    public function testExceptionDtNascimento100Anos()
+    public function testExceptionDtNascimentoMenorQue100Anos()
     {
         // Cria um objeto DateTime com a data atual
         $data = new DateTime(today());
