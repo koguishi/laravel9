@@ -31,4 +31,13 @@ class Atleta
         DomainValidation::notAfterToday($this->dtNascimento, "Data de nascimento não pode ser posterior a hoje");
         DomainValidation::notBefore100Years($this->dtNascimento, "Data de nascimento não pode ser anterior a 100 anos");
     }
+
+    public function alterar(
+        ?string $nome = null,
+        ?DateTime $dtNascimento = null,
+    )
+    {
+        $this->nome = $nome ?? $this->nome;
+        $this->dtNascimento = $dtNascimento ?? $this->dtNascimento;
+    }
 }
