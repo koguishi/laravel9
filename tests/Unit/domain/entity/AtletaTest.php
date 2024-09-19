@@ -137,4 +137,20 @@ class AtletaTest extends TestCase
         $this->assertEquals($uuid, $atleta->id());
         $this->assertEquals($criadoEm, $atleta->criadoEm);
     }
+
+    public function testExceptionAlterarNomeMenorQue3()
+    {
+        try {
+            $atleta = new Atleta(
+                nome: 'AAA',
+                dtNascimento: new DateTime('2000-01-01'),
+            );
+            $atleta->alterar(nome: 'AA');
+
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("Nome deve ter no mínimo 3 caracteres", $th->getMessage());
+        }
+    }    
 }
