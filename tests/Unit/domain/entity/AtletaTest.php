@@ -111,5 +111,30 @@ class AtletaTest extends TestCase
         }
     }
 
+    public function testAlterarAluno() {
+        $uuid = (string) RamseyUuid::uuid4();
 
+        $nome = 'Atleta já cadastrado';
+        $criadoEm = new DateTime(date('Y-m-d H:i:s'));
+        $dtNascimento = new DateTime('1974-10-08');
+
+        $atleta = new Atleta(
+            nome: $nome,
+            dtNascimento: $dtNascimento,
+            id: new Uuid($uuid),
+            criadoEm: $criadoEm
+        );
+        $nomeAlterado = 'Nome Alterado';
+        $dtNascimentoAlterado = new DateTime('2004-10-08');
+
+        $atleta->alterar(
+            nome: $nomeAlterado,
+            dtNascimento: $dtNascimentoAlterado,
+        );
+
+        $this->assertEquals($nomeAlterado, $atleta->nome);
+        $this->assertEquals($dtNascimentoAlterado, $atleta->dtNascimento);
+        $this->assertEquals($uuid, $atleta->id());
+        $this->assertEquals($criadoEm, $atleta->criadoEm);
+    }
 }
