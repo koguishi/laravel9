@@ -91,4 +91,25 @@ class AtletaTest extends TestCase
         }
     }
 
+    public function testExceptionDtNascimento100Anos()
+    {
+        // Cria um objeto DateTime com a data atual
+        $data = new DateTime(today());
+        
+        // Subtrai 150 anos
+        $data->modify('-100 years');
+        try {
+            $atleta = new Atleta(
+                nome: random_bytes(100),
+                dtNascimento: $data,
+            );
+
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("Data de nascimento não pode ser anterior a 100 anos", $th->getMessage());
+        }
+    }
+
+
 }
