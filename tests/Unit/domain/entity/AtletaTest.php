@@ -93,15 +93,10 @@ class AtletaTest extends TestCase
 
     public function testExceptionDtNascimentoMenorQue100Anos()
     {
-        // Cria um objeto DateTime com a data atual
-        $data = new DateTime(today());
-        
-        // Subtrai 150 anos
-        $data->modify('-100 years');
         try {
             $atleta = new Atleta(
                 nome: random_bytes(100),
-                dtNascimento: $data,
+                dtNascimento: $this->dataAtualMenos100Anos(),
             );
 
             $this->assertTrue(false);
@@ -194,19 +189,21 @@ class AtletaTest extends TestCase
                 dtNascimento: new DateTime('2000-01-01'),
             );
 
-            // Cria um objeto DateTime com a data atual
-            $data = new DateTime(today());
-                
-            // Subtrai 150 anos
-            $data->modify('-100 years');
-
-            $atleta->alterar(dtNascimento: $data);
+            $atleta->alterar(dtNascimento: $this->dataAtualMenos100Anos());
 
             $this->assertTrue(false);
         } catch (\Throwable $th) {
             $this->assertInstanceOf(EntityValidationException::class, $th);
             $this->assertEquals("Data de nascimento não pode ser anterior a 100 anos", $th->getMessage());
         }
+    }
+
+    private function dataAtualMenos100Anos() : DateTime
+    {
+        // Cria um objeto DateTime com a data atual
+        $data = new DateTime(today());
+        // Subtrai 100 anos
+        return $data->modify('-100 years');
     }
 
 }
