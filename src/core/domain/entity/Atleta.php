@@ -29,5 +29,6 @@ class Atleta
         $nomeMaxLen = 100;
         DomainValidation::strMaxLen($this->nome, $nomeMaxLen, "Nome deve ter no máximo {$nomeMaxLen} caracteres");
         DomainValidation::notAfterToday($this->dtNascimento, "Data de nascimento não pode ser posterior a hoje");
+        DomainValidation::notBefore100Years($this->dtNascimento, "Data de nascimento não pode ser anterior a 100 anos");
     }
 }

@@ -42,9 +42,23 @@ class DomainValidation
             $today = new DateTime(today());
     
             if ($value >= $today) {
-                throw new EntityValidationException($exceptionMessage ?? "Data de nascimento não pode ser posterior a hoje");
+                throw new EntityValidationException($exceptionMessage ?? "Não pode ser posterior a hoje");
             }
         }
     }
+
+    public static function notBefore100Years(DateTime $value, string $exceptionMessage = null)
+    {
+        if ($value) {
+            date_default_timezone_set('America/Sao_Paulo');
+            $dtLimit = new DateTime(today());
+            $dtLimit->modify('-100 years');
+    
+            if ($value <= $dtLimit) {
+                throw new EntityValidationException($exceptionMessage ?? "Não pode ser anterior a 100 anos");
+            }
+        }
+    }
+
 
 }
