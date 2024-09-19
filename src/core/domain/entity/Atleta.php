@@ -39,5 +39,6 @@ class Atleta
     {
         $this->nome = $nome ?? $this->nome;
         $this->dtNascimento = $dtNascimento ?? $this->dtNascimento;
+        $this->validate();
     }
 }
