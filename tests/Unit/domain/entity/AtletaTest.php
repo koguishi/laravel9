@@ -168,6 +168,45 @@ class AtletaTest extends TestCase
             $this->assertInstanceOf(EntityValidationException::class, $th);
             $this->assertEquals("Nome deve ter no máximo 100 caracteres", $th->getMessage());
         }
-    }    
+    }
+
+    public function testExceptionAlterarDtNascimentoMaiorQueHoje()
+    {
+        try {
+            $atleta = new Atleta(
+                nome: random_bytes(100),
+                dtNascimento: new DateTime('2000-01-01'),
+            );
+            $atleta->alterar(dtNascimento: new DateTime(today()));
+
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("Data de nascimento não pode ser posterior a hoje", $th->getMessage());
+        }
+    }
+
+    public function testExceptionAlterarDtNascimentoMenorQue100anos()
+    {
+        try {
+            $atleta = new Atleta(
+                nome: random_bytes(100),
+                dtNascimento: new DateTime('2000-01-01'),
+            );
+
+            // Cria um objeto DateTime com a data atual
+            $data = new DateTime(today());
+                
+            // Subtrai 150 anos
+            $data->modify('-100 years');
+
+            $atleta->alterar(dtNascimento: $data);
+
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("Data de nascimento não pode ser anterior a 100 anos", $th->getMessage());
+        }
+    }
 
 }
