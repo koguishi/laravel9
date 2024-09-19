@@ -3,6 +3,7 @@
 namespace core\domain\validation;
 
 use core\domain\exception\EntityValidationException;
+use DateTime;
 
 class DomainValidation
 {
@@ -33,4 +34,17 @@ class DomainValidation
             throw new EntityValidationException($exceptionMessage ?? 'Não pode ser maior que {$max}');
         }
     }
+
+    public static function notAfterToday(DateTime $value, string $exceptionMessage = null)
+    {
+        if ($value) {
+            date_default_timezone_set('America/Sao_Paulo');
+            $today = new DateTime(today());
+    
+            if ($value >= $today) {
+                throw new EntityValidationException($exceptionMessage ?? "Data de nascimento não pode ser posterior a hoje");
+            }
+        }
+    }
+
 }

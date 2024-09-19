@@ -28,6 +28,6 @@ class Atleta
         DomainValidation::strMinLen($this->nome, $nomeMinLen, "Nome deve ter no mínimo {$nomeMinLen} caracteres");
         $nomeMaxLen = 100;
         DomainValidation::strMaxLen($this->nome, $nomeMaxLen, "Nome deve ter no máximo {$nomeMaxLen} caracteres");
-        // DomainValidation::notNull($this->dtNascimento)
+        DomainValidation::notAfterToday($this->dtNascimento, "Data de nascimento não pode ser posterior a hoje");
     }
 }
