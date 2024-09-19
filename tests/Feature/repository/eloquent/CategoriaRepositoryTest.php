@@ -286,7 +286,6 @@ class CategoriaRepositoryTest extends TestCase
         sort($arrNomes);
 
         foreach ($arrCategorias->items() as $key => $categoria) {
-            dump($categoria->nome);
             $this->assertEquals($arrNomes[$key], $categoria->nome);
         }
     }
