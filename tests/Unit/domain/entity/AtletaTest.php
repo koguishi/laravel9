@@ -51,7 +51,7 @@ class AtletaTest extends TestCase
         try {
             new Atleta(
                 nome: 'AA',
-                dtNascimento: new DateTime(),
+                dtNascimento: new DateTime('2000-01-01'),
             );
 
             $this->assertTrue(false);
@@ -66,7 +66,7 @@ class AtletaTest extends TestCase
         try {
             new Atleta(
                 nome: random_bytes(101),
-                dtNascimento: new DateTime(),
+                dtNascimento: new DateTime('2000-01-01'),
             );
 
             $this->assertTrue(false);
