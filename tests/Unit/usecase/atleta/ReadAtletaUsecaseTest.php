@@ -27,7 +27,7 @@ class ReadAtletaUsecaseTest extends TestCase
         $uuid = (string) RamseyUuid::uuid4();
         $atleta = new Atleta(
             id: new Uuid($uuid),
-            nome: 'categoria A',
+            nome: 'Nome do Atleta',
             dtNascimento: new DateTime('2001-01-01'),
         );
 

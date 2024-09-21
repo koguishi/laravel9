@@ -23,7 +23,7 @@ class CreateAtletaUsecaseTest extends TestCase
     public function testCreateAtleta()
     {
         $atleta = new Atleta(
-            nome: 'categoria A',
+            nome: 'Nome do Atleta',
             dtNascimento: new DateTime('2001-01-01'),
         );
 
