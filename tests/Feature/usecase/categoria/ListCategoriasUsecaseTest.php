@@ -4,35 +4,35 @@ namespace Tests\Feature\usecase\categoria;
 
 use App\Models\Categoria as Model;
 use app\repository\eloquent\CategoriaRepository;
-use core\usecase\categoria\ReadAllCategoriasInput;
-use core\usecase\categoria\ReadAllCategoriasOutput;
-use core\usecase\categoria\ReadAllCategoriasUsecase;
+use core\usecase\categoria\ListCategoriasInput;
+use core\usecase\categoria\ListCategoriasOutput;
+use core\usecase\categoria\ListCategoriasUsecase;
 use Tests\TestCase;
 
-class ReadAllCategoriasUsecaseTest extends TestCase
+class ListCategoriasUsecaseTest extends TestCase
 {
     public function testReadAll()
     {
         $categoriasModel = Model::factory()->count(20)->create();
         $repository = new CategoriaRepository(new Model());
-        $useCase = new ReadAllCategoriasUsecase($repository);
+        $useCase = new ListCategoriasUsecase($repository);
         $responseUseCase = $useCase->execute(
-            new ReadAllCategoriasInput()
+            new ListCategoriasInput()
         );
 
-        $this->assertInstanceOf(ReadAllCategoriasOutput::class, $responseUseCase);
+        $this->assertInstanceOf(ListCategoriasOutput::class, $responseUseCase);
         $this->assertEquals(count($categoriasModel), count($responseUseCase->items));
     }
 
     public function testReadAllEmpty()
     {
         $repository = new CategoriaRepository(new Model());
-        $useCase = new ReadAllCategoriasUsecase($repository);
+        $useCase = new ListCategoriasUsecase($repository);
         $responseUseCase = $useCase->execute(
-            new ReadAllCategoriasInput()
+            new ListCategoriasInput()
         );
 
-        $this->assertInstanceOf(ReadAllCategoriasOutput::class, $responseUseCase);
+        $this->assertInstanceOf(ListCategoriasOutput::class, $responseUseCase);
         $this->assertCount(0, $responseUseCase->items);
     }
 
@@ -40,14 +40,14 @@ class ReadAllCategoriasUsecaseTest extends TestCase
     {
         $categoriasModel = Model::factory()->count(20)->create();
         $repository = new CategoriaRepository(new Model());
-        $useCase = new ReadAllCategoriasUsecase($repository);
+        $useCase = new ListCategoriasUsecase($repository);
         $responseUseCase = $useCase->execute(
-            new ReadAllCategoriasInput(
+            new ListCategoriasInput(
                 filter: $categoriasModel[0]->nome
             )
         );
 
-        $this->assertInstanceOf(ReadAllCategoriasOutput::class, $responseUseCase);
+        $this->assertInstanceOf(ListCategoriasOutput::class, $responseUseCase);
         $this->assertGreaterThanOrEqual(1, count($responseUseCase->items));
         foreach ($responseUseCase->items as $key => $item) {
             $this->assertTrue(str_contains($item['nome'], $categoriasModel[0]->nome));
@@ -58,14 +58,14 @@ class ReadAllCategoriasUsecaseTest extends TestCase
     {
         $categoriasModel = Model::factory()->count(20)->create();
         $repository = new CategoriaRepository(new Model());
-        $useCase = new ReadAllCategoriasUsecase($repository);
+        $useCase = new ListCategoriasUsecase($repository);
         $responseUseCase = $useCase->execute(
-            new ReadAllCategoriasInput(
+            new ListCategoriasInput(
                 filter: 'filtro qualquer 1234'
             )
         );
 
-        $this->assertInstanceOf(ReadAllCategoriasOutput::class, $responseUseCase);
+        $this->assertInstanceOf(ListCategoriasOutput::class, $responseUseCase);
         $this->assertCount(0, $responseUseCase->items);
     }
 
@@ -79,14 +79,14 @@ class ReadAllCategoriasUsecaseTest extends TestCase
         sort($arrNomes);
 
         $repository = new CategoriaRepository(new Model());
-        $useCase = new ReadAllCategoriasUsecase($repository);
+        $useCase = new ListCategoriasUsecase($repository);
         $responseUseCase = $useCase->execute(
-            new ReadAllCategoriasInput(
+            new ListCategoriasInput(
                 order: '{"nome": "ASC"}',
             )
         );
 
-        $this->assertInstanceOf(ReadAllCategoriasOutput::class, $responseUseCase);
+        $this->assertInstanceOf(ListCategoriasOutput::class, $responseUseCase);
         $this->assertEquals(count($categoriasModel), count($responseUseCase->items));
 
         foreach ($responseUseCase->items as $key => $item) {
