@@ -11,7 +11,7 @@ interface CategoriaRepositoryInterface
     public function update(Categoria $categoria): Categoria;
     public function delete(string $id): bool;
 
-    public function readAll(string $filter = '', string $order = ''): array;
+    public function list(string $filter = '', string $order = ''): array;
     public function paginate(
         string $filter = '',
         string $order = '',

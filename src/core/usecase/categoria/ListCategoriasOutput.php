@@ -2,7 +2,7 @@
 
 namespace core\usecase\categoria;
 
-class ReadAllCategoriasOutput
+class ListCategoriasOutput
 {
     public function __construct(
         public array $items,

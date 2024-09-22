@@ -2,7 +2,7 @@
 
 namespace core\usecase\categoria;
 
-class ReadAllCategoriasInput
+class ListCategoriasInput
 {
     public function __construct(
         public string $filter = '',

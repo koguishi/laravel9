@@ -4,22 +4,22 @@ namespace Tests\Unit\usecase\categoria;
 
 use core\domain\entity\Categoria;
 use core\domain\repository\CategoriaRepositoryInterface;
-use core\usecase\categoria\ReadAllCategoriasInput;
-use core\usecase\categoria\ReadAllCategoriasOutput;
-use core\usecase\categoria\ReadAllCategoriasUsecase;
+use core\usecase\categoria\ListCategoriasInput;
+use core\usecase\categoria\ListCategoriasOutput;
+use core\usecase\categoria\ListCategoriasUsecase;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class ReadAllCategoriasUsecaseTest extends TestCase
+class ListCategoriasUsecaseTest extends TestCase
 {
     public function tearDown(): void
     {
         Mockery::close();
     }
 
-    public function testReadAllCategorias()
+    public function testListCategorias()
     {
         $categoriaA = new Categoria(
             nome: 'categoria A',
@@ -38,15 +38,15 @@ class ReadAllCategoriasUsecaseTest extends TestCase
             stdClass::class,
             CategoriaRepositoryInterface::class,
         );
-        $mockRepo->shouldReceive('readAll')->andReturn($categorias);
+        $mockRepo->shouldReceive('list')->andReturn($categorias);
 
-        $input = new ReadAllCategoriasInput();
+        $input = new ListCategoriasInput();
 
-        $usecase = new ReadAllCategoriasUsecase($mockRepo);
+        $usecase = new ListCategoriasUsecase($mockRepo);
         $response = $usecase->execute($input);
 
-        $mockRepo->shouldHaveReceived('readAll');
-        $this->assertInstanceOf(ReadAllCategoriasOutput::class, $response);
+        $mockRepo->shouldHaveReceived('list');
+        $this->assertInstanceOf(ListCategoriasOutput::class, $response);
         $this->assertCount(2, $response->items);
         $this->assertContains($categoriaA, $response->items);
         $this->assertContains($categoriaB, $response->items);

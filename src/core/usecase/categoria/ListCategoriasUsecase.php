@@ -4,7 +4,7 @@ namespace core\usecase\categoria;
 
 use core\domain\repository\CategoriaRepositoryInterface;
 
-class ReadAllCategoriasUsecase
+class ListCategoriasUsecase
 {
     protected CategoriaRepositoryInterface $repository;
 
@@ -13,14 +13,14 @@ class ReadAllCategoriasUsecase
         $this->repository = $repository;
     }
 
-    public function execute(ReadAllCategoriasInput $input): ReadAllCategoriasOutput
+    public function execute(ListCategoriasInput $input): ListCategoriasOutput
     {
-        $categorias = $this->repository->readAll(
+        $categorias = $this->repository->list(
             filter: $input->filter,
             order: $input->order,
         );
 
-        return new ReadAllCategoriasOutput(
+        return new ListCategoriasOutput(
             items: $categorias,
         );
     }
