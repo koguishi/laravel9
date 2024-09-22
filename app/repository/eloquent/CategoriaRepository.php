@@ -75,7 +75,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         return $categoriaDb->delete();
     }
 
-    public function readAll(
+    public function list(
         string $filter = '',
         string $order = ''
     ): array

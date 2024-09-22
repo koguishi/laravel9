@@ -152,18 +152,18 @@ class CategoriaRepositoryTest extends TestCase
         }
     }
 
-    public function testReadAll()
+    public function testList()
     {
         $categorias = CategoriaModel::factory()->count(20)->create();
-        $response = $this->repository->readAll();
+        $response = $this->repository->list();
         $this->assertEquals(count($categorias), count($response));
         // TODO: checar o conteudo de $categorias e $response
     }
 
-    public function testReadAllOrderByNomeAsc()
+    public function testListOrderByNomeAsc()
     {
         $categoriasModel = CategoriaModel::factory()->count(20)->create();
-        $arrCategorias = $this->repository->readAll(
+        $arrCategorias = $this->repository->list(
             order: '{"nome": "asc"}',
         );
         $this->assertEquals(count($categoriasModel), count($arrCategorias));
@@ -179,11 +179,11 @@ class CategoriaRepositoryTest extends TestCase
         }
     }
 
-    public function testReadAllFilterByNome()
+    public function testListFilterByNome()
     {
         $categoriasModel = CategoriaModel::factory()->count(50)->create();
 
-        $arrCategorias = $this->repository->readAll(
+        $arrCategorias = $this->repository->list(
             filter: $categoriasModel[0]->nome
         );
         $this->assertGreaterThanOrEqual(1, count($arrCategorias));
@@ -191,7 +191,7 @@ class CategoriaRepositoryTest extends TestCase
             $this->assertEquals($categoriasModel[0]->nome, $arrCategorias[$key]['nome']);
         }
 
-        $arrCategorias = $this->repository->readAll(
+        $arrCategorias = $this->repository->list(
             filter: $categoriasModel[count($categoriasModel)-1]->nome
         );
         $this->assertGreaterThanOrEqual(1, count($arrCategorias));
@@ -204,11 +204,11 @@ class CategoriaRepositoryTest extends TestCase
     }
 
 
-    public function testReadAllFilterByDescricao()
+    public function testListFilterByDescricao()
     {
         $categoriasModel = CategoriaModel::factory()->count(50)->create();
 
-        $arrCategorias = $this->repository->readAll(
+        $arrCategorias = $this->repository->list(
             filter: $categoriasModel[0]->descricao
         );
         $this->assertGreaterThanOrEqual(1, count($arrCategorias));
@@ -219,7 +219,7 @@ class CategoriaRepositoryTest extends TestCase
             );
         }
 
-        $arrCategorias = $this->repository->readAll(
+        $arrCategorias = $this->repository->list(
             filter: $categoriasModel[count($categoriasModel)-1]->descricao
         );
         $this->assertGreaterThanOrEqual(1, count($arrCategorias));
@@ -231,10 +231,10 @@ class CategoriaRepositoryTest extends TestCase
         }
     }
 
-    public function testReadAllFilterNotFound()
+    public function testListFilterNotFound()
     {
         $categoriasModel = CategoriaModel::factory()->count(50)->create();
-        $arrCategorias = $this->repository->readAll(
+        $arrCategorias = $this->repository->list(
             filter: 'xyz'
         );
         $this->assertEquals(0, count($arrCategorias));
