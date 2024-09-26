@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\repository\eloquent;
 
-use App\Models\Atleta as AtletaModel;
+use app\Models\Atleta as AtletaModel;
 use app\repository\eloquent\AtletaRepository;
 use core\domain\entity\Atleta;
 use core\domain\repository\AtletaRepositoryInterface;
