@@ -22,15 +22,7 @@ class AtletaFactory extends Factory
         return [
             'id' => (string) Str::uuid(),
             'nome' => $this->faker->name(),
-            'dtNascimento' => $this->dataAtualMenos10Anos(),
+            'dtNascimento' => $this->faker->dateTimeBetween('-100 years', 'now'),
         ];
     }
-
-    private function dataAtualMenos10Anos() : DateTime
-    {
-        // Cria um objeto DateTime com a data atual
-        $data = new DateTime(today());
-        // Subtrai 100 anos
-        return $data->modify('-10 years');
-    }    
 }
