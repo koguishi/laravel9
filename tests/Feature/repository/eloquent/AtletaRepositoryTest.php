@@ -5,9 +5,11 @@ namespace Tests\Feature\repository\eloquent;
 use App\Models\Atleta as AtletaModel;
 use app\repository\eloquent\AtletaRepository;
 use core\domain\entity\Atleta;
+use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
 use DateTime;
 use Tests\TestCase;
+use Throwable;
 
 class AtletaRepositoryTest extends TestCase
 {
@@ -58,5 +60,16 @@ class AtletaRepositoryTest extends TestCase
         $this->assertEquals($atletaB->id, $responseB->id);
         $this->assertEquals($atletaB->nome, $responseB->nome);
         $this->assertEquals($atletaB->dtNascimento, $responseB->dtNascimento);
+    }
+
+    public function testReadNotFound()
+    {
+        try {
+            $this->repository->read('fakeValue');
+
+            $this->assertTrue(false);
+        } catch (Throwable $th) {
+            $this->assertInstanceOf(NotFoundException::class, $th);
+        }
     }
 }
