@@ -72,4 +72,31 @@ class AtletaRepositoryTest extends TestCase
             $this->assertInstanceOf(NotFoundException::class, $th);
         }
     }
+
+    public function testUpdate()
+    {
+        $atletaA = AtletaModel::factory()->create();
+        $this->assertDatabaseHas('atletas', [
+            'nome' => $atletaA->nome,
+            'dtNascimento' => $atletaA->dtNascimento
+        ]);
+
+        $responseA = $this->repository->read($atletaA->id);
+        $responseA->alterar(
+            $responseA->nome . 'ALTERADO',
+            AtletaModel::factory()->valid_dtNascimento(),
+        );
+        $this->repository->update($responseA);
+        $this->assertDatabaseHas('atletas', [
+            'nome' => $responseA->nome,
+            'dtNascimento' => $responseA->dtNascimento,
+        ]);
+
+        $this->assertDatabaseMissing('atletas', [
+            'nome' => $atletaA->nome,
+        ]);
+        $this->assertDatabaseMissing('atletas', [
+            'dtNascimento' => $atletaA->dtNascimento,
+        ]);
+    }
 }
