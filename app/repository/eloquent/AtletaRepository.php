@@ -4,6 +4,7 @@ namespace app\repository\eloquent;
 
 use App\Models\Atleta as AtletaModel;
 use core\domain\entity\Atleta;
+use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\PaginationInterface;
 use core\domain\valueobject\Uuid;
@@ -21,7 +22,7 @@ class AtletaRepository implements AtletaRepositoryInterface
         $entity = new Atleta(
             id: new Uuid($object->id),
             nome: $object->nome,
-            dtNascimento: $object->dtNascimento,
+            dtNascimento: new DateTime($object->dtNascimento),
         );
 
         return $entity;
@@ -32,14 +33,18 @@ class AtletaRepository implements AtletaRepositoryInterface
         $atletaDb = $this->model->create([
             'id' => $entity->id(),
             'nome' => $entity->nome,
-            'dtNascimento' => $entity->dtNascimento,
+            'dtNascimento' => $entity->dtNascimento->format('Y-m-d'),
         ]);
         return $this->toEntity($atletaDb);
     }
     
     public function read(string $id): Atleta
     {
-        return new Atleta(nome: '', dtNascimento: new DateTime());
+        $atletaDb = $this->model->find($id);
+        if (! $atletaDb) {
+            throw new NotFoundException('Atleta not found');
+        }
+        return $this->toEntity($atletaDb);
     }
 
     public function update(Atleta $entity): Atleta
