@@ -66,7 +66,11 @@ class AtletaRepository implements AtletaRepositoryInterface
 
     public function delete(string $id): bool
     {
-        return true;
+        $atletaDb = $this->model->find($id);
+        if (! $atletaDb) {
+            throw new NotFoundException('Atleta not found');
+        }        
+        return $atletaDb->delete();
     }
 
     public function list(
