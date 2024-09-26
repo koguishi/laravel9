@@ -49,7 +49,19 @@ class AtletaRepository implements AtletaRepositoryInterface
 
     public function update(Atleta $entity): Atleta
     {
-        return new Atleta(nome: '', dtNascimento: new DateTime());
+        $atletaDb = $this->model->find($entity->id());
+        if (! $atletaDb) {
+            throw new NotFoundException('Atleta not found');
+        }        
+
+        $atletaDb->update([
+            'nome' => $entity->nome,
+            'dtNascimento' => $entity->dtNascimento,
+        ]);
+
+        $atletaDb->refresh();
+
+        return $this->toEntity($atletaDb);        
     }
 
     public function delete(string $id): bool
