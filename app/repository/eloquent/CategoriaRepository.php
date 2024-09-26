@@ -63,7 +63,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
 
         $categoriaDb->refresh();
 
-        return $this->toEntity($categoriaDb);        
+        return $this->toEntity($categoriaDb);
     }
 
     public function delete(string $id): bool
