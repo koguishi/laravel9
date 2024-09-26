@@ -25,4 +25,9 @@ class AtletaFactory extends Factory
             'dtNascimento' => $this->faker->dateTimeBetween('-100 years', 'now'),
         ];
     }
+
+    public function valid_dtNascimento(): DateTime
+    {
+        return $this->faker->dateTimeBetween('-100 years', 'now');
+    }
 }
