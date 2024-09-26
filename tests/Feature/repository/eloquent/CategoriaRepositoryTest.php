@@ -49,21 +49,17 @@ class CategoriaRepositoryTest extends TestCase
 
         $responseA = $this->repository->read($categoriaA->id);
         $this->assertInstanceOf(CategoriaEntity::class, $responseA);
-        $this->assertDatabaseHas('categorias', [
-            'nome' => $categoriaA->nome,
-            'descricao' => $categoriaA->descricao,
-            'ativo' => $categoriaA->ativo,
-            'created_at' => $categoriaA->created_at,
-        ]);
+        $this->assertEquals($categoriaA->id, $responseA->id);
+        $this->assertEquals($categoriaA->nome, $responseA->nome);
+        $this->assertEquals($categoriaA->descricao, $responseA->descricao);
+        $this->assertEquals($categoriaA->ativo, $responseA->ativo);
 
         $responseB = $this->repository->read($categoriaB->id);
         $this->assertInstanceOf(CategoriaEntity::class, $responseB);
-        $this->assertDatabaseHas('categorias', [
-            'nome' => $categoriaB->nome,
-            'descricao' => $categoriaB->descricao,
-            'ativo' => $categoriaB->ativo,
-            'created_at' => $categoriaB->created_at,
-        ]);
+        $this->assertEquals($categoriaB->id, $responseB->id);
+        $this->assertEquals($categoriaB->nome, $responseB->nome);
+        $this->assertEquals($categoriaB->descricao, $responseB->descricao);
+        $this->assertEquals($categoriaB->ativo, $responseB->ativo);
     }
 
     public function testReadNotFound()
