@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\repository\eloquent;
 
-use app\Models\Atleta as AtletaModel;
+use App\Models\Atleta as AtletaModel;
 use app\repository\eloquent\AtletaRepository;
 use core\domain\entity\Atleta;
 use core\domain\repository\AtletaRepositoryInterface;
@@ -40,6 +40,23 @@ class AtletaRepositoryTest extends TestCase
             'dtNascimento' => $entity->dtNascimento(),
             'created_at' => $entity->criadoEm(),
         ]);
-    }    
+    }
 
+    public function testRead()
+    {
+        $atletaA = AtletaModel::factory()->create();
+        $atletaB = AtletaModel::factory()->create();
+
+        $responseA = $this->repository->read($atletaA->id);
+        $this->assertInstanceOf(Atleta::class, $responseA);
+        $this->assertEquals($atletaA->id, $responseA->id);
+        $this->assertEquals($atletaA->nome, $responseA->nome);
+        $this->assertEquals($atletaA->dtNascimento, $responseA->dtNascimento);
+
+        $responseB = $this->repository->read($atletaB->id);
+        $this->assertInstanceOf(Atleta::class, $responseB);
+        $this->assertEquals($atletaB->id, $responseB->id);
+        $this->assertEquals($atletaB->nome, $responseB->nome);
+        $this->assertEquals($atletaB->dtNascimento, $responseB->dtNascimento);
+    }
 }
