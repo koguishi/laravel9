@@ -2,7 +2,7 @@
 
 namespace app\repository\eloquent;
 
-use app\Models\Atleta as AtletaModel;
+use App\Models\Atleta as AtletaModel;
 use core\domain\entity\Atleta;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\PaginationInterface;
