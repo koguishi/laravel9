@@ -22,6 +22,11 @@ class Atleta
         $this->validate();
     }
 
+    public function dtNascimento(): string
+    {
+        return $this->dtNascimento->format('Y-m-d H:i:s');
+    }    
+
     private function validate()
     {
         $nomeMinLen = 3;
