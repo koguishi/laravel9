@@ -6,6 +6,7 @@ use App\Models\Atleta as AtletaModel;
 use core\domain\entity\Atleta;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\PaginationInterface;
+use core\domain\valueobject\Uuid;
 use DateTime;
 
 class AtletaRepository implements AtletaRepositoryInterface
@@ -16,9 +17,24 @@ class AtletaRepository implements AtletaRepositoryInterface
         $this->model = $model;
     }
 
+    private function toEntity(object $object): Atleta {
+        $entity = new Atleta(
+            id: new Uuid($object->id),
+            nome: $object->nome,
+            dtNascimento: $object->dtNascimento,
+        );
+
+        return $entity;
+    }    
+
     public function create(Atleta $entity): Atleta
     {
-        return new Atleta(nome: '', dtNascimento: new DateTime());
+        $atletaDb = $this->model->create([
+            'id' => $entity->id(),
+            'nome' => $entity->nome,
+            'dtNascimento' => $entity->dtNascimento,
+        ]);
+        return $this->toEntity($atletaDb);
     }
     
     public function read(string $id): Atleta
