@@ -7,7 +7,6 @@ use app\repository\eloquent\AtletaRepository;
 use core\domain\entity\Atleta;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
-use Database\Factories\AtletaFactory;
 use DateTime;
 use Tests\TestCase;
 use Throwable;
@@ -115,4 +114,27 @@ class AtletaRepositoryTest extends TestCase
             $this->assertInstanceOf(NotFoundException::class, $th);
         }
     }
+
+    public function testDelete()
+    {
+        $atletaA = AtletaModel::factory()->create();
+        $this->assertDatabaseHas('atletas', [
+            'nome' => $atletaA->nome,
+            'dtNascimento' => $atletaA->dtNascimento
+        ]);
+
+        $this->repository->delete($atletaA->id);
+        $this->assertSoftDeleted($atletaA);
+    }
+
+    public function testDeleteNotFound()
+    {
+        try {
+            $this->repository->delete('fakeValue');
+
+            $this->assertTrue(false);
+        } catch (Throwable $th) {
+            $this->assertInstanceOf(NotFoundException::class, $th);
+        }
+    }    
 }
