@@ -7,6 +7,7 @@ use app\repository\eloquent\AtletaRepository;
 use core\domain\entity\Atleta;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
+use Database\Factories\AtletaFactory;
 use DateTime;
 use Tests\TestCase;
 use Throwable;
@@ -98,5 +99,20 @@ class AtletaRepositoryTest extends TestCase
         $this->assertDatabaseMissing('atletas', [
             'dtNascimento' => $atletaA->dtNascimento,
         ]);
+    }
+
+    public function testUpdateNotFound()
+    {
+        $entity = New Atleta(
+            nome: 'nome qualquer',
+            dtNascimento: AtletaModel::factory()->valid_dtNascimento(),
+        );
+        try {
+            $this->repository->update($entity);
+
+            $this->assertTrue(false);
+        } catch (Throwable $th) {
+            $this->assertInstanceOf(NotFoundException::class, $th);
+        }
     }
 }
