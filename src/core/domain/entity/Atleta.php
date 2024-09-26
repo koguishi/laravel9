@@ -24,7 +24,7 @@ class Atleta
 
     public function dtNascimento(): string
     {
-        return $this->dtNascimento->format('Y-m-d H:i:s');
+        return $this->dtNascimento->format('Y-m-d');
     }    
 
     private function validate()
