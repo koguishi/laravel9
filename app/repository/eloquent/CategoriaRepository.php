@@ -43,7 +43,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
     {
         $categoriaDb = $this->model->find($id);
         if (! $categoriaDb) {
-            throw new NotFoundException('Categoria não encontrada');
+            throw new NotFoundException('Categoria not found');
         }
         return $this->toEntity($categoriaDb);
     }
@@ -52,7 +52,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
     {
         $categoriaDb = $this->model->find($entity->id());
         if (! $categoriaDb) {
-            throw new NotFoundException('Categoria não encontrada');
+            throw new NotFoundException('Categoria not found');
         }        
 
         $categoriaDb->update([
@@ -70,8 +70,8 @@ class CategoriaRepository implements CategoriaRepositoryInterface
     {
         $categoriaDb = $this->model->find($id);
         if (! $categoriaDb) {
-            throw new NotFoundException('Categoria não encontrada');
-        }        
+            throw new NotFoundException('Categoria not found');
+        }
         return $categoriaDb->delete();
     }
 
@@ -97,7 +97,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         }
 
         $categorias = $builder->get();
-        return $categorias->toArray();        
+        return $categorias->toArray();
     }
 
     public function paginate(
