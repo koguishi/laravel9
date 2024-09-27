@@ -78,7 +78,23 @@ class AtletaRepository implements AtletaRepositoryInterface
         string $order = ''
     ): array
     {
-        return [];
+        $builder = $this->model->where(
+            function ($query) use ($filter) {
+                if ($filter) {
+                    $query->where('nome', 'LIKE', "%{$filter}%");
+                }
+            }
+        );
+
+        if (!empty($order)) {
+            $arrOrder = json_decode($order, true);
+            foreach ($arrOrder as $column => $direction) {
+                $builder->orderBy($column, $direction);
+            }
+        }
+
+        $atletas = $builder->get();
+        return $atletas->toArray();
     }
 
     public function paginate(
