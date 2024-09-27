@@ -197,4 +197,24 @@ class AtletaRepositoryTest extends TestCase
         );
         $this->assertEquals(0, count($arrAtletas));
     }    
+
+    public function testListOrderByDtNascimentoAsc()
+    {
+        $atletas = AtletaModel::factory()->count(20)->create();
+        $arrAtletas = $this->repository->list(
+            order: '{"dtNascimento": "asc"}',
+        );
+        $this->assertEquals(count($atletas), count($arrAtletas));
+
+        $arrDatas = [];
+        foreach ($atletas as $key => $atleta) {
+            array_push($arrDatas, $atleta->dtNascimento);
+        }
+        sort($arrDatas);
+
+        foreach ($arrAtletas as $key => $value) {
+            $this->assertEquals($arrDatas[$key]->format('Y-m-d H:i:s'), $arrAtletas[$key]['dtNascimento']);
+        }
+    }
+
 }
