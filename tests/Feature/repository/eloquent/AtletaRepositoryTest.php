@@ -136,5 +136,65 @@ class AtletaRepositoryTest extends TestCase
         } catch (Throwable $th) {
             $this->assertInstanceOf(NotFoundException::class, $th);
         }
+    }
+
+    public function testList()
+    {
+        $atletas = AtletaModel::factory()->count(20)->create();
+        $response = $this->repository->list();
+        $this->assertEquals(count($atletas), count($response));
+        // TODO: checar o conteudo de $atletas e $response
+    }
+
+    public function testListOrderByNomeAsc()
+    {
+        $atletas = AtletaModel::factory()->count(20)->create();
+        $arrAtletas = $this->repository->list(
+            order: '{"nome": "asc"}',
+        );
+        $this->assertEquals(count($atletas), count($arrAtletas));
+
+        $arrNomes = [];
+        foreach ($atletas as $key => $atleta) {
+            array_push($arrNomes, $atleta->nome);
+        }
+        sort($arrNomes);
+
+        foreach ($arrAtletas as $key => $value) {
+            $this->assertEquals($arrNomes[$key], $arrAtletas[$key]['nome']);
+        }
+    }
+
+    public function testListFilterByNome()
+    {
+        $atletas = AtletaModel::factory()->count(50)->create();
+
+        $arrAtletas = $this->repository->list(
+            filter: $atletas[0]->nome
+        );
+        $this->assertGreaterThanOrEqual(1, count($arrAtletas));
+        foreach ($arrAtletas as $key => $value) {
+            $this->assertEquals($atletas[0]->nome, $arrAtletas[$key]['nome']);
+        }
+
+        $arrAtletas = $this->repository->list(
+            filter: $atletas[count($atletas)-1]->nome
+        );
+        $this->assertGreaterThanOrEqual(1, count($arrAtletas));
+        foreach ($arrAtletas as $key => $value) {
+            $this->assertEquals(
+                $atletas[count($atletas)-1]->nome,
+                $arrAtletas[$key]['nome'],
+            );
+        }
+    }
+
+    public function testListFilterNotFound()
+    {
+        $atletas = AtletaModel::factory()->count(50)->create();
+        $arrAtletas = $this->repository->list(
+            filter: 'xyz'
+        );
+        $this->assertEquals(0, count($arrAtletas));
     }    
 }
