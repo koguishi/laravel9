@@ -38,7 +38,6 @@ class CategoriaRepositoryTest extends TestCase
             'nome' => $entity->nome,
             'descricao' => $entity->descricao,
             'ativo' => $entity->ativo,
-//             'created_at' => $entity->criadoEm(),
         ]);
     }
 
@@ -129,12 +128,6 @@ class CategoriaRepositoryTest extends TestCase
 
         $this->repository->delete($categoriaA->id);
         $this->assertSoftDeleted($categoriaA);
-        // $this->assertDatabaseMissing('categorias', [
-        //     'nome' => $categoriaA->nome,
-        // ]);
-        // $this->assertDatabaseMissing('categorias', [
-        //     'descricao' => $categoriaA->descricao,
-        // ]);
     }
 
     public function testDeleteNotFound()
@@ -198,7 +191,6 @@ class CategoriaRepositoryTest extends TestCase
             );
         }
     }
-
 
     public function testListFilterByDescricao()
     {
