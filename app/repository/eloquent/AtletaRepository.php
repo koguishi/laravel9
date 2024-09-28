@@ -3,6 +3,7 @@
 namespace app\repository\eloquent;
 
 use App\Models\Atleta as AtletaModel;
+use app\repository\PaginationPresenter;
 use core\domain\entity\Atleta;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
@@ -108,11 +109,37 @@ class AtletaRepository implements AtletaRepositoryInterface
         int $page = 1,
         int $totalPage = 15,
         string $order = '',
-        string $filter = '',
+        string $filter_nome = '',
         ?DateTime $filter_dtNascimento_inicial = null,
         ?DateTime $filter_dtNascimento_final = null,
     ): PaginationInterface
     {
-        return new PaginationInterface();
+        $query = $this->model;
+
+        if ($filter_nome) {
+            $query = $query->where('nome', 'LIKE', "%{$filter_nome}%");
+        }
+
+        if ($filter_dtNascimento_inicial) {
+            $query = $query->whereDate('dtNascimento', '>=', $filter_dtNascimento_inicial->format('Y-m-d'));
+        }
+
+        if ($filter_dtNascimento_final) {
+            $query = $query->whereDate('dtNascimento', '<=', $filter_dtNascimento_final->format('Y-m-d'));
+        }
+
+        if (!empty($order)) {
+            $arrOrder = json_decode($order);
+            foreach ($arrOrder as $column => $direction) {
+                $query = $query->orderBy($column, $direction);
+            }
+        }
+
+        $paginator = $query->paginate(
+            page: $page,
+            perPage: $totalPage,
+        );
+
+        return new PaginationPresenter($paginator);
     }
 }
