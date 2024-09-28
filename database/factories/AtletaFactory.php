@@ -21,12 +21,13 @@ class AtletaFactory extends Factory
         return [
             'id' => (string) Str::uuid(),
             'nome' => $this->faker->name(),
-            'dtNascimento' => $this->faker->dateTimeBetween('-100 years', 'now'),
+            'dtNascimento' => $this->valid_dtNascimento(),
         ];
     }
 
     public function valid_dtNascimento(): DateTime
     {
-        return $this->faker->dateTimeBetween('-100 years', 'now');
+        $strApenasData = $this->faker->dateTimeBetween('-100 years', 'now')->format('Y-m-d');
+        return new DateTime($strApenasData);
     }
 }

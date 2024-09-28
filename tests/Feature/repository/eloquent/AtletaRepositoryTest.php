@@ -169,6 +169,25 @@ class AtletaRepositoryTest extends TestCase
         }
     }
 
+    public function testListOrderByDtNascimentoAsc()
+    {
+        $atletas = AtletaModel::factory()->count(20)->create();
+        $arrAtletas = $this->repository->list(
+            order: '{"dtNascimento": "asc"}',
+        );
+        $this->assertEquals(count($atletas), count($arrAtletas));
+
+        $arrDatas = [];
+        foreach ($atletas as $key => $atleta) {
+            array_push($arrDatas, $atleta->dtNascimento);
+        }
+        sort($arrDatas);
+
+        foreach ($arrAtletas as $key => $value) {
+            $this->assertEquals($arrDatas[$key]->format('Y-m-d H:i:s'), $arrAtletas[$key]['dtNascimento']);
+        }
+    }
+
     public function testListFilterByNome()
     {
         $atletas = AtletaModel::factory()->count(50)->create();
@@ -195,31 +214,12 @@ class AtletaRepositoryTest extends TestCase
 
     public function testListFilterNotFound()
     {
-        $atletas = AtletaModel::factory()->count(50)->create();
+        AtletaModel::factory()->count(50)->create();
         $arrAtletas = $this->repository->list(
             filter_nome: 'xyz'
         );
         $this->assertEquals(0, count($arrAtletas));
     }    
-
-    public function testListOrderByDtNascimentoAsc()
-    {
-        $atletas = AtletaModel::factory()->count(20)->create();
-        $arrAtletas = $this->repository->list(
-            order: '{"dtNascimento": "asc"}',
-        );
-        $this->assertEquals(count($atletas), count($arrAtletas));
-
-        $arrDatas = [];
-        foreach ($atletas as $key => $atleta) {
-            array_push($arrDatas, $atleta->dtNascimento);
-        }
-        sort($arrDatas);
-
-        foreach ($arrAtletas as $key => $value) {
-            $this->assertEquals($arrDatas[$key]->format('Y-m-d H:i:s'), $arrAtletas[$key]['dtNascimento']);
-        }
-    }
 
     public function testListFilterByDtNascimento()
     {
@@ -272,7 +272,7 @@ class AtletaRepositoryTest extends TestCase
         $primeiraData = new DateTime($arrDatas[0]);
         $ultimaData = new DateTime($arrDatas[5]);
 
-        $primeiraData->modify('-1 days');       
+        $primeiraData->modify('-1 days');
         $ultimaData->modify('+1 days');
 
         $arrAtletas = $this->repository->list(
@@ -298,8 +298,114 @@ class AtletaRepositoryTest extends TestCase
         $this->assertCount(15, $response->items());
     }
 
-    public function testPaginateWithFilter()
+    public function testPaginateOrderByNomeAsc()
     {
-        $this->assertTrue(false);
+        $atletas = AtletaModel::factory()->count(20)->create();
+        $response = $this->repository->paginate(
+            order: '{"nome": "asc"}',
+        );
+        $this->assertCount(15, $response->items());
+
+        $arrNomes = [];
+        foreach ($atletas as $key => $atleta) {
+            array_push($arrNomes, $atleta->nome);
+        }
+        sort($arrNomes);
+
+        foreach ($response->items() as $key => $value) {
+            $this->assertEquals($arrNomes[$key], $value->nome);
+        }
+    }
+
+    public function testPaginateOrderByDtNascimentoAsc()
+    {
+        $atletas = AtletaModel::factory()->count(20)->create();
+        $response = $this->repository->paginate(
+            order: '{"dtNascimento": "asc"}',
+        );
+        $this->assertCount(15, $response->items());
+
+        $arrDatas = [];
+        foreach ($atletas as $key => $atleta) {
+            array_push($arrDatas, $atleta->dtNascimento);
+        }
+        sort($arrDatas);
+
+        foreach ($response->items() as $key => $value) {
+            $this->assertEquals(
+                $arrDatas[$key]->format('Y-m-d H:i:s'),
+                $value->dtNascimento
+            );
+        }
+    }
+
+
+    public function testPaginateFilterByNome()
+    {
+        AtletaModel::factory()->count(20)->create();
+        $atleta = AtletaModel::factory()->create();
+
+        $response = $this->repository->paginate(
+            filter_nome: $atleta->nome
+        );
+
+        $this->assertInstanceOf(PaginationInterface::class, $response);
+        $this->assertCount(1, $response->items());
+        $this->assertEquals($atleta->nome, $response->items()[0]->nome);
+    }
+
+    public function testPaginateFilterNotFound()
+    {
+        AtletaModel::factory()->count(50)->create();
+        $response = $this->repository->paginate(
+            filter_nome: 'xyz'
+        );
+        $this->assertEquals(0, count($response->items()));
+    }
+
+    public function testPaginateFilterByDtNascimento()
+    {
+        $dtNascimento1 = new DateTime('1999-01-23');
+        $dtNascimento2 = new DateTime('2011-04-15');
+        $dtNascimento3 = new DateTime('2021-09-30');
+        AtletaModel::factory(
+            count: 7,
+            state: ['dtNascimento' => $dtNascimento1]
+        )->create();
+
+        AtletaModel::factory(
+            count: 7,
+            state: ['dtNascimento' => $dtNascimento2]
+        )->create();
+
+        AtletaModel::factory(
+            count: 7,
+            state: ['dtNascimento' => $dtNascimento3]
+        )->create();
+
+        $response = $this->repository->paginate(
+            filter_dtNascimento_inicial: $dtNascimento1,
+            filter_dtNascimento_final: $dtNascimento1,
+        );
+        $this->assertCount(7, $response->items());
+
+        $response = $this->repository->paginate(
+            filter_dtNascimento_inicial: $dtNascimento1,
+            filter_dtNascimento_final: $dtNascimento2,
+        );
+        $this->assertCount(14, $response->items());
+
+        $dtNascimento1->modify('-1 days');
+        $dtNascimento3->modify('+1 days');
+
+        $response = $this->repository->paginate(
+            filter_dtNascimento_inicial: $dtNascimento3
+        );
+        $this->assertCount(0, $response->items());
+
+        $response = $this->repository->paginate(
+            filter_dtNascimento_final: $dtNascimento1
+        );
+        $this->assertCount(0, $response->items());
     }
 }
