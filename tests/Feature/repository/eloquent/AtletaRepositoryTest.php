@@ -13,6 +13,9 @@ use Throwable;
 
 class AtletaRepositoryTest extends TestCase
 {
+    /**
+     * @var AtletaRepository
+     */
     protected $repository;
 
     protected function setUp(): void
@@ -170,7 +173,7 @@ class AtletaRepositoryTest extends TestCase
         $atletas = AtletaModel::factory()->count(50)->create();
 
         $arrAtletas = $this->repository->list(
-            filter: $atletas[0]->nome
+            filter_nome: $atletas[0]->nome
         );
         $this->assertGreaterThanOrEqual(1, count($arrAtletas));
         foreach ($arrAtletas as $key => $value) {
@@ -178,7 +181,7 @@ class AtletaRepositoryTest extends TestCase
         }
 
         $arrAtletas = $this->repository->list(
-            filter: $atletas[count($atletas)-1]->nome
+            filter_nome: $atletas[count($atletas)-1]->nome
         );
         $this->assertGreaterThanOrEqual(1, count($arrAtletas));
         foreach ($arrAtletas as $key => $value) {
@@ -193,7 +196,7 @@ class AtletaRepositoryTest extends TestCase
     {
         $atletas = AtletaModel::factory()->count(50)->create();
         $arrAtletas = $this->repository->list(
-            filter: 'xyz'
+            filter_nome: 'xyz'
         );
         $this->assertEquals(0, count($arrAtletas));
     }    
@@ -217,4 +220,70 @@ class AtletaRepositoryTest extends TestCase
         }
     }
 
+    public function testListFilterByDtNascimento()
+    {
+        $arrDatas = [
+            '1999-12-29',
+            '1999-12-30',
+            '1999-12-31',
+            '2000-01-01',
+            '2000-01-02',
+            '2000-01-03',
+        ];
+        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[0]]);
+        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[1]]);
+        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[2]]);
+        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[3]]);
+        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[4]]);
+        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[5]]);
+
+        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[0]]);
+        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[1]]);
+        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[2]]);
+        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[3]]);
+        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[4]]);
+        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[5]]);
+
+        $arrAtletas = $this->repository->list(
+            filter_dtNascimento_inicial: new DateTime($arrDatas[0]),
+            filter_dtNascimento_final: new DateTime($arrDatas[1]),
+        );
+        $this->assertCount(2, $arrAtletas);
+
+        $arrAtletas = $this->repository->list(
+            filter_dtNascimento_inicial: new DateTime($arrDatas[1]),
+            filter_dtNascimento_final: null,
+        );
+        $this->assertCount(5, $arrAtletas);
+
+        $arrAtletas = $this->repository->list(
+            filter_dtNascimento_inicial: null,
+            filter_dtNascimento_final: new DateTime($arrDatas[2]),
+        );
+        $this->assertCount(3, $arrAtletas);
+
+        $arrAtletas = $this->repository->list(
+            filter_dtNascimento_inicial: new DateTime($arrDatas[3]),
+            filter_dtNascimento_final: new DateTime($arrDatas[3]),
+        );
+        $this->assertCount(1, $arrAtletas);
+
+        $primeiraData = new DateTime($arrDatas[0]);
+        $ultimaData = new DateTime($arrDatas[5]);
+
+        $primeiraData->modify('-1 days');       
+        $ultimaData->modify('+1 days');
+
+        $arrAtletas = $this->repository->list(
+            filter_dtNascimento_inicial: $ultimaData,
+            filter_dtNascimento_final: null,
+        );
+        $this->assertCount(0, $arrAtletas);
+
+        $arrAtletas = $this->repository->list(
+            filter_dtNascimento_inicial: null,
+            filter_dtNascimento_final: $primeiraData,
+        );
+        $this->assertCount(0, $arrAtletas);
+    }
 }
