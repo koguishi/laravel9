@@ -18,7 +18,6 @@ class AtletaFactory extends Factory
      */
     public function definition()
     {
-        $descricao = $this->faker->sentence(10);
         return [
             'id' => (string) Str::uuid(),
             'nome' => $this->faker->name(),
