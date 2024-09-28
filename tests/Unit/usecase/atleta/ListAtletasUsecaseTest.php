@@ -48,7 +48,7 @@ class ListAtletasUsecaseTest extends TestCase
         $mockRepo->shouldReceive('list')->andReturn($atletas);
 
         $input = new ListAtletasInput(
-            filter: '',
+            filter_nome: '',
             order: '',
         );
 

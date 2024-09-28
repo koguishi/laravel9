@@ -78,7 +78,6 @@ class AtletaRepository implements AtletaRepositoryInterface
         string $order = '',
         ?DateTime $filter_dtNascimento_inicial = null,
         ?DateTime $filter_dtNascimento_final = null,
-
     ): array
     {
         $query = $this->model;

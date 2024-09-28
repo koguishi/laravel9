@@ -17,7 +17,7 @@ class ListAtletasUsecase
     {
 
         $atletas = $this->repository->list(
-            filter: $input->filter,
+            filter_nome: $input->filter_nome,
             order: $input->order,
         );
 

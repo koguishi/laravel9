@@ -15,8 +15,8 @@ interface AtletaRepositoryInterface
     public function list(
         string $filter_nome = '',
         string $order = '',
-        ?DateTime $filter_dtNascimento_inicial,
-        ?DateTime $filter_dtNascimento_final,
+        ?DateTime $filter_dtNascimento_inicial = null,
+        ?DateTime $filter_dtNascimento_final = null,
     ): array;
 
     public function paginate(
