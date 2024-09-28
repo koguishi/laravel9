@@ -7,6 +7,7 @@ use app\repository\eloquent\AtletaRepository;
 use core\domain\entity\Atleta;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
+use core\domain\repository\PaginationInterface;
 use DateTime;
 use Tests\TestCase;
 use Throwable;
@@ -285,5 +286,20 @@ class AtletaRepositoryTest extends TestCase
             filter_dtNascimento_final: $primeiraData,
         );
         $this->assertCount(0, $arrAtletas);
+    }
+
+    public function testPaginate()
+    {
+        AtletaModel::factory(count: 20)->create();
+
+        $response = $this->repository->paginate();
+
+        $this->assertInstanceOf(PaginationInterface::class, $response);
+        $this->assertCount(15, $response->items());
+    }
+
+    public function testPaginateWithFilter()
+    {
+        $this->assertTrue(false);
     }
 }
