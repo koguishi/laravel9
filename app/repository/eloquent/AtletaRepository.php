@@ -74,27 +74,35 @@ class AtletaRepository implements AtletaRepositoryInterface
     }
 
     public function list(
-        string $filter = '',
-        string $order = ''
+        string $filter_nome = '',
+        string $order = '',
+        ?DateTime $filter_dtNascimento_inicial = null,
+        ?DateTime $filter_dtNascimento_final = null,
+
     ): array
     {
-        $builder = $this->model->where(
-            function ($query) use ($filter) {
-                if ($filter) {
-                    $query->where('nome', 'LIKE', "%{$filter}%");
-                }
-            }
-        );
+        $query = $this->model;
+
+        if ($filter_nome) {
+            $query = $query->where('nome', 'LIKE', "%{$filter_nome}%");
+        }
+
+        if ($filter_dtNascimento_inicial) {
+            $query = $query->whereDate('dtNascimento', '>=', $filter_dtNascimento_inicial->format('Y-m-d'));
+        }
+
+        if ($filter_dtNascimento_final) {
+            $query = $query->whereDate('dtNascimento', '<=', $filter_dtNascimento_final->format('Y-m-d'));
+        }
 
         if (!empty($order)) {
-            $arrOrder = json_decode($order, true);
+            $arrOrder = json_decode($order);
             foreach ($arrOrder as $column => $direction) {
-                $builder->orderBy($column, $direction);
+                $query = $query->orderBy($column, $direction);
             }
         }
 
-        $atletas = $builder->get();
-        return $atletas->toArray();
+        return $query->get()->toArray();
     }
 
     public function paginate(
