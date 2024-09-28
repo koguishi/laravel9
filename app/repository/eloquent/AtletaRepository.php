@@ -74,8 +74,8 @@ class AtletaRepository implements AtletaRepositoryInterface
     }
 
     public function list(
-        string $filter_nome = '',
         string $order = '',
+        string $filter_nome = '',
         ?DateTime $filter_dtNascimento_inicial = null,
         ?DateTime $filter_dtNascimento_final = null,
     ): array
@@ -105,10 +105,12 @@ class AtletaRepository implements AtletaRepositoryInterface
     }
 
     public function paginate(
-        string $filter = '',
-        string $order = '',
         int $page = 1,
-        int $totalPage = 15
+        int $totalPage = 15,
+        string $order = '',
+        string $filter = '',
+        ?DateTime $filter_dtNascimento_inicial = null,
+        ?DateTime $filter_dtNascimento_final = null,
     ): PaginationInterface
     {
         return new PaginationInterface();
