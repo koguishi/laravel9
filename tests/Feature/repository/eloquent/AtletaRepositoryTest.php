@@ -408,4 +408,43 @@ class AtletaRepositoryTest extends TestCase
         );
         $this->assertCount(0, $response->items());
     }
+
+    public function testPaginateFilterByDtNascimentoPagX()
+    {
+        $dtNascimento1 = new DateTime('1999-01-23');
+        $dtNascimento2 = new DateTime('2011-04-15');
+        AtletaModel::factory(
+            count: 7,
+            state: ['dtNascimento' => $dtNascimento1]
+        )->create();
+
+        AtletaModel::factory(
+            count: 7,
+            state: ['dtNascimento' => $dtNascimento2]
+        )->create();
+
+        AtletaModel::factory(
+            count: 10,
+            state: ['dtNascimento' => $dtNascimento1]
+        )->create();
+
+        // total de 17 items com $dtNascimento1
+        $response = $this->repository->paginate(
+            page: 2,
+            filter_dtNascimento_inicial: $dtNascimento1,
+            filter_dtNascimento_final: $dtNascimento1,
+        );
+        // como não passamos o totalPage ele assume o padrão que é 15
+        // portanto, 17 - 15 = 2 itens na segunda página
+        $this->assertCount(2, $response->items());
+
+        // total de 7 items com $dtNascimento2
+        $response = $this->repository->paginate(
+            totalPage: 3,
+            page: 3,
+            filter_dtNascimento_inicial: $dtNascimento2,
+            filter_dtNascimento_final: $dtNascimento2,
+        );
+        $this->assertCount(1, $response->items());
+    }
 }
