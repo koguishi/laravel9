@@ -25,13 +25,13 @@ class UpdateAtletaUsecaseTest extends TestCase
     public function testUpdateAtleta()
     {
         $uuid = (string) RamseyUuid::uuid4();
-        $atleta = new Atleta(
+        $atletaOriginal = new Atleta(
             id: new Uuid($uuid),
             nome: 'Nome do Atleta',
             dtNascimento: new DateTime('2001-01-01'),
         );
 
-        $atleta = new Atleta(
+        $atletaAlterado = new Atleta(
             id: new Uuid($uuid),
             nome: 'Atleta Alterado',
             dtNascimento: new DateTime('2001-01-01'),
@@ -44,13 +44,13 @@ class UpdateAtletaUsecaseTest extends TestCase
             stdClass::class,
             AtletaRepositoryInterface::class,
         );
-        $mockRepo->shouldReceive('read')->andReturn($atleta);
-        $mockRepo->shouldReceive('update')->andReturn($atleta);
+        $mockRepo->shouldReceive('read')->andReturn($atletaOriginal);
+        $mockRepo->shouldReceive('update')->andReturn($atletaAlterado);
 
         $input = new UpdateAtletaInput(
-            id: $atleta->id,
-            nome: $atleta->nome,
-            dtNascimento: $atleta->dtNascimento,
+            id: $atletaAlterado->id,
+            nome: $atletaAlterado->nome,
+            dtNascimento: $atletaAlterado->dtNascimento,
         );
 
         $usecase = new UpdateAtletaUsecase($mockRepo);
@@ -59,9 +59,9 @@ class UpdateAtletaUsecaseTest extends TestCase
         $mockRepo->shouldHaveReceived('update');
 
         $this->assertInstanceOf(UpdateAtletaOutput::class, $response);
-        $this->assertEquals($atleta->id(), $response->id);
-        $this->assertEquals($atleta->nome, $response->nome);
-        $this->assertEquals($atleta->dtNascimento, $response->dtNascimento);
-        $this->assertNotEmpty($atleta->criadoEm(), $response->criadoEm);
+        $this->assertEquals($atletaAlterado->id(), $response->id);
+        $this->assertEquals($atletaAlterado->nome, $response->nome);
+        $this->assertEquals($atletaAlterado->dtNascimento, $response->dtNascimento);
+        $this->assertNotEmpty($atletaAlterado->criadoEm(), $response->criadoEm);
     }
 }
