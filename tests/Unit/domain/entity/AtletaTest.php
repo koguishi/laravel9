@@ -87,7 +87,7 @@ class AtletaTest extends TestCase
             $this->assertTrue(false);
         } catch (\Throwable $th) {
             $this->assertInstanceOf(EntityValidationException::class, $th);
-            $this->assertEquals("Data de nascimento não pode ser posterior a hoje", $th->getMessage());
+            $this->assertEquals("Data de nascimento não pode ser igual ou posterior a hoje", $th->getMessage());
         }
     }
 
@@ -177,7 +177,7 @@ class AtletaTest extends TestCase
             $this->assertTrue(false);
         } catch (\Throwable $th) {
             $this->assertInstanceOf(EntityValidationException::class, $th);
-            $this->assertEquals("Data de nascimento não pode ser posterior a hoje", $th->getMessage());
+            $this->assertEquals("Data de nascimento não pode ser igual ou posterior a hoje", $th->getMessage());
         }
     }
 
