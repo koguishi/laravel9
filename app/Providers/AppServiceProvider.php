@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use app\repository\eloquent\AtletaRepository;
 use app\repository\eloquent\CategoriaRepository;
+use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\CategoriaRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
@@ -37,5 +39,11 @@ class AppServiceProvider extends ServiceProvider
             CategoriaRepositoryInterface::class,
             CategoriaRepository::class
         );
+
+        $this->app->singleton(
+            AtletaRepositoryInterface::class,
+            AtletaRepository::class
+        );
+
     }    
 }
