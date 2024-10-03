@@ -28,7 +28,7 @@ class PaginateAtletasUsecase
                     'id' => $data->id,
                     'nome' => $data->nome,
                     'dtNascimento' => $data->dtNascimento,
-                    'criadoEm' => $data->criadoEm,
+                    'criadoEm' => $data->created_at,
                 ];
             }, $atletas->items()),
             total: $atletas->total(),

@@ -50,7 +50,7 @@ class UpdateAtletaUsecaseTest extends TestCase
         $input = new UpdateAtletaInput(
             id: $atletaAlterado->id,
             nome: $atletaAlterado->nome,
-            dtNascimento: $atletaAlterado->dtNascimento,
+            dtNascimento: $atletaAlterado->dtNascimento->format('Y-m-d'),
         );
 
         $usecase = new UpdateAtletaUsecase($mockRepo);
