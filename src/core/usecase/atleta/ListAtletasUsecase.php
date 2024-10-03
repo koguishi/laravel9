@@ -18,6 +18,8 @@ class ListAtletasUsecase
 
         $atletas = $this->repository->list(
             filter_nome: $input->filter_nome,
+            filter_dtNascimento_inicial: $input->filter_dtNascimento_inicial,
+            filter_dtNascimento_final: $input->filter_dtNascimento_final,
             order: $input->order,
         );
 
