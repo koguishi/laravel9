@@ -8,7 +8,7 @@ class UpdateAtletaInput
 {
     public function __construct(
         public string $id,
-        public string $nome,
-        public DateTime $dtNascimento,
+        public ?string $nome = null,
+        public ?string $dtNascimento = null,
     ) { }
 }

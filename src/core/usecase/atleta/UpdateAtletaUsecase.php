@@ -4,6 +4,7 @@ namespace core\usecase\atleta;
 
 use core\domain\entity\Atleta;
 use core\domain\repository\AtletaRepositoryInterface;
+use DateTime;
 
 class UpdateAtletaUsecase
 {
@@ -19,8 +20,10 @@ class UpdateAtletaUsecase
         $atleta = $this->repository->read($input->id);
 
         $atleta->alterar(
-            nome: $input->nome,
-            dtNascimento: $input->dtNascimento,
+            nome: $input->nome ?? $atleta->nome,
+            dtNascimento: $input->dtNascimento
+                ? new DateTime($input->dtNascimento)
+                : $atleta->dtNascimento,
         );
 
         $this->repository->update($atleta);
