@@ -14,6 +14,15 @@ class AtletaResource extends JsonResource
      */
     public function toArray($request)
     {
+        if (is_array($this->resource)) {
+            return [
+                'id' => $this['id'],
+                'nome' => $this['nome'],
+                'dtNascimento' => $this['dtNascimento'],
+                'created_at' => $this['criadoEm'],
+            ];
+        }
+
         // dd($this->criadoEm);
         return [
             'id' => $this->id,
