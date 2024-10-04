@@ -41,12 +41,12 @@ class AtletaControllerTest extends TestCase
 
     public function test_index()
     {
+        AtletaModel::factory(count: 5)->create();
         $usecase = new PaginateAtletasUsecase($this->repository);
         $response = $this->controller->index($usecase, new Request());
 
         $this->assertInstanceOf(AnonymousResourceCollection::class, $response);
         $this->assertArrayHasKey('meta', $response->additional);
-        
     }
 
     public function test_create()

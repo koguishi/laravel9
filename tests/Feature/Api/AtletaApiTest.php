@@ -11,45 +11,45 @@ class AtletaApiTest extends TestCase
 {
     protected $endpoint = '/api/atletas';
 
-    // public function test_list_empty_atletas()
-    // {
-    //     $response = $this->getJson($this->endpoint);
+    public function test_list_empty_atletas()
+    {
+        $response = $this->getJson($this->endpoint);
 
-    //     $response->assertStatus(200);
-    //     $response->assertJsonCount(0, 'data');
-    // }    
+        $response->assertStatus(200);
+        $response->assertJsonCount(0, 'data');
+    }
 
-    // public function test_list_atletas()
-    // {
-    //     Atleta::factory()->count(30)->create();
+    public function test_list_atletas()
+    {
+        Atleta::factory()->count(30)->create();
 
-    //     $response = $this->getJson($this->endpoint);
+        $response = $this->getJson($this->endpoint);
 
-    //     $response->assertStatus(200);
-    //     $response->assertJsonStructure([
-    //         'meta' => [
-    //             'total',
-    //             'current_page',
-    //             'last_page',
-    //             'first_page',
-    //             'per_page',
-    //             'to',
-    //             'from',
-    //         ],
-    //     ]);
-    //     $response->assertJsonCount(15, 'data');
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'meta' => [
+                'total',
+                'current_page',
+                'last_page',
+                'first_page',
+                'per_page',
+                'to',
+                'from',
+            ],
+        ]);
+        $response->assertJsonCount(15, 'data');
 
-    //     $arrContent = json_decode($response->getContent());
-    //     $this->assertCount(15, $arrContent->data);
+        $arrContent = json_decode($response->getContent());
+        $this->assertCount(15, $arrContent->data);
 
-    //     $this->assertEquals(30, $arrContent->meta->total);
-    //     $this->assertEquals(1, $arrContent->meta->current_page);
-    //     $this->assertEquals(2, $arrContent->meta->last_page);
-    //     $this->assertEquals(1, $arrContent->meta->first_page);
-    //     $this->assertEquals(15, $arrContent->meta->per_page);
-    //     $this->assertEquals(1, $arrContent->meta->to);
-    //     $this->assertEquals(15, $arrContent->meta->from);
-    // }
+        $this->assertEquals(30, $arrContent->meta->total);
+        $this->assertEquals(1, $arrContent->meta->current_page);
+        $this->assertEquals(2, $arrContent->meta->last_page);
+        $this->assertEquals(1, $arrContent->meta->first_page);
+        $this->assertEquals(15, $arrContent->meta->per_page);
+        $this->assertEquals(1, $arrContent->meta->to);
+        $this->assertEquals(15, $arrContent->meta->from);
+    }
 
     // public function test_paginated_atletas()
     // {
