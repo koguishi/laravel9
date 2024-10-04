@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use core\domain\exception\AlreadyExistsException;
 use core\domain\exception\EntityValidationException;
 use core\domain\exception\NotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -46,6 +47,10 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof NotFoundException) {
             return $this->showError($exception->getMessage(), Response::HTTP_NOT_FOUND);
+        }
+
+        if ($exception instanceof AlreadyExistsException) {
+            return $this->showError($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         if ($exception instanceof EntityValidationException) {

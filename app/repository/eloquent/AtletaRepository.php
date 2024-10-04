@@ -5,6 +5,7 @@ namespace app\repository\eloquent;
 use App\Models\Atleta as AtletaModel;
 use app\repository\PaginationPresenter;
 use core\domain\entity\Atleta;
+use core\domain\exception\AlreadyExistsException;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\PaginationInterface;
@@ -31,6 +32,11 @@ class AtletaRepository implements AtletaRepositoryInterface
 
     public function create(Atleta $entity): Atleta
     {
+        $atletaDb = $this->model->where('nome', '=', $entity->nome);
+        if ($atletaDb) {
+            throw new AlreadyExistsException('Atleta already exists');
+        }
+
         $atletaDb = $this->model->create([
             'id' => $entity->id(),
             'nome' => $entity->nome,

@@ -5,6 +5,7 @@ namespace Tests\Feature\repository\eloquent;
 use App\Models\Atleta as AtletaModel;
 use app\repository\eloquent\AtletaRepository;
 use core\domain\entity\Atleta;
+use core\domain\exception\AlreadyExistsException;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\PaginationInterface;
@@ -47,6 +48,22 @@ class AtletaRepositoryTest extends TestCase
             'created_at' => $entity->criadoEm(),
         ]);
     }
+
+    public function testCreateAlreadyExists()
+    {
+        $atleta = AtletaModel::factory()->create();
+        $entity = New Atleta(
+            nome: $atleta->nome,
+            dtNascimento: new DateTime('2001-01-01'),
+        );
+        try {
+            $this->repository->create($entity);
+    
+            $this->assertTrue(false);
+        } catch (Throwable $th) {
+            $this->assertInstanceOf(AlreadyExistsException::class, $th);
+        }
+    }    
 
     public function testRead()
     {
