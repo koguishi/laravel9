@@ -32,8 +32,8 @@ class AtletaRepository implements AtletaRepositoryInterface
 
     public function create(Atleta $entity): Atleta
     {
-        $atletaDb = $this->model->where('nome', '=', $entity->nome);
-        if ($atletaDb) {
+        $arrAtleta = $this->model->where('nome', '=', $entity->nome)->get()->toArray();
+        if (! empty($arrAtleta)) {
             throw new AlreadyExistsException('Atleta already exists');
         }
 
