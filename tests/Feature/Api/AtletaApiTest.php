@@ -3,7 +3,7 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Atleta;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response; // use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
