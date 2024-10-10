@@ -20,7 +20,7 @@ use DateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response; // use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
@@ -158,17 +158,15 @@ class AtletaControllerTest extends TestCase
         $this->assertEquals($dtNascimentoAlterado->format('Y-m-d'), $atletaResponse->dtNascimento);
     }
 
+    public function test_delete()
+    {
+        $categoria = AtletaModel::factory()->create();
 
+        $response = $this->controller->destroy(
+            id: $categoria->id,
+            usecase: new DeleteAtletaUsecase($this->repository),
+        );
 
-    // public function test_delete()
-    // {
-    //     $categoria = AtletaModel::factory()->create();
-
-    //     $response = $this->controller->destroy(
-    //         id: $categoria->id,
-    //         usecase: new DeleteAtletaUsecase($this->repository),
-    //     );        
-
-    //     $this->assertEquals(Response::HTTP_NO_CONTENT, $response->status());
-    // }
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->status());
+    }
 }

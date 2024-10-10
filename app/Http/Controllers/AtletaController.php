@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AtletaResource;
-use App\Models\Atleta;
 use core\usecase\atleta\CreateAtletaInput;
 use core\usecase\atleta\CreateAtletaUsecase;
+use core\usecase\atleta\DeleteAtletaInput;
+use core\usecase\atleta\DeleteAtletaUsecase;
 use core\usecase\atleta\PaginateAtletasInput;
 use core\usecase\atleta\PaginateAtletasUsecase;
 use core\usecase\atleta\ReadAtletaInput;
@@ -14,7 +15,7 @@ use core\usecase\atleta\UpdateAtletaInput;
 use core\usecase\atleta\UpdateAtletaUsecase;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response; // use Illuminate\Http\Response;
 
 class AtletaController extends Controller
 {
@@ -120,11 +121,11 @@ class AtletaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Atleta  $atleta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Atleta $atleta)
+    public function destroy(DeleteAtletaUsecase $usecase, string $id)
     {
-        //
+        $usecase->execute(new DeleteAtletaInput(id: $id));
+        return response()->noContent();        
     }
 }
