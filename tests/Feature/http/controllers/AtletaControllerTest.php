@@ -5,7 +5,6 @@ namespace Tests\Feature\http\controllers;
 use App\Http\Controllers\AtletaController;
 use App\Http\Requests\AtletaCreateRequest;
 use App\Http\Requests\AtletaUpdateRequest;
-use App\Http\Resources\AtletaResource;
 use App\Models\Atleta as AtletaModel;
 use app\repository\eloquent\AtletaRepository;
 use core\usecase\atleta\
@@ -16,7 +15,6 @@ use core\usecase\atleta\
     DeleteAtletaUsecase,
     PaginateAtletasUsecase,
 };
-use DateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
