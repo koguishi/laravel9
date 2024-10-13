@@ -226,56 +226,134 @@ class AtletaApiTest extends TestCase
         ]);
     }
 
-    // public function test_not_found_update()
-    // {
-    //     $data = [
-    //         'nome' => 'New name',
-    //     ];
+    public function test_not_found_update()
+    {
+        $data = [];
 
-    //     $response = $this->putJson("{$this->endpoint}/fake_id", $data);
+        $response = $this->putJson("{$this->endpoint}/fake_id", $data);
 
-    //     $response->assertStatus(Response::HTTP_NOT_FOUND);
-    // }
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
 
-    // public function test_validations_update()
-    // {
-    //     $atleta = Atleta::factory()->create();
+    public function test_update_validate_nome_min()
+    {
+        $atleta = Atleta::factory()->create();
 
-    //     $response = $this->putJson("{$this->endpoint}/{$atleta->id}", []);
+        $data = [
+            'nome' => 'AB',
+        ];
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-    //     $response->assertJsonStructure([
-    //         'message',
-    //         'errors' => [
-    //             'nome',
-    //         ],
-    //     ]);
-    // }
+        $response = $this->putJson("{$this->endpoint}/{$atleta->id}", $data);
 
-    // public function test_update()
-    // {
-    //     $atleta = Atleta::factory()->create();
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-    //     $data = [
-    //         'nome' => 'Name Updated',
-    //     ];
+        $response->assertJsonFragment(
+            [
+                'nome' => ['The nome must be at least 3 characters.'],
+            ]
+        );
+    }
 
-    //     $response = $this->putJson("{$this->endpoint}/{$atleta->id}", $data);
 
-    //     $response->assertStatus(Response::HTTP_OK);
-    //     $response->assertJsonStructure([
-    //         'data' => [
-    //             'id',
-    //             'nome',
-    //             'descricao',
-    //             'ativo',
-    //             // 'created_at',
-    //         ],
-    //     ]);
-    //     $this->assertDatabaseHas('atletas', [
-    //         'nome' => 'Name Updated',
-    //     ]);
-    // }
+    public function test_update_validate_nome_max()
+    {
+        $atleta = Atleta::factory()->create();
+
+        $data = [
+            'nome' => Str::random(101),
+        ];
+
+        $response = $this->putJson("{$this->endpoint}/{$atleta->id}", $data);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonFragment(
+            [
+                'nome' => ['The nome must not be greater than 100 characters.'],
+            ]
+        );
+    }
+
+    public function test_update_validate_dt_nascimento()
+    {
+        $atleta = Atleta::factory()->create();
+
+        $data = [
+            'dtNascimento' => '2000-02-30',
+        ];
+
+        $response = $this->putJson("{$this->endpoint}/{$atleta->id}", $data);
+       
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonFragment(
+            [
+                'dtNascimento' => ['The dt nascimento is not a valid date.'],
+            ]
+        );
+    }
+
+    public function test_update_validate_dt_nascimento_before_today()
+    {
+        $atleta = Atleta::factory()->create();
+
+        $data = [
+            'dtNascimento' => (new DateTime())->format('Y-m-d'),
+        ];
+
+        $response = $this->putJson("{$this->endpoint}/{$atleta->id}", $data);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonFragment(
+            [
+                'dtNascimento' => ['The dt nascimento must be a date before today.'],
+            ]
+        );
+    }
+
+    public function test_update_validate_dt_nascimento_after_1900_01_01()
+    {
+        $atleta = Atleta::factory()->create();
+
+        $data = [
+            'dtNascimento' => '1899-12-31',
+        ];
+
+        $response = $this->putJson("{$this->endpoint}/{$atleta->id}", $data);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonFragment(
+            [
+                'dtNascimento' => ['The dt nascimento must be a date after or equal to 1900-01-01.'],
+            ]
+        );
+    }
+
+    public function test_update()
+    {
+        $atleta = Atleta::factory()->create();
+
+        $dtNascimentoAlterado = $atleta->dtNascimento;
+        $dtNascimentoAlterado->modify('-1 days');
+
+        $data = [
+            'nome' => 'Name Updated',
+            'dtNascimento' => $dtNascimentoAlterado->format('Y-m-d'),
+        ];
+
+        $response = $this->putJson("{$this->endpoint}/{$atleta->id}", $data);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'nome',
+                'dtNascimento',
+            ],
+        ]);
+        $this->assertDatabaseHas('atletas', [
+            'nome' => 'Name Updated',
+            'dtNascimento' => $dtNascimentoAlterado->format('Y-m-d H:i:s'),
+        ]);
+    }
 
     // public function test_not_found_delete()
     // {
