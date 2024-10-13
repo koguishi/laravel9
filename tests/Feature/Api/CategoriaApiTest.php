@@ -151,7 +151,7 @@ class CategoriaApiTest extends TestCase
     }
 
 
-    public function test_create_validate_description_min()
+    public function test_create_validate_descricao_min()
     {
         $data = [
             'nome' => 'valid name',
@@ -169,7 +169,7 @@ class CategoriaApiTest extends TestCase
         ]);
     }
 
-    public function test_create_validate_description_max()
+    public function test_create_validate_descricao_max()
     {
         $data = [
             'nome' => 'valid name',
