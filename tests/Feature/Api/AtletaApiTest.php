@@ -355,22 +355,22 @@ class AtletaApiTest extends TestCase
         ]);
     }
 
-    // public function test_not_found_delete()
-    // {
-    //     $response = $this->deleteJson("{$this->endpoint}/fake_id");
+    public function test_not_found_delete()
+    {
+        $response = $this->deleteJson("{$this->endpoint}/fake_id");
 
-    //     $response->assertStatus(Response::HTTP_NOT_FOUND);
-    // }
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
 
-    // public function test_delete()
-    // {
-    //     $atleta = Atleta::factory()->create();
+    public function test_delete()
+    {
+        $atleta = Atleta::factory()->create();
 
-    //     $response = $this->deleteJson("{$this->endpoint}/{$atleta->id}");
+        $response = $this->deleteJson("{$this->endpoint}/{$atleta->id}");
 
-    //     $response->assertStatus(Response::HTTP_NO_CONTENT);
-    //     $this->assertSoftDeleted('atletas', [
-    //         'id' => $atleta->id,
-    //     ]);
-    // }
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
+        $this->assertSoftDeleted('atletas', [
+            'id' => $atleta->id,
+        ]);
+    }
 }
