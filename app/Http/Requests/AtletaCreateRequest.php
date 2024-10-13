@@ -23,8 +23,22 @@ class AtletaCreateRequest extends FormRequest
      */
     public function rules()
     {
+        // forma de deixar o limite dinamico
+        // $date100YearsAgo = now()->subYears(100)->format('Y-m-d');
         return [
-            //
+            'nome' => [
+                'required',
+                'min:3',
+                'max:100',
+            ],
+            'dtNascimento' => [
+                'required',
+                'date',
+                // forma de deixar o limite dinamico
+                // 'after_or_equal:' . $date100YearsAgo,
+                'after_or_equal:1900-01-01',
+                'before:today',
+            ]
         ];
     }
 }

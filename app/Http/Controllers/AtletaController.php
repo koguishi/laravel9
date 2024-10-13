@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AtletaCreateRequest;
 use App\Http\Resources\AtletaResource;
 use core\usecase\atleta\CreateAtletaInput;
 use core\usecase\atleta\CreateAtletaUsecase;
@@ -54,7 +55,7 @@ class AtletaController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(CreateAtletaUsecase $usecase, Request $request)
+    public function store(CreateAtletaUsecase $usecase, AtletaCreateRequest $request)
     {
         $input = new CreateAtletaInput(
             nome: $request->nome,
