@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Atleta;
+use DateTime;
 use Symfony\Component\HttpFoundation\Response; // use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -51,28 +52,28 @@ class AtletaApiTest extends TestCase
         $this->assertEquals(15, $arrContent->meta->from);
     }
 
-    // public function test_paginated_atletas()
-    // {
-    //     Atleta::factory()->count(25)->create();
+    public function test_paginated_atletas()
+    {
+        Atleta::factory()->count(25)->create();
 
-    //     $response = $this->getJson("$this->endpoint?page=2");
+        $response = $this->getJson("$this->endpoint?page=2");
 
-    //     $response->assertStatus(200);
-    //     $this->assertEquals(2, $response['meta']['current_page']);
-    //     $this->assertEquals(25, $response['meta']['total']);
-    //     $response->assertJsonCount(10, 'data');
+        $response->assertStatus(200);
+        $this->assertEquals(2, $response['meta']['current_page']);
+        $this->assertEquals(25, $response['meta']['total']);
+        $response->assertJsonCount(10, 'data');
 
-    //     $arrContent = json_decode($response->getContent());
-    //     $this->assertCount(10, $arrContent->data);
+        $arrContent = json_decode($response->getContent());
+        $this->assertCount(10, $arrContent->data);
 
-    //     $this->assertEquals(25, $arrContent->meta->total);
-    //     $this->assertEquals(2, $arrContent->meta->current_page);
-    //     $this->assertEquals(2, $arrContent->meta->last_page);
-    //     $this->assertEquals(16, $arrContent->meta->first_page);
-    //     $this->assertEquals(15, $arrContent->meta->per_page);
-    //     $this->assertEquals(16, $arrContent->meta->to);
-    //     $this->assertEquals(25, $arrContent->meta->from);
-    // }
+        $this->assertEquals(25, $arrContent->meta->total);
+        $this->assertEquals(2, $arrContent->meta->current_page);
+        $this->assertEquals(2, $arrContent->meta->last_page);
+        $this->assertEquals(16, $arrContent->meta->first_page);
+        $this->assertEquals(15, $arrContent->meta->per_page);
+        $this->assertEquals(16, $arrContent->meta->to);
+        $this->assertEquals(25, $arrContent->meta->from);
+    }
 
     public function test_http_not_found()
     {
@@ -99,110 +100,106 @@ class AtletaApiTest extends TestCase
         $this->assertEquals($atleta->id, $response['data']['id']);
     }
 
-    // public function test_create_validate_nome_required()
-    // {
-    //     $data = [];
+    public function test_create_validate_required_fields()
+    {
+        $data = [];
 
-    //     $response = $this->postJson($this->endpoint, $data);
+        $response = $this->postJson($this->endpoint, $data);
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-    //     $response->assertJsonStructure([
-    //         'message',
-    //         'errors' => [
-    //             'nome',
-    //         ],
-    //     ]);
-    // }
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-    // public function test_create_validate_nome_min()
-    // {
-    //     $data = [
-    //         'nome' => 'AB',
-    //     ];
+        $response->assertJsonFragment(
+            [
+                'nome' => ['The nome field is required.'],
+                'dtNascimento' => ['The dt nascimento field is required.']
+            ]
+        );
+    }
 
-    //     $response = $this->postJson($this->endpoint, $data);
+    public function test_create_validate_nome_min()
+    {
+        $data = [
+            'nome' => 'AB',
+        ];
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-    //     $response->assertJsonStructure([
-    //         'message',
-    //         'errors' => [
-    //             'nome',
-    //         ],
-    //     ]);
-    // }
+        $response = $this->postJson($this->endpoint, $data);
 
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
 
-    // public function test_create_validate_nome_max()
-    // {
-    //     $data = [
-    //         'nome' => Str::random(101),
-    //     ];
-
-    //     $response = $this->postJson($this->endpoint, $data);
-
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-    //     $response->assertJsonStructure([
-    //         'message',
-    //         'errors' => [
-    //             'nome',
-    //         ],
-    //     ]);
-    // }
+        $response->assertJsonFragment(
+            [
+                'nome' => ['The nome must be at least 3 characters.'],
+            ]
+        );
+    }
 
 
-    // public function test_create_validate_description_min()
-    // {
-    //     $data = [
-    //         'nome' => 'valid name',
-    //         'descricao' => 'AB',
-    //     ];
+    public function test_create_validate_nome_max()
+    {
+        $data = [
+            'nome' => Str::random(101),
+        ];
 
-    //     $response = $this->postJson($this->endpoint, $data);
+        $response = $this->postJson($this->endpoint, $data);
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-    //     $response->assertJsonStructure([
-    //         'message',
-    //         'errors' => [
-    //             'descricao',
-    //         ],
-    //     ]);
-    // }
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonFragment(
+            [
+                'nome' => ['The nome must not be greater than 100 characters.'],
+            ]
+        );
+    }
 
-    // public function test_create_validate_description_max()
-    // {
-    //     $data = [
-    //         'nome' => 'valid name',
-    //         'descricao' => Str::random(256),
-    //     ];
+    public function test_create_validate_dt_nascimento()
+    {
+        $data = [
+            'nome' => 'valid name',
+            'dtNascimento' => '2020-02-30',
+        ];
 
-    //     $response = $this->postJson($this->endpoint, $data);
+        $response = $this->postJson($this->endpoint, $data);
+       
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonFragment(
+            [
+                'dtNascimento' => ['The dt nascimento is not a valid date.'],
+            ]
+        );
+    }
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-    //     $response->assertJsonStructure([
-    //         'message',
-    //         'errors' => [
-    //             'descricao',
-    //         ],
-    //     ]);
-    // }
+    public function test_create_validate_dt_nascimento_before_today()
+    {
+        $data = [
+            'nome' => 'valid name',
+            'dtNascimento' => (new DateTime())->format('Y-m-d'),
+        ];
 
-    // public function test_create_validate_ativo()
-    // {
-    //     $data = [
-    //         'nome' => 'valid name',
-    //         'ativo' => 'string'
-    //     ];
+        $response = $this->postJson($this->endpoint, $data);
+       
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonFragment(
+            [
+                'dtNascimento' => ['The dt nascimento must be a date before today.'],
+            ]
+        );
+    }
 
-    //     $response = $this->postJson($this->endpoint, $data);
+    public function test_create_validate_dt_nascimento_after_1900_01_01()
+    {
+        $data = [
+            'nome' => 'valid name',
+            'dtNascimento' => '1899-12-31',
+        ];
 
-    //     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-    //     $response->assertJsonStructure([
-    //         'message',
-    //         'errors' => [
-    //             'ativo',
-    //         ],
-    //     ]);
-    // }
+        $response = $this->postJson($this->endpoint, $data);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonFragment(
+            [
+                'dtNascimento' => ['The dt nascimento must be a date after or equal to 1900-01-01.'],
+            ]
+        );
+    }
 
     public function test_create()
     {
