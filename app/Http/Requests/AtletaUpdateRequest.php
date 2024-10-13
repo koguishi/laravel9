@@ -13,7 +13,7 @@ class AtletaUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,30 @@ class AtletaUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nome' => [
+                'nullable',
+            ],
+            'dtNascimento' => [
+                'nullable',
+            ]
         ];
     }
+
+    public function withValidator($validator)
+    {
+        $validator->sometimes(
+            'nome',
+            'min:3|max:100',
+            function ($input) {
+                return !empty($input->nome);
+            }
+        );
+        $validator->sometimes(
+            'dtNascimento',
+            'date|after_or_equal:1900-01-01|before:today',
+            function ($input) {
+                return !empty($input->dtNascimento);
+            }
+        );
+    }    
 }

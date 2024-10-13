@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AtletaCreateRequest;
+use App\Http\Requests\AtletaUpdateRequest;
 use App\Http\Resources\AtletaResource;
 use core\usecase\atleta\CreateAtletaInput;
 use core\usecase\atleta\CreateAtletaUsecase;
@@ -100,7 +101,7 @@ class AtletaController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateAtletaUsecase $usecase, string $id, Request $request)
+    public function update(UpdateAtletaUsecase $usecase, string $id, AtletaUpdateRequest $request)
     {
         $input = new UpdateAtletaInput(
             id: $id,
