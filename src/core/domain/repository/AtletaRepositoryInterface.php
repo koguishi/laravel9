@@ -21,7 +21,7 @@ interface AtletaRepositoryInterface
 
     public function paginate(
         int $page = 1,
-        int $totalPage = 15,
+        int $perPage = 15,
         string $order = '',
         string $filter_nome = '',
         ?DateTime $filter_dtNascimento_inicial = null,

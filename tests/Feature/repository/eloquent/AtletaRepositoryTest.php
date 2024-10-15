@@ -457,7 +457,7 @@ class AtletaRepositoryTest extends TestCase
 
         // total de 7 items com $dtNascimento2
         $response = $this->repository->paginate(
-            totalPage: 3,
+            perPage: 3,
             page: 3,
             filter_dtNascimento_inicial: $dtNascimento2,
             filter_dtNascimento_final: $dtNascimento2,

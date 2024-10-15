@@ -32,7 +32,7 @@ class AtletaController extends Controller
             filter: $request->get('filter', '') ,
             order: $request->get('order', ''),
             page: (int) $request->get('page', 1),
-            perPage: (int) $request->get('totalPage', 15),
+            perPage: (int) $request->get('perPage', 15),
         );
         $response = $usecase->execute(input: $usecaseInput);
 

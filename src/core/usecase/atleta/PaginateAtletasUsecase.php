@@ -19,7 +19,7 @@ class PaginateAtletasUsecase
             filter_nome: $input->filter,
             order: $input->order,
             page: $input->page,
-            totalPage: $input->perPage,
+            perPage: $input->perPage,
         );
 
         return new PaginateAtletasOutput(

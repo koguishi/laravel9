@@ -59,7 +59,7 @@ class AtletaRepository implements AtletaRepositoryInterface
         $atletaDb = $this->model->find($entity->id());
         if (! $atletaDb) {
             throw new NotFoundException('Atleta not found');
-        }        
+        }
 
         $atletaDb->update([
             'nome' => $entity->nome,
@@ -113,7 +113,7 @@ class AtletaRepository implements AtletaRepositoryInterface
 
     public function paginate(
         int $page = 1,
-        int $totalPage = 15,
+        int $perPage = 15,
         string $order = '',
         string $filter_nome = '',
         ?DateTime $filter_dtNascimento_inicial = null,
@@ -143,7 +143,7 @@ class AtletaRepository implements AtletaRepositoryInterface
 
         $paginator = $query->paginate(
             page: $page,
-            perPage: $totalPage,
+            perPage: $perPage,
         );
 
         return new PaginationPresenter($paginator);
