@@ -31,7 +31,7 @@ class PaginateAtletasUsecaseTest extends TestCase
         $responseUseCase = $useCase->execute(
             new PaginateAtletasInput(
                 page: 2,
-                totalPage: 7
+                perPage: 7
             )
         );
         $this->assertInstanceOf(PaginateAtletasOutput::class, $responseUseCase);
@@ -49,7 +49,7 @@ class PaginateAtletasUsecaseTest extends TestCase
         $responseUseCase = $useCase->execute(
             new PaginateAtletasInput(
                 page: 3,
-                totalPage: 7
+                perPage: 7
             )
         );
         $this->assertInstanceOf(PaginateAtletasOutput::class, $responseUseCase);
