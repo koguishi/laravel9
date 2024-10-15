@@ -16,7 +16,7 @@ class PaginateAtletasUsecase
     public function execute(PaginateAtletasInput $input): PaginateAtletasOutput
     {
         $atletas = $this->repository->paginate(
-            filter_nome: $input->filter,
+            filter_nome: $input->filter_nome,
             order: $input->order,
             page: $input->page,
             perPage: $input->perPage,
