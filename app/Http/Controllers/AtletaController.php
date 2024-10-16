@@ -29,7 +29,7 @@ class AtletaController extends Controller
     public function index(PaginateAtletasUsecase $usecase, Request $request)
     {
         $usecaseInput = new PaginateAtletasInput(
-            filter_nome: $request->get('filter', '') ,
+            filter_nome: $request->get('filter_nome', '') ,
             order: $request->get('order', ''),
             page: (int) $request->get('page', 1),
             perPage: (int) $request->get('perPage', 15),

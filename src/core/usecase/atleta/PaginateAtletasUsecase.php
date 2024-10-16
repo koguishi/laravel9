@@ -16,10 +16,12 @@ class PaginateAtletasUsecase
     public function execute(PaginateAtletasInput $input): PaginateAtletasOutput
     {
         $atletas = $this->repository->paginate(
-            filter_nome: $input->filter_nome,
-            order: $input->order,
             page: $input->page,
             perPage: $input->perPage,
+            order: $input->order,
+            filter_nome: $input->filter_nome,
+            filter_dtNascimento_inicial: $input->filter_dtNascimento_inicial,
+            filter_dtNascimento_final: $input->filter_dtNascimento_final,
         );
 
         return new PaginateAtletasOutput(
