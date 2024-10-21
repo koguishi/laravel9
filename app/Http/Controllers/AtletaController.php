@@ -21,6 +21,12 @@ use Symfony\Component\HttpFoundation\Response; // use Illuminate\Http\Response;
 
 class AtletaController extends Controller
 {
+    private function isValidDate($date)
+    {
+        if ($date === '') return true;
+        $d = DateTime::createFromFormat('Y-m-d', $date);
+        return $d && $d->format('Y-m-d') === $date;
+    }    
     /**
      * Display a listing of the resource.
      *
@@ -28,11 +34,30 @@ class AtletaController extends Controller
      */
     public function index(PaginateAtletasUsecase $usecase, Request $request)
     {
+        // TODO: pensar se a controller é o local mais adequado para as validações abaixo
+        // Validar os filtros de data
+        $startDate = $request->get('filter_dtNascimento_inicial', '');
+        $endDate = $request->get('filter_dtNascimento_final', '');
+
+        if (!$this->isValidDate($startDate)) {
+            return response()->json(['error' => 'Invalid start date format.'], 400);
+        }
+
+        if (!$this->isValidDate($endDate)) {
+            return response()->json(['error' => 'Invalid end date format.'], 400);
+        }
+
+        if ($startDate && $endDate && $startDate > $endDate) {
+            return response()->json(['error' => 'Start date cannot be after end date.'], 400);
+        }
+
         $usecaseInput = new PaginateAtletasInput(
-            filter_nome: $request->get('filter_nome', '') ,
-            order: $request->get('order', ''),
             page: (int) $request->get('page', 1),
             perPage: (int) $request->get('perPage', 15),
+            order: $request->get('order', ''),
+            filter_nome: $request->get('filter_nome', ''),
+            filter_dtNascimento_inicial: $startDate ? new DateTime($startDate) : null,
+            filter_dtNascimento_final: $endDate ? new DateTime($endDate) : null,
         );
         $response = $usecase->execute(input: $usecaseInput);
 
