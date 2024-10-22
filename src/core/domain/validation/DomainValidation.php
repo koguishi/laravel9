@@ -35,6 +35,18 @@ class DomainValidation
         }
     }
 
+    public static function notAfterToday(DateTime $value, string $exceptionMessage = null)
+    {
+        if ($value) {
+            date_default_timezone_set('America/Sao_Paulo');
+            $today = new DateTime(today());
+    
+            if ($value > $today) {
+                throw new EntityValidationException($exceptionMessage ?? "Não pode ser posterior a hoje");
+            }
+        }
+    }
+
     public static function notTodayOrAfter(DateTime $value, string $exceptionMessage = null)
     {
         if ($value) {
