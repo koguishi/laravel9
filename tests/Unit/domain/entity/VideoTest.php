@@ -175,65 +175,86 @@ class VideoTest extends TestCase
         $this->assertEquals($media->encodedPath, $video->videoFile->encodedPath);
     }
 
-    // public function testExceptionNomeMenorQue3()
-    // {
-    //     try {
-    //         new Atleta(
-    //             nome: 'AA',
-    //             dtNascimento: new DateTime('2000-01-01'),
-    //         );
+    public function testExceptionTituloMenorQue3()
+    {
+        try {
+            new Video(
+                titulo: 'AA',
+                descricao: '',
+                dtFilmagem: new DateTime('2000-01-01'),
+            );
 
-    //         $this->assertTrue(false);
-    //     } catch (\Throwable $th) {
-    //         $this->assertInstanceOf(EntityValidationException::class, $th);
-    //         $this->assertEquals("Nome deve ter no mínimo 3 caracteres", $th->getMessage());
-    //     }
-    // }
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("video: Titulo deve ter no mínimo 3 caracteres; ", $th->getMessage());
+        }
+    }
 
-    // public function testExceptionNomeMaiorQue100()
-    // {
-    //     try {
-    //         new Atleta(
-    //             nome: random_bytes(101),
-    //             dtNascimento: new DateTime('2000-01-01'),
-    //         );
+    public function testExceptionTituloMaiorQue100()
+    {
+        try {
+            new Video(
+                titulo: random_bytes(101),
+                descricao: '',
+                dtFilmagem: new DateTime('2000-01-01'),
+            );
 
-    //         $this->assertTrue(false);
-    //     } catch (\Throwable $th) {
-    //         $this->assertInstanceOf(EntityValidationException::class, $th);
-    //         $this->assertEquals("Nome deve ter no máximo 100 caracteres", $th->getMessage());
-    //     }
-    // }
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("video: Titulo deve ter no máximo 100 caracteres; ", $th->getMessage());
+        }
+    }
     
-    // public function testExceptionDtNascimentoMaiorQueHoje()
-    // {
-    //     try {
-    //         $video = new Atleta(
-    //             nome: random_bytes(100),
-    //             dtNascimento: new DateTime(today()),
-    //         );
+    public function testExceptionDtFilmagemMaiorQueHoje()
+    {
+        try {
+            $video = new Video(
+                titulo: random_bytes(100),
+                descricao: '',
+                dtFilmagem: new DateTime(today()->modify('1 day')),
+            );
 
-    //         $this->assertTrue(false);
-    //     } catch (\Throwable $th) {
-    //         $this->assertInstanceOf(EntityValidationException::class, $th);
-    //         $this->assertEquals("Data de nascimento não pode ser igual ou posterior a hoje", $th->getMessage());
-    //     }
-    // }
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("video: Data de filmagem não pode ser posterior a hoje; ", $th->getMessage());
+        }
+    }
 
-    // public function testExceptionDtNascimentoMenorQue100Anos()
-    // {
-    //     try {
-    //         $video = new Atleta(
-    //             nome: random_bytes(100),
-    //             dtNascimento: $this->dataAtualMenos100Anos(),
-    //         );
+    public function testExceptionDtFilmagemMenorQue30Anos()
+    {
+        try {
+            $video = new Video(
+                titulo: random_bytes(100),
+                descricao: '',
+                dtFilmagem: new DateTime(today()->modify('-30 years')),
+            );
 
-    //         $this->assertTrue(false);
-    //     } catch (\Throwable $th) {
-    //         $this->assertInstanceOf(EntityValidationException::class, $th);
-    //         $this->assertEquals("Data de nascimento não pode ser anterior a 100 anos", $th->getMessage());
-    //     }
-    // }
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("video: Data de filmagem não pode ser anterior a 30 anos; ", $th->getMessage());
+        }
+    }
+
+    public function testExceptionTituloMenorQue3DtFilmagemMaiorQueHoje()
+    {
+        try {
+            new Video(
+                titulo: 'AA',
+                descricao: '',
+                dtFilmagem: new DateTime(today()->modify('1 day')),
+            );
+
+            $this->assertTrue(false);
+        } catch (\Throwable $th) {
+            $this->assertInstanceOf(EntityValidationException::class, $th);
+            $this->assertEquals("video: Titulo deve ter no mínimo 3 caracteres; video: Data de filmagem não pode ser posterior a hoje; ", $th->getMessage());
+        }
+    }
+
 
     // public function testAlterarAluno() {
     //     $uuid = (string) RamseyUuid::uuid4();

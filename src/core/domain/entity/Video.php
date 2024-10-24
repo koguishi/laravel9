@@ -4,6 +4,7 @@ namespace core\domain\entity;
 
 use core\domain\entity\traits\MagicMethodsTrait;
 use core\domain\exception\EntityValidationException;
+use core\domain\notification\Notification;
 use core\domain\validation\DomainValidation;
 use core\domain\valueobject\Media;
 use core\domain\valueobject\Uuid;
@@ -36,12 +37,47 @@ class Video
 
     private function validate()
     {
+        $notification = new Notification();
         $tituloMinLen = 3;
-        DomainValidation::strMinLen($this->titulo, $tituloMinLen, "Titulo deve ter no mínimo {$tituloMinLen} caracteres");
         $tituloMaxLen = 100;
-        DomainValidation::strMaxLen($this->titulo, $tituloMaxLen, "Titulo deve ter no máximo {$tituloMaxLen} caracteres");
-        DomainValidation::notAfterToday($this->dtFilmagem, "Data de filmagem não pode ser posterior a hoje");
-        DomainValidation::notBefore100Years($this->dtFilmagem, "Data de filmagem não pode ser anterior a 100 anos");
+
+        if (strlen($this->titulo) < $tituloMinLen) {
+            $notification->addError([
+                'context' => 'video',
+                'message' => "Titulo deve ter no mínimo {$tituloMinLen} caracteres",
+            ]);
+        }
+
+        if (strlen($this->titulo) > $tituloMaxLen) {
+            $notification->addError([
+                'context' => 'video',
+                'message' => "Titulo deve ter no máximo {$tituloMaxLen} caracteres",
+            ]);
+        }
+
+        if ($this->dtFilmagem) {
+            date_default_timezone_set('America/Sao_Paulo');
+
+            $dtLimit = new DateTime(today());
+            if ($this->dtFilmagem > $dtLimit) {
+                $notification->addError([
+                    'context' => 'video',
+                    'message' => 'Data de filmagem não pode ser posterior a hoje',
+                ]);
+            }
+
+            $dtLimit->modify('-30 years');
+            if ($this->dtFilmagem <= $dtLimit) {
+                $notification->addError([
+                    'context' => 'video',
+                    'message' => 'Data de filmagem não pode ser anterior a 30 anos',
+                ]);
+            }
+        }
+
+        if ($notification->hasError()) {
+            throw new EntityValidationException($notification->getMessage());
+        }
     }
 
     public function alterar(
