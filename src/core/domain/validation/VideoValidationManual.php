@@ -5,7 +5,7 @@ namespace core\domain\validation;
 use core\domain\entity\Entity;
 use DateTime;
 
-class VideoManualValidation implements ValidationInterface
+class VideoValidationManual implements ValidationInterface
 {
     public function validate(Entity $entity): void
     {
