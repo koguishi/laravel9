@@ -10,8 +10,8 @@ class VideoValidationFactory
 {
     public static function create(): ValidationInterface
     {
-        // return new VideoValidationManual();
+        return new VideoValidationManual();
         // return new VideoLaravelValidator();
-        return new VideoValidationRakit();
+        // return new VideoValidationRakit();
     }
 }
