@@ -5,6 +5,7 @@ namespace core\domain\entity;
 use core\domain\entity\traits\MagicMethodsTrait;
 use core\domain\exception\EntityValidationException;
 use core\domain\validation\DomainValidation;
+use core\domain\valueobject\Media;
 use core\domain\valueobject\Uuid;
 use DateTime;
 
@@ -21,6 +22,7 @@ class Video
         protected DateTime $dtFilmagem,
         protected ?Uuid $id = null,
         protected ?DateTime $criadoEm = null,
+        protected ?Media $videoFile = null,
     ) {
         $this->id = $this->id ?? Uuid::random();
         $this->criadoEm = $this->criadoEm ?? new DateTime();

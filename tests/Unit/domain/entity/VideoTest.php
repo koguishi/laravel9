@@ -3,7 +3,9 @@
 namespace Tests\Unit\domain\entity;
 
 use core\domain\entity\Video;
+use core\domain\enum\MediaStatus;
 use core\domain\exception\EntityValidationException;
+use core\domain\valueobject\Media;
 use core\domain\valueobject\Uuid;
 use DateTime;
 use PHPUnit\Framework\TestCase;
@@ -146,6 +148,31 @@ class VideoTest extends TestCase
 
         $video->desvincularAtleta(atletaId: $atletaId);
         $this->assertCount(0, $video->atletaIds);
+    }
+
+    public function testMedia()
+    {
+        $media = new Media(
+            filePath: 'path/video.mp4',
+            mediaStatus: MediaStatus::PENDING,
+            encodedPath: 'otherPath/encoded.ext',
+        );
+
+        $titulo = 'titulo do Video';
+        $descricao = 'descricao do Video';
+        $dtFilmagem = new DateTime(date('Y-m-d'));
+
+        $video = new Video(
+            titulo: $titulo,
+            descricao: $descricao,
+            dtFilmagem: $dtFilmagem,
+            videoFile: $media,
+        );
+
+        $this->assertInstanceOf(Media::class, $video->videoFile);
+        $this->assertEquals($media->filePath, $video->videoFile->filePath);
+        $this->assertEquals($media->mediaStatus, $video->videoFile->mediaStatus);
+        $this->assertEquals($media->encodedPath, $video->videoFile->encodedPath);
     }
 
     // public function testExceptionNomeMenorQue3()
