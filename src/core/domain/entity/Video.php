@@ -2,18 +2,13 @@
 
 namespace core\domain\entity;
 
-use core\domain\entity\traits\MagicMethodsTrait;
 use core\domain\exception\EntityValidationException;
-use core\domain\notification\Notification;
-use core\domain\validation\DomainValidation;
 use core\domain\valueobject\Media;
 use core\domain\valueobject\Uuid;
 use DateTime;
 
-class Video
+class Video extends Entity
 {
-    use MagicMethodsTrait;
-
     protected array $categoriaIds = [];
     protected array $atletaIds = [];
 
@@ -25,6 +20,7 @@ class Video
         protected ?DateTime $criadoEm = null,
         protected ?Media $videoFile = null,
     ) {
+        parent::__construct();
         $this->id = $this->id ?? Uuid::random();
         $this->criadoEm = $this->criadoEm ?? new DateTime();
         $this->validate();
@@ -37,19 +33,18 @@ class Video
 
     private function validate()
     {
-        $notification = new Notification();
         $tituloMinLen = 3;
         $tituloMaxLen = 100;
 
         if (strlen($this->titulo) < $tituloMinLen) {
-            $notification->addError([
+            $this->notification->addError([
                 'context' => 'video',
                 'message' => "Titulo deve ter no mínimo {$tituloMinLen} caracteres",
             ]);
         }
 
         if (strlen($this->titulo) > $tituloMaxLen) {
-            $notification->addError([
+            $this->notification->addError([
                 'context' => 'video',
                 'message' => "Titulo deve ter no máximo {$tituloMaxLen} caracteres",
             ]);
@@ -60,7 +55,7 @@ class Video
 
             $dtLimit = new DateTime(today());
             if ($this->dtFilmagem > $dtLimit) {
-                $notification->addError([
+                $this->notification->addError([
                     'context' => 'video',
                     'message' => 'Data de filmagem não pode ser posterior a hoje',
                 ]);
@@ -68,15 +63,15 @@ class Video
 
             $dtLimit->modify('-30 years');
             if ($this->dtFilmagem <= $dtLimit) {
-                $notification->addError([
+                $this->notification->addError([
                     'context' => 'video',
                     'message' => 'Data de filmagem não pode ser anterior a 30 anos',
                 ]);
             }
         }
 
-        if ($notification->hasError()) {
-            throw new EntityValidationException($notification->getMessage());
+        if ($this->notification->hasError()) {
+            throw new EntityValidationException($this->notification->getMessage());
         }
     }
 
