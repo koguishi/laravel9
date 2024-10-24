@@ -3,6 +3,7 @@
 namespace core\domain\entity;
 
 use core\domain\exception\EntityValidationException;
+use core\domain\factory\VideoValidationFactory;
 use core\domain\valueobject\Media;
 use core\domain\valueobject\Uuid;
 use DateTime;
@@ -33,45 +34,12 @@ class Video extends Entity
 
     private function validate()
     {
-        $tituloMinLen = 3;
-        $tituloMaxLen = 100;
-
-        if (strlen($this->titulo) < $tituloMinLen) {
-            $this->notification->addError([
-                'context' => 'video',
-                'message' => "Titulo deve ter no mínimo {$tituloMinLen} caracteres",
-            ]);
-        }
-
-        if (strlen($this->titulo) > $tituloMaxLen) {
-            $this->notification->addError([
-                'context' => 'video',
-                'message' => "Titulo deve ter no máximo {$tituloMaxLen} caracteres",
-            ]);
-        }
-
-        if ($this->dtFilmagem) {
-            date_default_timezone_set('America/Sao_Paulo');
-
-            $dtLimit = new DateTime(today());
-            if ($this->dtFilmagem > $dtLimit) {
-                $this->notification->addError([
-                    'context' => 'video',
-                    'message' => 'Data de filmagem não pode ser posterior a hoje',
-                ]);
-            }
-
-            $dtLimit->modify('-30 years');
-            if ($this->dtFilmagem <= $dtLimit) {
-                $this->notification->addError([
-                    'context' => 'video',
-                    'message' => 'Data de filmagem não pode ser anterior a 30 anos',
-                ]);
-            }
-        }
+        VideoValidationFactory::create()->validate($this);
 
         if ($this->notification->hasError()) {
-            throw new EntityValidationException($this->notification->getMessage());
+            throw new EntityValidationException(
+                $this->notification->getMessage('video')
+            );
         }
     }
 
