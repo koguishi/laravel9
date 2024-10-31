@@ -5,8 +5,11 @@ namespace Tests\Unit\usecase\video;
 use core\domain\repository\VideoRepositoryInterface;
 use core\usecase\interfaces\FileStorageInterface;
 use core\usecase\interfaces\TransactionInterface;
+use core\usecase\video\CreateVideoInput;
+use core\usecase\video\CreateVideoOutput;
 use core\usecase\video\CreateVideoUsecase;
 use core\usecase\video\VideoEventManagerInterface;
+use DateTime;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +22,7 @@ class CreateVideoUsecaseTest extends TestCase
         Mockery::close();
     }
 
-    public function testCreateVideo()
+    public function testConstructor()
     {
         $usecase = new CreateVideoUsecase(
             repository: $this->mockRepository(),
@@ -28,6 +31,20 @@ class CreateVideoUsecaseTest extends TestCase
             eventManager: $this->mockEventManager(),
         );
         $this->assertTrue(true);
+    }
+
+    public function testExecute()
+    {
+        $usecase = new CreateVideoUsecase(
+            repository: $this->mockRepository(),
+            transaction: $this->mockTransaction(),
+            fileStorage: $this->mockStorage(),
+            eventManager: $this->mockEventManager(),
+        );
+        $response = $usecase->execute(
+            input: $this->videoInput()
+        );
+        $this->assertInstanceOf(CreateVideoOutput::class, $response);
     }
 
     private function mockRepository()
@@ -79,5 +96,15 @@ class CreateVideoUsecaseTest extends TestCase
             VideoEventManagerInterface::class,
         );
         return $mock;
+    }
+
+    private function videoInput()
+    {
+        $input = new CreateVideoInput(
+            titulo: 'titulo',
+            descricao: 'descricao',
+            dtFilmagem: new DateTime('2001-01-01'),
+        );
+        return $input;
     }
 }
