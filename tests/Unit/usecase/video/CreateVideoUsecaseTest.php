@@ -57,6 +57,7 @@ class CreateVideoUsecaseTest extends TestCase
             stdClass::class,
             VideoRepositoryInterface::class,
         );
+        $mock->shouldReceive("create");
         return $mock;
     }
 
@@ -70,6 +71,7 @@ class CreateVideoUsecaseTest extends TestCase
             stdClass::class,
             TransactionInterface::class,
         );
+        $mock->shouldReceive("rollback", "commit");
         return $mock;
     }
 
@@ -83,6 +85,7 @@ class CreateVideoUsecaseTest extends TestCase
             stdClass::class,
             FileStorageInterface::class,
         );
+        $mock->shouldReceive("store")->andReturn('filePath');
         return $mock;
     }
     private function mockEventManager()
@@ -95,6 +98,7 @@ class CreateVideoUsecaseTest extends TestCase
             stdClass::class,
             VideoEventManagerInterface::class,
         );
+        $mock->shouldReceive("dispatch");
         return $mock;
     }
 
