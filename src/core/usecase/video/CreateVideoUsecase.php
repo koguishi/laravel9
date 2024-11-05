@@ -4,6 +4,7 @@ namespace core\usecase\video;
 
 use core\domain\entity\Video;
 use core\domain\event\VideoCreatedEvent;
+use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\VideoRepositoryInterface;
@@ -62,8 +63,14 @@ class CreateVideoUsecase
             dtFilmagem: $input->dtFilmagem,
         );
 
+        $this->validateCategoriasIds($input->categoriasIds);
+        foreach ($input->categoriasIds as $categoriaId) {
+            $video->vincularCategoria($categoriaId);
+        }
+
+        $this->validateAtletasIds($input->atletasIds);
         foreach ($input->atletasIds as $atletaId) {
-            $video->desvincularAtleta($atletaId);
+            $video->vincularAtleta($atletaId);
         }
 
         return $video;
@@ -78,5 +85,43 @@ class CreateVideoUsecase
             );
         }
         return '';
+    }
+
+    private function validateCategoriasIds(array $ids = [])
+    {
+        $categoriasIdsDb = $this->categoriaRepository->getIds($ids);
+
+        $arrayDiff = array_diff($ids, $categoriasIdsDb);
+
+        $countDiff = count($arrayDiff);
+
+        if ($countDiff) {
+            $msg = sprintf(
+                '%s %s not found',
+                $countDiff > 1 ? 'Categorias' : 'Categoria',
+                implode(', ', $arrayDiff)
+            );
+
+            throw new NotFoundException($msg);
+        }
+    }
+
+    private function validateAtletasIds(array $ids = [])
+    {
+        $atletasIdsDb = $this->atletaRepository->getIds($ids);
+
+        $arrayDiff = array_diff($ids, $atletasIdsDb);
+
+        $countDiff = count($arrayDiff);
+
+        if ($countDiff) {
+            $msg = sprintf(
+                '%s %s not found',
+                $countDiff > 1 ? 'Atletas' : 'Atleta',
+                implode(', ', $arrayDiff)
+            );
+
+            throw new NotFoundException($msg);
+        }
     }
 }

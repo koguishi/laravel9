@@ -10,7 +10,8 @@ class CreateVideoInput
         public string $titulo,
         public string $descricao,
         public DateTime $dtFilmagem,
-        public array $atletasIds = [],
+        public array $categoriasIds,
+        public array $atletasIds,
         public ?array $videoMedia = null,
     ) { }
 }

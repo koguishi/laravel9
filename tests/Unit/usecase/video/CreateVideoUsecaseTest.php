@@ -140,7 +140,9 @@ class CreateVideoUsecaseTest extends TestCase
             titulo: 'titulo',
             descricao: 'descricao',
             dtFilmagem: new DateTime('2001-01-01'),
-        );
+            categoriasIds: [],
+            atletasIds: [],
+         );
         return $input;
     }
 }
