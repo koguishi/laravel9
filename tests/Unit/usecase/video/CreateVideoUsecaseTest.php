@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\usecase\video;
 
+use core\domain\repository\AtletaRepositoryInterface;
+use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\VideoRepositoryInterface;
 use core\usecase\interfaces\FileStorageInterface;
 use core\usecase\interfaces\TransactionInterface;
@@ -29,6 +31,8 @@ class CreateVideoUsecaseTest extends TestCase
             transaction: $this->mockTransaction(),
             fileStorage: $this->mockStorage(),
             eventManager: $this->mockEventManager(),
+            categoriaRepository: $this->mockCategoriaRepository(),
+            atletaRepository: $this->mockAtletaRepository(),
         );
         $this->assertTrue(true);
     }
@@ -40,6 +44,8 @@ class CreateVideoUsecaseTest extends TestCase
             transaction: $this->mockTransaction(),
             fileStorage: $this->mockStorage(),
             eventManager: $this->mockEventManager(),
+            categoriaRepository: $this->mockCategoriaRepository(),
+            atletaRepository: $this->mockAtletaRepository(),
         );
         $response = $usecase->execute(
             input: $this->videoInput()
@@ -99,6 +105,32 @@ class CreateVideoUsecaseTest extends TestCase
             VideoEventManagerInterface::class,
         );
         $mock->shouldReceive("dispatch");
+        return $mock;
+    }
+
+    private function mockCategoriaRepository()
+    {
+        /**
+         * @var CategoriaRepositoryInterface|MockInterface $mock
+         */
+        $mock = Mockery::mock(
+            stdClass::class,
+            CategoriaRepositoryInterface::class,
+        );
+        $mock->shouldReceive("getIds");
+        return $mock;
+    }
+
+    private function mockAtletaRepository()
+    {
+        /**
+         * @var AtletaRepositoryInterface|MockInterface $mock
+         */
+        $mock = Mockery::mock(
+            stdClass::class,
+            AtletaRepositoryInterface::class,
+        );
+        $mock->shouldReceive("getIds");
         return $mock;
     }
 

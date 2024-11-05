@@ -4,6 +4,8 @@ namespace core\usecase\video;
 
 use core\domain\entity\Video;
 use core\domain\event\VideoCreatedEvent;
+use core\domain\repository\AtletaRepositoryInterface;
+use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\VideoRepositoryInterface;
 use core\usecase\interfaces\FileStorageInterface;
 use core\usecase\interfaces\TransactionInterface;
@@ -15,6 +17,8 @@ class CreateVideoUsecase
         protected TransactionInterface $transaction,
         protected FileStorageInterface $fileStorage,
         protected VideoEventManagerInterface $eventManager,
+        protected CategoriaRepositoryInterface $categoriaRepository,
+        protected AtletaRepositoryInterface $atletaRepository,
     ) { }
 
     public function execute(CreateVideoInput $input): CreateVideoOutput
