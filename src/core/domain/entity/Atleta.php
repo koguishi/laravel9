@@ -2,14 +2,12 @@
 
 namespace core\domain\entity;
 
-use core\domain\entity\traits\MagicMethodsTrait;
 use core\domain\validation\DomainValidation;
 use core\domain\valueobject\Uuid;
 use DateTime;
 
-class Atleta
+class Atleta extends Entity
 {
-    use MagicMethodsTrait;
 
     public function __construct(
         protected string $nome,

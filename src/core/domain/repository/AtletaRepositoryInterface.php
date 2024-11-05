@@ -5,13 +5,8 @@ namespace core\domain\repository;
 use core\domain\entity\Atleta;
 use DateTime;
 
-interface AtletaRepositoryInterface
+interface AtletaRepositoryInterface extends EntityRepositoryInterface
 {
-    public function create(Atleta $atleta): Atleta;
-    public function read(string $id): Atleta;
-    public function update(Atleta $atleta): Atleta;
-    public function delete(string $id): bool;
-
     public function getIds(array $atletasIds = []): array;
 
     public function list(

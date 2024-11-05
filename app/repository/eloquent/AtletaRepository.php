@@ -5,6 +5,7 @@ namespace app\repository\eloquent;
 use App\Models\Atleta as AtletaModel;
 use app\repository\PaginationPresenter;
 use core\domain\entity\Atleta;
+use core\domain\entity\Entity;
 use core\domain\exception\AlreadyExistsException;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
@@ -30,7 +31,7 @@ class AtletaRepository implements AtletaRepositoryInterface
         return $entity;
     }    
 
-    public function create(Atleta $entity): Atleta
+    public function create(Entity $entity): Atleta
     {
         $arrAtleta = $this->model->where('nome', '=', $entity->nome)->get()->toArray();
         if (! empty($arrAtleta)) {
@@ -54,7 +55,7 @@ class AtletaRepository implements AtletaRepositoryInterface
         return $this->toEntity($atletaDb);
     }
 
-    public function update(Atleta $entity): Atleta
+    public function update(Entity $entity): Atleta
     {
         $atletaDb = $this->model->find($entity->id());
         if (! $atletaDb) {
