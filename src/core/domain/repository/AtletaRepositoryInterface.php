@@ -12,6 +12,8 @@ interface AtletaRepositoryInterface
     public function update(Atleta $atleta): Atleta;
     public function delete(string $id): bool;
 
+    public function getIds(array $atletasIds = []): array;
+
     public function list(
         string $order = '',
         string $filter_nome = '',

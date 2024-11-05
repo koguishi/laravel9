@@ -80,6 +80,14 @@ class AtletaRepository implements AtletaRepositoryInterface
         return $atletaDb->delete();
     }
 
+    public function getIds(array $atletasIds = []): array
+    {
+        return $this->model
+            ->whereIn('id', $atletasIds)
+            ->pluck('id')
+            ->toArray();
+    }
+
     public function list(
         string $order = '',
         string $filter_nome = '',

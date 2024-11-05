@@ -141,6 +141,22 @@ class CategoriaRepositoryTest extends TestCase
         }
     }
 
+    public function testGetIds()
+    {
+        $categorias = CategoriaModel::factory()->count(20)->create();
+        $response = $this->repository->getIds([$categorias[0]->id]);
+        $this->assertCount(1, $response);
+        $this->assertEquals($categorias[0]->id, $response[0]);
+
+        $response = $this->repository->getIds([
+            $categorias[1]->id,
+            $categorias[2]->id,
+        ]);
+        $this->assertCount(2, $response);
+        $this->assertContains($categorias[1]->id, $response);
+        $this->assertContains($categorias[2]->id, $response);
+    }
+
     public function testList()
     {
         $categorias = CategoriaModel::factory()->count(20)->create();

@@ -159,6 +159,22 @@ class AtletaRepositoryTest extends TestCase
         }
     }
 
+    public function testGetIds()
+    {
+        $atletas = AtletaModel::factory()->count(20)->create();
+        $response = $this->repository->getIds([$atletas[0]->id]);
+        $this->assertCount(1, $response);
+        $this->assertEquals($atletas[0]->id, $response[0]);
+
+        $response = $this->repository->getIds([
+            $atletas[1]->id,
+            $atletas[2]->id,
+        ]);
+        $this->assertCount(2, $response);
+        $this->assertContains($atletas[1]->id, $response);
+        $this->assertContains($atletas[2]->id, $response);
+    }
+
     public function testList()
     {
         $atletas = AtletaModel::factory()->count(20)->create();

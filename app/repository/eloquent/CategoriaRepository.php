@@ -75,6 +75,14 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         return $categoriaDb->delete();
     }
 
+    public function getIds(array $categoriasIds = []): array
+    {
+        return $this->model
+            ->whereIn('id', $categoriasIds)
+            ->pluck('id')
+            ->toArray();
+    }
+
     public function list(
         string $filter = '',
         string $order = ''
