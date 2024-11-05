@@ -2,15 +2,12 @@
 
 namespace core\domain\entity;
 
-use core\domain\entity\traits\MagicMethodsTrait;
 use core\domain\validation\DomainValidation;
 use core\domain\valueobject\Uuid;
 use DateTime;
 
-class Categoria
+class Categoria extends Entity
 {
-    use MagicMethodsTrait;
-
     public function __construct(
         protected Uuid|string $id = '',
         protected string $nome = '',

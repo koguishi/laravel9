@@ -5,6 +5,7 @@ namespace app\repository\eloquent;
 use App\Models\Categoria as CategoriaModel;
 use App\repository\PaginationPresenter;
 use core\domain\entity\Categoria as CategoriaEntity;
+use core\domain\entity\Entity;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\PaginationInterface;
@@ -28,7 +29,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         return $entity;
     }
 
-    public function create(CategoriaEntity $entity): CategoriaEntity
+    public function create(Entity $entity): CategoriaEntity
     {
         $categoriaDb = $this->model->create([
             'id' => $entity->id(),
@@ -48,7 +49,7 @@ class CategoriaRepository implements CategoriaRepositoryInterface
         return $this->toEntity($categoriaDb);
     }
 
-    public function update(CategoriaEntity $entity): CategoriaEntity
+    public function update(Entity $entity): CategoriaEntity
     {
         $categoriaDb = $this->model->find($entity->id());
         if (! $categoriaDb) {
