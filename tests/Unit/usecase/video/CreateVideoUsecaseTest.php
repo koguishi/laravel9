@@ -19,35 +19,26 @@ use stdClass;
 
 class CreateVideoUsecaseTest extends TestCase
 {
+    protected $usecase;
+    protected function setUp(): void
+    {
+        $this->usecase = new CreateVideoUsecase(
+            repository: $this->mockRepository(),
+            transaction: $this->mockTransaction(),
+            fileStorage: $this->mockStorage(),
+            eventManager: $this->mockEventManager(),
+            categoriaRepository: $this->mockCategoriaRepository(),
+            atletaRepository: $this->mockAtletaRepository(),
+        );
+    }
     public function tearDown(): void
     {
         Mockery::close();
     }
 
-    public function testConstructor()
-    {
-        $usecase = new CreateVideoUsecase(
-            repository: $this->mockRepository(),
-            transaction: $this->mockTransaction(),
-            fileStorage: $this->mockStorage(),
-            eventManager: $this->mockEventManager(),
-            categoriaRepository: $this->mockCategoriaRepository(),
-            atletaRepository: $this->mockAtletaRepository(),
-        );
-        $this->assertTrue(true);
-    }
-
     public function testExecute()
     {
-        $usecase = new CreateVideoUsecase(
-            repository: $this->mockRepository(),
-            transaction: $this->mockTransaction(),
-            fileStorage: $this->mockStorage(),
-            eventManager: $this->mockEventManager(),
-            categoriaRepository: $this->mockCategoriaRepository(),
-            atletaRepository: $this->mockAtletaRepository(),
-        );
-        $response = $usecase->execute(
+        $response = $this->usecase->execute(
             input: $this->videoInput()
         );
         $this->assertInstanceOf(CreateVideoOutput::class, $response);
