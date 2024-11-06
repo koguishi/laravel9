@@ -9,12 +9,12 @@ use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\VideoRepositoryInterface;
-use core\domain\valueobject\Media;
 use core\usecase\interfaces\FileStorageInterface;
 use core\usecase\interfaces\TransactionInterface;
 
 class CreateVideoUsecase
 {
+    protected VideoBuilder $builder;
     public function __construct(
         protected VideoRepositoryInterface $repository,
         protected TransactionInterface $transaction,
@@ -22,35 +22,41 @@ class CreateVideoUsecase
         protected VideoEventManagerInterface $eventManager,
         protected CategoriaRepositoryInterface $categoriaRepository,
         protected AtletaRepositoryInterface $atletaRepository,
-    ) { }
+    ) {
+        $this->builder = new VideoBuilder();
+    }
 
     public function execute(CreateVideoInput $input): CreateVideoOutput
     {
-        // create entity do video usando o $input
-        // inserir ids de atleta(s) e categoria(s)
-        $video = $this->createVideoEntity($input);
+        $this->validateIds(
+            $this->categoriaRepository,
+            'Categoria(s)',
+            $input->categoriasIds
+        );
+
+        $this->validateIds(
+            $this->atletaRepository,
+            'Atleta(s)',
+            $input->atletasIds
+        );
+
+        $this->builder->createEntity($input);
+        $this->builder->addCategorias($input);
+        $this->builder->addAtletas($input);
 
         try {
             // persitir a entity do video usando $repository
-            $this->repository->create($video);
+            $this->repository->create($this->builder->getEntity());
 
             // armazenar a media usando o id da entity do video para o path usando o $fileStorage
-            $path = $this->storeVideo($video->id(), $input->videoFile);
-            if ($path) {
+            $this->addVideoMedia($input);
 
-                // informar path para entidade video
-                $media = new Media($path, MediaStatus::PENDING);
-                $video->setVideoFile($media);
-                $this->repository->updateMedia($video);
-
-                // disparar o evento usando o $eventManager
-                $this->eventManager->dispatch(new VideoCreatedEvent($video));
-            }
+            $this->repository->updateMedia($this->builder->getEntity());
 
             // comitar a transação usando o $transaction
             $this->transaction->commit();
 
-            return $this->createOutput($video);
+            return $this->createOutput($this->builder->getEntity());
         } catch (\Throwable $th) {
             $this->transaction->rollBack();
 
@@ -71,38 +77,19 @@ class CreateVideoUsecase
         );
     }
 
-    private function createVideoEntity(CreateVideoInput $input): Video
+    private function addVideoMedia(object $input): void
     {
-        $this->validateIds(
-            $this->categoriaRepository,
-            'Categoria(s)',
-            $input->categoriasIds
-        );
+        $path = $this->storeFile($this->builder->getEntity()->id(), $input->videoFile);
+        if ($path) {
+            // informar path para entidade video
+            $this->builder->addVideoMedia($path, MediaStatus::PENDING);
 
-        $this->validateIds(
-            $this->atletaRepository,
-            'Atleta(s)',
-            $input->atletasIds
-        );
-
-        $video = new Video(
-            titulo: $input->titulo,
-            descricao: $input->descricao,
-            dtFilmagem: $input->dtFilmagem,
-        );
-
-        foreach ($input->categoriasIds as $categoriaId) {
-            $video->vincularCategoria($categoriaId);
+            // disparar o evento usando o $eventManager
+            $this->eventManager->dispatch(new VideoCreatedEvent($this->builder->getEntity()));
         }
-
-        foreach ($input->atletasIds as $atletaId) {
-            $video->vincularAtleta($atletaId);
-        }
-
-        return $video;
     }
 
-    private function storeVideo(string $path, ?array $media = null): string
+    private function storeFile(string $path, ?array $media = null): string
     {
         if ($media) {
             $this->fileStorage->store(

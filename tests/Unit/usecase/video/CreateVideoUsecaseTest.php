@@ -54,7 +54,7 @@ class CreateVideoUsecaseTest extends TestCase
             stdClass::class,
             VideoRepositoryInterface::class,
         );
-        $mock->shouldReceive("create");
+        $mock->shouldReceive("create", "updateMedia");
         return $mock;
     }
 
