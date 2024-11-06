@@ -30,7 +30,17 @@ class Video extends Entity
     public function dtFilmagem(): string
     {
         return $this->dtFilmagem->format('Y-m-d');
-    }    
+    }
+
+    public function videoFile(): ?Media
+    {
+        return $this->videoFile;
+    }
+
+    public function setVideoFile(Media $videoFile): void
+    {
+        $this->videoFile = $videoFile;
+    }
 
     private function validate()
     {

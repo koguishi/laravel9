@@ -33,7 +33,7 @@ class CreateVideoUsecase
             $this->repository->create($video);
 
             // armazenar a media usando o id da entity do video para o path usando o $fileStorage
-            $path = $this->storeVideo($video->id(), $input->videoMedia);
+            $path = $this->storeVideo($video->id(), $input->videoFile);
             if ($path) {
                 // TODO: informar path para entidade video
                 // $video->alterarPath()
@@ -44,15 +44,22 @@ class CreateVideoUsecase
             // comitar a transação usando o $transaction
             $this->transaction->commit();
 
-            return new CreateVideoOutput(
-                titulo: $input->titulo,
-                descricao: $input->descricao,
-                dtFilmagem: $input->dtFilmagem,
-            );
+            return $this->createOutput($video);
         } catch (\Throwable $th) {
             $this->transaction->rollBack();
             throw $th;
         }
+    }
+
+    private function createOutput(Video $video): CreateVideoOutput
+    {
+        return new CreateVideoOutput(
+            id: $video->id(),
+            titulo: $video->titulo,
+            descricao: $video->descricao,
+            dtFilmagem: $video->dtFilmagem,
+            pathVideoFile: $video->videoFile()?->filePath
+        );
     }
 
     private function createVideoEntity(CreateVideoInput $input): Video

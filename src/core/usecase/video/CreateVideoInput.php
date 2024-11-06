@@ -12,6 +12,6 @@ class CreateVideoInput
         public DateTime $dtFilmagem,
         public array $categoriasIds,
         public array $atletasIds,
-        public ?array $videoMedia = null,
+        public ?array $videoFile = null,
     ) { }
 }
