@@ -73,18 +73,28 @@ class CreateVideoUsecase
 
     private function createVideoEntity(CreateVideoInput $input): Video
     {
+        $this->validateIds(
+            $this->categoriaRepository,
+            'Categoria(s)',
+            $input->categoriasIds
+        );
+
+        $this->validateIds(
+            $this->atletaRepository,
+            'Atleta(s)',
+            $input->atletasIds
+        );
+
         $video = new Video(
             titulo: $input->titulo,
             descricao: $input->descricao,
             dtFilmagem: $input->dtFilmagem,
         );
 
-        $this->validateCategoriasIds($input->categoriasIds);
         foreach ($input->categoriasIds as $categoriaId) {
             $video->vincularCategoria($categoriaId);
         }
 
-        $this->validateAtletasIds($input->atletasIds);
         foreach ($input->atletasIds as $atletaId) {
             $video->vincularAtleta($atletaId);
         }
@@ -103,18 +113,18 @@ class CreateVideoUsecase
         return '';
     }
 
-    private function validateCategoriasIds(array $ids = [])
+    private function validateIds($repository, string $label, array $ids = [])
     {
-        $categoriasIdsDb = $this->categoriaRepository->getIds($ids);
+        $idsDb = $repository->getIds($ids);
 
-        $arrayDiff = array_diff($ids, $categoriasIdsDb);
+        $arrayDiff = array_diff($ids, $idsDb);
 
         $countDiff = count($arrayDiff);
 
         if ($countDiff) {
             $msg = sprintf(
-                '%s %s not found',
-                $countDiff > 1 ? 'Categorias' : 'Categoria',
+                '%s not found: %s',
+                $label,
                 implode(', ', $arrayDiff)
             );
 
@@ -122,22 +132,4 @@ class CreateVideoUsecase
         }
     }
 
-    private function validateAtletasIds(array $ids = [])
-    {
-        $atletasIdsDb = $this->atletaRepository->getIds($ids);
-
-        $arrayDiff = array_diff($ids, $atletasIdsDb);
-
-        $countDiff = count($arrayDiff);
-
-        if ($countDiff) {
-            $msg = sprintf(
-                '%s %s not found',
-                $countDiff > 1 ? 'Atletas' : 'Atleta',
-                implode(', ', $arrayDiff)
-            );
-
-            throw new NotFoundException($msg);
-        }
-    }
 }
