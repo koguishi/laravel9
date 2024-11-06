@@ -3,11 +3,13 @@
 namespace core\usecase\video;
 
 use core\domain\entity\Video;
+use core\domain\enum\MediaStatus;
 use core\domain\event\VideoCreatedEvent;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\VideoRepositoryInterface;
+use core\domain\valueobject\Media;
 use core\usecase\interfaces\FileStorageInterface;
 use core\usecase\interfaces\TransactionInterface;
 
@@ -35,8 +37,12 @@ class CreateVideoUsecase
             // armazenar a media usando o id da entity do video para o path usando o $fileStorage
             $path = $this->storeVideo($video->id(), $input->videoFile);
             if ($path) {
-                // TODO: informar path para entidade video
-                // $video->alterarPath()
+
+                // informar path para entidade video
+                $media = new Media($path, MediaStatus::PENDING);
+                $video->setVideoFile($media);
+                $this->repository->updateMedia($video);
+
                 // disparar o evento usando o $eventManager
                 $this->eventManager->dispatch(new VideoCreatedEvent($video));
             }
@@ -47,6 +53,9 @@ class CreateVideoUsecase
             return $this->createOutput($video);
         } catch (\Throwable $th) {
             $this->transaction->rollBack();
+
+            // if (isset($path)) $this->fileStorage->delete($path);
+
             throw $th;
         }
     }
