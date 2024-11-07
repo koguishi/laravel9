@@ -2,6 +2,7 @@
 
 namespace core\usecase\video;
 
+use core\domain\builder\VideoBuilder;
 use core\domain\enum\MediaStatus;
 use core\domain\event\VideoCreatedEvent;
 use core\domain\exception\NotFoundException;

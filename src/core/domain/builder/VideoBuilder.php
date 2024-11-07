@@ -1,6 +1,6 @@
 <?php
 
-namespace core\usecase\video;
+namespace core\domain\builder;
 
 use core\domain\entity\Video;
 use core\domain\enum\MediaStatus;
