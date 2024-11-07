@@ -41,7 +41,7 @@ abstract class BaseVideoUsecase
     protected function storeFile(string $path, ?array $media = null): string
     {
         if ($media) {
-            $this->fileStorage->store(
+            return $this->fileStorage->store(
                 path: $path,
                 file: $media,
             );

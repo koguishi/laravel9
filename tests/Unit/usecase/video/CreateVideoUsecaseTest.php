@@ -71,6 +71,16 @@ class CreateVideoUsecaseTest extends TestCase
         ];
     }
 
+    public function testUploadVideoFile()
+    {
+        $response = $this->usecase->execute(
+            input: $this->videoInput(
+                videoFile: ['tmp => temp/file.png']
+            )
+        );
+        $this->assertNotNull($response->pathVideoFile);
+    }
+
     private function mockRepository()
     {
         // return Mockery::mock(stdClass::class, VideoRepositoryInterface::class);
@@ -153,17 +163,23 @@ class CreateVideoUsecaseTest extends TestCase
     }
 
     private function videoInput(
+        string $titulo = 'titulo',
+        string $descricao = 'descrição',
+        DateTime $dtFilmagem = new DateTime('2001-01-01'),        
         array $categoriasIds = [],
         array $atletasIds = [],
+        ?array $videoFile = null,
     )
     {
         $input = new CreateVideoInput(
-            titulo: 'titulo',
-            descricao: 'descricao',
-            dtFilmagem: new DateTime('2001-01-01'),
+            titulo: $titulo,
+            descricao: $descricao,
+            dtFilmagem: $dtFilmagem,
             categoriasIds: $categoriasIds,
             atletasIds: $atletasIds,
-         );
+            videoFile: $videoFile,
+        );
+
         return $input;
     }
 }
