@@ -45,24 +45,30 @@ class CreateVideoUsecaseTest extends TestCase
         $this->assertInstanceOf(CreateVideoOutput::class, $response);
     }
 
-    public function testExceptionCategoriasIds()
+    /**
+     * @dataProvider dataProviderIds
+     */
+    public function testExceptionIds(
+        array $categoriasIds,
+        array $atletasIds,
+    )
     {
         $this->expectException(NotFoundException::class);
         $response = $this->usecase->execute(
             input: $this->videoInput(
-                categoriasIds: ['uuid1', 'uuid2'],
+                categoriasIds: $categoriasIds,
+                atletasIds: $atletasIds,
             )
         );
     }
 
-    public function testExceptionAtletasIds()
+    public function dataProviderIds(): array
     {
-        $this->expectException(NotFoundException::class);
-        $response = $this->usecase->execute(
-            input: $this->videoInput(
-                atletasIds: ['uuid1', 'uuid2'],
-            )
-        );
+        return [
+            [['uuid_categoria_1'], ['uuid_atleta_1']],
+            [['uuid_categoria_1', 'uuid_categoria_2'], ['uuid_atleta_1', 'uuid_atleta_2']],
+            [['uuid_c_1', 'uuid_c_2', 'uuid_c_3'], ['uuid_a_1', 'uuid_a2', 'uuid_a3']],
+        ];
     }
 
     private function mockRepository()
