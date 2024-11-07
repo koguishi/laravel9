@@ -13,33 +13,37 @@ class VideoBuilder implements VideoBuilderInterface
         $this->video = null;
     }
 
-    public function createEntity(object $input): void
+    public function createEntity(object $input): VideoBuilderInterface
     {
         $this->video = new Video(
             titulo: $input->titulo,
             descricao: $input->descricao,
             dtFilmagem: $input->dtFilmagem,
         );
+        return $this;
     }
 
-    public function addCategorias(object $input): void
+    public function addCategoriasIds(object $input): VideoBuilderInterface
     {
         foreach ($input->categoriasIds as $categoriaId) {
             $this->video->vincularCategoria($categoriaId);
         }
+        return $this;
     }
 
-    public function addAtletas(object $input): void
+    public function addAtletasIds(object $input): VideoBuilderInterface
     {
         foreach ($input->atletasIds as $atletaId) {
             $this->video->vincularAtleta($atletaId);
         }
+        return $this;
     }
     
-    public function addVideoMedia(string $path, MediaStatus $mediaStatus): void
+    public function addVideoMedia(string $path, MediaStatus $mediaStatus): VideoBuilderInterface
     {
         $media = new Media($path, $mediaStatus);
         $this->video->setVideoFile($media);
+        return $this;
     }
 
     public function getEntity(): Video

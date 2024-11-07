@@ -28,9 +28,9 @@ class CreateVideoUsecase extends BaseVideoUsecase
             $input->atletasIds
         );
 
-        $this->builder->createEntity($input);
-        $this->builder->addCategorias($input);
-        $this->builder->addAtletas($input);
+        $this->builder->createEntity($input)
+            ->addCategoriasIds($input)
+            ->addAtletasIds($input);
 
         try {
             // persitir a entity do video usando $repository
