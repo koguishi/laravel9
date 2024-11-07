@@ -12,20 +12,8 @@ use core\domain\repository\VideoRepositoryInterface;
 use core\usecase\interfaces\FileStorageInterface;
 use core\usecase\interfaces\TransactionInterface;
 
-class CreateVideoUsecase
+class CreateVideoUsecase extends BaseVideoUsecase
 {
-    protected VideoBuilder $builder;
-    public function __construct(
-        protected VideoRepositoryInterface $repository,
-        protected TransactionInterface $transaction,
-        protected FileStorageInterface $fileStorage,
-        protected VideoEventManagerInterface $eventManager,
-        protected CategoriaRepositoryInterface $categoriaRepository,
-        protected AtletaRepositoryInterface $atletaRepository,
-    ) {
-        $this->builder = new VideoBuilder();
-    }
-
     public function execute(CreateVideoInput $input): CreateVideoOutput
     {
         $this->validateIds(
@@ -76,47 +64,4 @@ class CreateVideoUsecase
             pathVideoFile: $video->videoFile()?->filePath
         );
     }
-
-    private function addVideoMedia(object $input): void
-    {
-        $path = $this->storeFile($this->builder->getEntity()->id(), $input->videoFile);
-        if ($path) {
-            // informar path para entidade video
-            $this->builder->addVideoMedia($path, MediaStatus::PENDING);
-
-            // disparar o evento usando o $eventManager
-            $this->eventManager->dispatch(new VideoCreatedEvent($this->builder->getEntity()));
-        }
-    }
-
-    private function storeFile(string $path, ?array $media = null): string
-    {
-        if ($media) {
-            $this->fileStorage->store(
-                path: $path,
-                file: $media,
-            );
-        }
-        return '';
-    }
-
-    private function validateIds($repository, string $label, array $ids = [])
-    {
-        $idsDb = $repository->getIds($ids);
-
-        $arrayDiff = array_diff($ids, $idsDb);
-
-        $countDiff = count($arrayDiff);
-
-        if ($countDiff) {
-            $msg = sprintf(
-                '%s not found: %s',
-                $label,
-                implode(', ', $arrayDiff)
-            );
-
-            throw new NotFoundException($msg);
-        }
-    }
-
 }
