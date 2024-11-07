@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\usecase\video;
 
+use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\CategoriaRepositoryInterface;
 use core\domain\repository\VideoRepositoryInterface;
@@ -42,6 +43,26 @@ class CreateVideoUsecaseTest extends TestCase
             input: $this->videoInput()
         );
         $this->assertInstanceOf(CreateVideoOutput::class, $response);
+    }
+
+    public function testExceptionCategoriasIds()
+    {
+        $this->expectException(NotFoundException::class);
+        $response = $this->usecase->execute(
+            input: $this->videoInput(
+                categoriasIds: ['uuid1', 'uuid2'],
+            )
+        );
+    }
+
+    public function testExceptionAtletasIds()
+    {
+        $this->expectException(NotFoundException::class);
+        $response = $this->usecase->execute(
+            input: $this->videoInput(
+                atletasIds: ['uuid1', 'uuid2'],
+            )
+        );
     }
 
     private function mockRepository()
@@ -125,14 +146,17 @@ class CreateVideoUsecaseTest extends TestCase
         return $mock;
     }
 
-    private function videoInput()
+    private function videoInput(
+        array $categoriasIds = [],
+        array $atletasIds = [],
+    )
     {
         $input = new CreateVideoInput(
             titulo: 'titulo',
             descricao: 'descricao',
             dtFilmagem: new DateTime('2001-01-01'),
-            categoriasIds: [],
-            atletasIds: [],
+            categoriasIds: $categoriasIds,
+            atletasIds: $atletasIds,
          );
         return $input;
     }
