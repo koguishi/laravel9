@@ -6,9 +6,9 @@ use core\domain\entity\Video;
 use core\domain\enum\MediaStatus;
 use core\domain\valueobject\Media;
 
-class VideoBuilder implements VideoBuilderInterface
+class CreateVideoBuilder implements VideoBuilderInterface
 {
-    private ?Video $video = null;
+    protected ?Video $video = null;
     public function __construct() {
         $this->video = null;
     }
