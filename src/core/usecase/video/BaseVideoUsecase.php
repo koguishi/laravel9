@@ -3,6 +3,7 @@
 namespace core\usecase\video;
 
 use core\domain\builder\CreateVideoBuilder;
+use core\domain\builder\VideoBuilderInterface;
 use core\domain\enum\MediaStatus;
 use core\domain\event\VideoCreatedEvent;
 use core\domain\exception\NotFoundException;
@@ -14,7 +15,7 @@ use core\usecase\interfaces\TransactionInterface;
 
 abstract class BaseVideoUsecase
 {
-    protected CreateVideoBuilder $builder;
+    protected VideoBuilderInterface $builder;
     public function __construct(
         protected VideoRepositoryInterface $repository,
         protected TransactionInterface $transaction,
@@ -23,8 +24,10 @@ abstract class BaseVideoUsecase
         protected CategoriaRepositoryInterface $categoriaRepository,
         protected AtletaRepositoryInterface $atletaRepository,
     ) {
-        $this->builder = new CreateVideoBuilder();
+        $this->builder = $this->getBuilder();
     }
+
+    abstract protected function getBuilder(): VideoBuilderInterface;
 
     protected function addVideoMedia(object $input): void
     {

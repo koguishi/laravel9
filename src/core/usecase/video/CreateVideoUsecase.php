@@ -2,10 +2,17 @@
 
 namespace core\usecase\video;
 
+use core\domain\builder\CreateVideoBuilder;
+use core\domain\builder\VideoBuilderInterface;
 use core\domain\entity\Video;
 
 class CreateVideoUsecase extends BaseVideoUsecase
 {
+    protected function getBuilder(): VideoBuilderInterface
+    {
+        return new CreateVideoBuilder();
+    }
+    
     public function execute(CreateVideoInput $input): CreateVideoOutput
     {
         $this->validateIds(
