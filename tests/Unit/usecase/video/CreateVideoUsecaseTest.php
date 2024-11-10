@@ -2,21 +2,10 @@
 
 namespace Tests\Unit\usecase\video;
 
-use core\domain\exception\NotFoundException;
-use core\domain\repository\AtletaRepositoryInterface;
-use core\domain\repository\CategoriaRepositoryInterface;
-use core\domain\repository\VideoRepositoryInterface;
-use core\usecase\interfaces\FileStorageInterface;
-use core\usecase\interfaces\TransactionInterface;
 use core\usecase\video\CreateVideoInput;
 use core\usecase\video\CreateVideoOutput;
 use core\usecase\video\CreateVideoUsecase;
-use core\usecase\video\VideoEventManagerInterface;
 use DateTime;
-use Mockery;
-use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class CreateVideoUsecaseTest extends BaseVideoUsecaseTest
 {
