@@ -19,4 +19,11 @@ class UpdateVideoBuilder extends CreateVideoBuilder
         );
         return $this;
     }
+
+    public function setEntity(Video $video)
+    {
+        $this->video = $video;
+
+        return $this;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\usecase\video;
 
+use core\domain\entity\Video;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\CategoriaRepositoryInterface;
@@ -130,12 +131,25 @@ abstract class BaseVideoUsecaseTest extends TestCase
             VideoRepositoryInterface::class,
         );
         $mock->shouldReceive($this->repositoryActionName())
-            ->times($timesAction);
+            ->times($timesAction)
+            ->andReturn($this->createVideoEntity());
+
+        $mock->shouldReceive("read")
+            ->andReturn($this->createVideoEntity());
         
         $mock->shouldReceive("updateMedia")
             ->times($timesUpdateMedia);
 
         return $mock;
+    }
+
+    private function createVideoEntity()
+    {
+        return new Video(
+            titulo: 'Título',
+            descricao: 'Descrição',
+            dtFilmagem: new DateTime('2024-10-01'),
+        );
     }
 
     private function mockTransaction(

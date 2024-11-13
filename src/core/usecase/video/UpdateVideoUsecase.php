@@ -26,13 +26,24 @@ class UpdateVideoUsecase extends BaseVideoUsecase
             $input->atletasIds
         );
 
-        $this->builder->createEntity($input)
-            ->addCategoriasIds($input)
-            ->addAtletasIds($input);
+        /**
+         * @var Video
+         */
+        $video = $this->repository->read($input->id);
+        $video->alterar(
+            titulo: $input->titulo,
+            descricao: $input->descricao,
+        );        
+
+        /**
+         * @var UpdateVideoBuilder
+         */
+        $builder = $this->builder;
+        $builder->setEntity($video);
 
         try {
             // persitir a entity do video usando $repository
-            $this->repository->create($this->builder->getEntity());
+            $this->repository->update($this->builder->getEntity());
 
             // armazenar a media usando o id da entity do video para o path usando o $fileStorage
             $this->addVideoMedia($input);
