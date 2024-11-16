@@ -16,6 +16,12 @@ use stdClass;
 class ReadVideoUsecaseTest extends TestCase
 {
 
+    public function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }    
+
     public function testExecute()
     {
         $usecase = new ReadVideoUsecase(

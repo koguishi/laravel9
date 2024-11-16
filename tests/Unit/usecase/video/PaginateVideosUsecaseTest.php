@@ -16,6 +16,12 @@ class PaginateVideosUsecaseTest extends TestCase
 {
     use UsecaseTrait;
 
+    public function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }    
+
     public function testExecute()
     {
         $usecase = new PaginateVideosUsecase(
