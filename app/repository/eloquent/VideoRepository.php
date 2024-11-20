@@ -2,6 +2,7 @@
 
 namespace app\repository\eloquent;
 
+use app\Models\Video as Model;
 use app\repository\PaginationPresenter;
 use core\domain\entity\Entity;
 use core\domain\entity\Video;
@@ -12,6 +13,11 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class VideoRepository implements VideoRepositoryInterface
 {
+    protected $model;
+    
+    public function __construct(Model $model) {
+        $this->model = $model;
+    }
     public function create(Entity $entity): Entity
     {
         return $entity;
