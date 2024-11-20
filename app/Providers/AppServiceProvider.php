@@ -4,8 +4,14 @@ namespace App\Providers;
 
 use app\repository\eloquent\AtletaRepository;
 use app\repository\eloquent\CategoriaRepository;
+use app\repository\eloquent\VideoRepository;
+use app\services\FileStorage;
+use core\domain\event\VideoCreatedEvent;
 use core\domain\repository\AtletaRepositoryInterface;
 use core\domain\repository\CategoriaRepositoryInterface;
+use core\domain\repository\VideoRepositoryInterface;
+use core\usecase\interfaces\FileStorageInterface;
+use core\usecase\video\VideoEventManagerInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,6 +24,16 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->bindRepositories();
+
+        $this->app->bind(
+            FileStorageInterface::class,
+            FileStorage::class
+        );
+
+        $this->app->bind(
+            VideoEventManagerInterface::class,
+            VideoCreatedEvent::class
+        );
     }
 
     /**
@@ -45,5 +61,9 @@ class AppServiceProvider extends ServiceProvider
             AtletaRepository::class
         );
 
-    }    
+        $this->app->singleton(
+            VideoRepositoryInterface::class,
+            VideoRepository::class
+        );
+    }
 }
