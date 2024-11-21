@@ -331,11 +331,11 @@ class AtletaApiTest extends TestCase
     {
         $atleta = Atleta::factory()->create();
 
-        $atleta->dtNascimento->modify('-1 days');
+        $atleta->dt_nascimento->modify('-1 days');
 
         $data = [
             'nome' => 'Name Updated',
-            'dtNascimento' => $atleta->dtNascimento->format('Y-m-d'),
+            'dtNascimento' => $atleta->dt_nascimento->format('Y-m-d'),
         ];
 
         $response = $this->putJson("{$this->endpoint}/{$atleta->id}", $data);
@@ -350,7 +350,7 @@ class AtletaApiTest extends TestCase
         ]);
         $this->assertDatabaseHas('atletas', [
             'nome' => 'Name Updated',
-            'dtNascimento' => $atleta->dtNascimento->format('Y-m-d H:i:s'),
+            'dt_nascimento' => $atleta->dt_nascimento->format('Y-m-d H:i:s'),
         ]);
     }
 

@@ -44,7 +44,7 @@ class AtletaRepositoryTest extends TestCase
         $this->assertInstanceOf(Atleta::class, $response);
         $this->assertDatabaseHas('atletas', [
             'nome' => $entity->nome,
-            'dtNascimento' => $entity->dtNascimento(),
+            'dt_nascimento' => $entity->dtNascimento(),
             'created_at' => $entity->criadoEm(),
         ]);
     }
@@ -74,13 +74,13 @@ class AtletaRepositoryTest extends TestCase
         $this->assertInstanceOf(Atleta::class, $responseA);
         $this->assertEquals($atletaA->id, $responseA->id);
         $this->assertEquals($atletaA->nome, $responseA->nome);
-        $this->assertEquals($atletaA->dtNascimento, $responseA->dtNascimento);
+        $this->assertEquals($atletaA->dt_nascimento, $responseA->dtNascimento);
 
         $responseB = $this->repository->read($atletaB->id);
         $this->assertInstanceOf(Atleta::class, $responseB);
         $this->assertEquals($atletaB->id, $responseB->id);
         $this->assertEquals($atletaB->nome, $responseB->nome);
-        $this->assertEquals($atletaB->dtNascimento, $responseB->dtNascimento);
+        $this->assertEquals($atletaB->dt_nascimento, $responseB->dtNascimento);
     }
 
     public function testReadNotFound()
@@ -99,7 +99,7 @@ class AtletaRepositoryTest extends TestCase
         $atletaA = AtletaModel::factory()->create();
         $this->assertDatabaseHas('atletas', [
             'nome' => $atletaA->nome,
-            'dtNascimento' => $atletaA->dtNascimento
+            'dt_nascimento' => $atletaA->dt_nascimento
         ]);
 
         $responseA = $this->repository->read($atletaA->id);
@@ -110,14 +110,14 @@ class AtletaRepositoryTest extends TestCase
         $this->repository->update($responseA);
         $this->assertDatabaseHas('atletas', [
             'nome' => $responseA->nome,
-            'dtNascimento' => $responseA->dtNascimento,
+            'dt_nascimento' => $responseA->dtNascimento,
         ]);
 
         $this->assertDatabaseMissing('atletas', [
             'nome' => $atletaA->nome,
         ]);
         $this->assertDatabaseMissing('atletas', [
-            'dtNascimento' => $atletaA->dtNascimento,
+            'dtNascimento' => $atletaA->dt_nascimento,
         ]);
     }
 
@@ -141,7 +141,7 @@ class AtletaRepositoryTest extends TestCase
         $atletaA = AtletaModel::factory()->create();
         $this->assertDatabaseHas('atletas', [
             'nome' => $atletaA->nome,
-            'dtNascimento' => $atletaA->dtNascimento
+            'dt_nascimento' => $atletaA->dt_nascimento
         ]);
 
         $this->repository->delete($atletaA->id);
@@ -206,18 +206,18 @@ class AtletaRepositoryTest extends TestCase
     {
         $atletas = AtletaModel::factory()->count(20)->create();
         $arrAtletas = $this->repository->list(
-            order: '{"dtNascimento": "asc"}',
+            order: '{"dt_nascimento": "asc"}',
         );
         $this->assertEquals(count($atletas), count($arrAtletas));
 
         $arrDatas = [];
         foreach ($atletas as $key => $atleta) {
-            array_push($arrDatas, $atleta->dtNascimento);
+            array_push($arrDatas, $atleta->dt_nascimento);
         }
         sort($arrDatas);
 
         foreach ($arrAtletas as $key => $value) {
-            $this->assertEquals($arrDatas[$key]->format('Y-m-d H:i:s'), $arrAtletas[$key]['dtNascimento']);
+            $this->assertEquals($arrDatas[$key]->format('Y-m-d H:i:s'), $arrAtletas[$key]['dt_nascimento']);
         }
     }
 
@@ -264,19 +264,19 @@ class AtletaRepositoryTest extends TestCase
             '2000-01-02',
             '2000-01-03',
         ];
-        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[0]]);
-        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[1]]);
-        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[2]]);
-        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[3]]);
-        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[4]]);
-        AtletaModel::factory()->create(['dtNascimento' => $arrDatas[5]]);
+        AtletaModel::factory()->create(['dt_nascimento' => $arrDatas[0]]);
+        AtletaModel::factory()->create(['dt_nascimento' => $arrDatas[1]]);
+        AtletaModel::factory()->create(['dt_nascimento' => $arrDatas[2]]);
+        AtletaModel::factory()->create(['dt_nascimento' => $arrDatas[3]]);
+        AtletaModel::factory()->create(['dt_nascimento' => $arrDatas[4]]);
+        AtletaModel::factory()->create(['dt_nascimento' => $arrDatas[5]]);
 
-        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[0]]);
-        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[1]]);
-        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[2]]);
-        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[3]]);
-        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[4]]);
-        $this->assertDatabaseHas('atletas', ['dtNascimento' => $arrDatas[5]]);
+        $this->assertDatabaseHas('atletas', ['dt_nascimento' => $arrDatas[0]]);
+        $this->assertDatabaseHas('atletas', ['dt_nascimento' => $arrDatas[1]]);
+        $this->assertDatabaseHas('atletas', ['dt_nascimento' => $arrDatas[2]]);
+        $this->assertDatabaseHas('atletas', ['dt_nascimento' => $arrDatas[3]]);
+        $this->assertDatabaseHas('atletas', ['dt_nascimento' => $arrDatas[4]]);
+        $this->assertDatabaseHas('atletas', ['dt_nascimento' => $arrDatas[5]]);
 
         $arrAtletas = $this->repository->list(
             filter_dtNascimento_inicial: new DateTime($arrDatas[0]),
@@ -354,20 +354,20 @@ class AtletaRepositoryTest extends TestCase
     {
         $atletas = AtletaModel::factory()->count(20)->create();
         $response = $this->repository->paginate(
-            order: '{"dtNascimento": "asc"}',
+            order: '{"dt_nascimento": "asc"}',
         );
         $this->assertCount(15, $response->items());
 
         $arrDatas = [];
         foreach ($atletas as $key => $atleta) {
-            array_push($arrDatas, $atleta->dtNascimento);
+            array_push($arrDatas, $atleta->dt_nascimento);
         }
         sort($arrDatas);
 
         foreach ($response->items() as $key => $value) {
             $this->assertEquals(
                 $arrDatas[$key]->format('Y-m-d H:i:s'),
-                $value->dtNascimento
+                $value->dt_nascimento
             );
         }
     }
@@ -403,17 +403,17 @@ class AtletaRepositoryTest extends TestCase
         $dtNascimento3 = new DateTime('2021-09-30');
         AtletaModel::factory(
             count: 7,
-            state: ['dtNascimento' => $dtNascimento1]
+            state: ['dt_nascimento' => $dtNascimento1]
         )->create();
 
         AtletaModel::factory(
             count: 7,
-            state: ['dtNascimento' => $dtNascimento2]
+            state: ['dt_nascimento' => $dtNascimento2]
         )->create();
 
         AtletaModel::factory(
             count: 7,
-            state: ['dtNascimento' => $dtNascimento3]
+            state: ['dt_nascimento' => $dtNascimento3]
         )->create();
 
         $response = $this->repository->paginate(
@@ -448,17 +448,17 @@ class AtletaRepositoryTest extends TestCase
         $dtNascimento2 = new DateTime('2011-04-15');
         AtletaModel::factory(
             count: 7,
-            state: ['dtNascimento' => $dtNascimento1]
+            state: ['dt_nascimento' => $dtNascimento1]
         )->create();
 
         AtletaModel::factory(
             count: 7,
-            state: ['dtNascimento' => $dtNascimento2]
+            state: ['dt_nascimento' => $dtNascimento2]
         )->create();
 
         AtletaModel::factory(
             count: 10,
-            state: ['dtNascimento' => $dtNascimento1]
+            state: ['dt_nascimento' => $dtNascimento1]
         )->create();
 
         // total de 17 items com $dtNascimento1

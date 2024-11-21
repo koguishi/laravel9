@@ -21,7 +21,7 @@ class AtletaFactory extends Factory
         return [
             'id' => (string) Str::uuid(),
             'nome' => $this->faker->name(),
-            'dtNascimento' => $this->valid_dtNascimento(),
+            'dt_nascimento' => $this->valid_dtNascimento(),
         ];
     }
 

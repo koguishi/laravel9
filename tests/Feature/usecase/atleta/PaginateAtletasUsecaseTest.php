@@ -68,10 +68,10 @@ class PaginateAtletasUsecaseTest extends TestCase
             '2000-01-01',
             '2000-01-02',
         ];
-        Model::factory(count: 10)->create(['dtNascimento' => $arrDatas[0]]);
-        Model::factory(count: 10)->create(['dtNascimento' => $arrDatas[1]]);
-        Model::factory(count: 10)->create(['dtNascimento' => $arrDatas[2]]);
-        Model::factory(count: 10)->create(['dtNascimento' => $arrDatas[3]]);
+        Model::factory(count: 10)->create(['dt_nascimento' => $arrDatas[0]]);
+        Model::factory(count: 10)->create(['dt_nascimento' => $arrDatas[1]]);
+        Model::factory(count: 10)->create(['dt_nascimento' => $arrDatas[2]]);
+        Model::factory(count: 10)->create(['dt_nascimento' => $arrDatas[3]]);
 
         $repository = new AtletaRepository(new Model());
         $useCase = new PaginateAtletasUsecase($repository);

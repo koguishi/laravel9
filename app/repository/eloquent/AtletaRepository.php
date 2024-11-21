@@ -25,7 +25,7 @@ class AtletaRepository implements AtletaRepositoryInterface
         $entity = new Atleta(
             id: new Uuid($object->id),
             nome: $object->nome,
-            dtNascimento: new DateTime($object->dtNascimento),
+            dtNascimento: new DateTime($object->dt_nascimento),
         );
 
         return $entity;
@@ -41,7 +41,7 @@ class AtletaRepository implements AtletaRepositoryInterface
         $atletaDb = $this->model->create([
             'id' => $entity->id(),
             'nome' => $entity->nome,
-            'dtNascimento' => $entity->dtNascimento->format('Y-m-d'),
+            'dt_nascimento' => $entity->dtNascimento->format('Y-m-d'),
         ]);
         return $this->toEntity($atletaDb);
     }
@@ -64,7 +64,7 @@ class AtletaRepository implements AtletaRepositoryInterface
 
         $atletaDb->update([
             'nome' => $entity->nome,
-            'dtNascimento' => $entity->dtNascimento,
+            'dt_nascimento' => $entity->dtNascimento,
         ]);
 
         $atletaDb->refresh();
@@ -103,11 +103,11 @@ class AtletaRepository implements AtletaRepositoryInterface
         }
 
         if ($filter_dtNascimento_inicial) {
-            $query = $query->whereDate('dtNascimento', '>=', $filter_dtNascimento_inicial->format('Y-m-d'));
+            $query = $query->whereDate('dt_nascimento', '>=', $filter_dtNascimento_inicial->format('Y-m-d'));
         }
 
         if ($filter_dtNascimento_final) {
-            $query = $query->whereDate('dtNascimento', '<=', $filter_dtNascimento_final->format('Y-m-d'));
+            $query = $query->whereDate('dt_nascimento', '<=', $filter_dtNascimento_final->format('Y-m-d'));
         }
 
         if (!empty($order)) {
@@ -136,11 +136,11 @@ class AtletaRepository implements AtletaRepositoryInterface
         }
 
         if ($filter_dtNascimento_inicial) {
-            $query = $query->whereDate('dtNascimento', '>=', $filter_dtNascimento_inicial->format('Y-m-d'));
+            $query = $query->whereDate('dt_nascimento', '>=', $filter_dtNascimento_inicial->format('Y-m-d'));
         }
 
         if ($filter_dtNascimento_final) {
-            $query = $query->whereDate('dtNascimento', '<=', $filter_dtNascimento_final->format('Y-m-d'));
+            $query = $query->whereDate('dt_nascimento', '<=', $filter_dtNascimento_final->format('Y-m-d'));
         }
 
         if (!empty($order)) {

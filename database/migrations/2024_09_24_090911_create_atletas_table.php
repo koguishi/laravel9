@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('atletas', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nome')->unique();
-            $table->date('dtNascimento');
+            $table->date('dt_nascimento');
             $table->softDeletes();
             $table->timestamps();
         });

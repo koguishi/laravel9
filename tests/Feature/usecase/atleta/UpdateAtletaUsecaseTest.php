@@ -50,7 +50,7 @@ class UpdateAtletaUsecaseTest extends TestCase
         $this->assertInstanceOf(UpdateAtletaOutput::class, $responseUseCase);
 
         $this->assertEquals('nome alterado', $responseUseCase->nome);
-        $this->assertEquals($atletaModel->dtNascimento, $responseUseCase->dtNascimento);
+        $this->assertEquals($atletaModel->dt_nascimento, $responseUseCase->dtNascimento);
 
         $this->assertDatabaseMissing('atletas', [
             'nome' => $atletaModel->nome,
@@ -65,11 +65,11 @@ class UpdateAtletaUsecaseTest extends TestCase
     public function testUpdateDtNascimento()
     {
         $data = '1999-12-30';
-        $atletaModel = Model::factory()->create(['dtNascimento' => $data]);
+        $atletaModel = Model::factory()->create(['dt_nascimento' => $data]);
 
         $this->assertDatabaseHas('atletas', [
             'id' => $atletaModel->id,
-            'dtNascimento' => $data,
+            'dt_nascimento' => $data,
         ]);
 
         $dataAlterada = '1999-12-31';
@@ -87,11 +87,11 @@ class UpdateAtletaUsecaseTest extends TestCase
         $this->assertEquals($atletaModel->nome, $responseUseCase->nome);
 
         $this->assertDatabaseMissing('atletas', [
-            'dtNascimento' => $atletaModel->dtNascimento,
+            'dt_nascimento' => $atletaModel->dtNascimento,
         ]);
         $this->assertDatabaseHas('atletas', [
             'id' => $atletaModel->id,
-            'dtNascimento' => $responseUseCase->dtNascimento,
+            'dt_nascimento' => $responseUseCase->dtNascimento,
         ]);
 
     }

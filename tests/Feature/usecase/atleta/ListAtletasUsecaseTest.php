@@ -61,10 +61,10 @@ class ListAtletasUsecaseTest extends TestCase
             '1999-12-31',
             '2000-01-01',
         ];
-        Model::factory()->create(['dtNascimento' => $arrDatas[0]]);
-        Model::factory()->create(['dtNascimento' => $arrDatas[0]]);
-        Model::factory()->create(['dtNascimento' => $arrDatas[1]]);
-        Model::factory()->create(['dtNascimento' => $arrDatas[1]]);
+        Model::factory()->create(['dt_nascimento' => $arrDatas[0]]);
+        Model::factory()->create(['dt_nascimento' => $arrDatas[0]]);
+        Model::factory()->create(['dt_nascimento' => $arrDatas[1]]);
+        Model::factory()->create(['dt_nascimento' => $arrDatas[1]]);
 
         $repository = new AtletaRepository(new Model());
         $useCase = new ListAtletasUsecase($repository);
@@ -106,10 +106,10 @@ class ListAtletasUsecaseTest extends TestCase
     {
         $dataExistente = '1999-12-31';
         $dataPesquisa = '1999-12-30';
-        Model::factory()->create(['dtNascimento' => $dataExistente]);
-        Model::factory()->create(['dtNascimento' => $dataExistente]);
-        Model::factory()->create(['dtNascimento' => $dataExistente]);
-        Model::factory()->create(['dtNascimento' => $dataExistente]);
+        Model::factory()->create(['dt_nascimento' => $dataExistente]);
+        Model::factory()->create(['dt_nascimento' => $dataExistente]);
+        Model::factory()->create(['dt_nascimento' => $dataExistente]);
+        Model::factory()->create(['dt_nascimento' => $dataExistente]);
 
         $repository = new AtletaRepository(new Model());
         $useCase = new ListAtletasUsecase($repository);
@@ -153,7 +153,7 @@ class ListAtletasUsecaseTest extends TestCase
         $atletasModel = Model::factory()->count(20)->create();
         $arrDatas = [];
         foreach ($atletasModel as $key => $atletaModel) {
-            array_push($arrDatas, $atletaModel->dtNascimento);
+            array_push($arrDatas, $atletaModel->dt_nascimento);
         }
         sort($arrDatas);
 
@@ -161,7 +161,7 @@ class ListAtletasUsecaseTest extends TestCase
         $useCase = new ListAtletasUsecase($repository);
         $responseUseCase = $useCase->execute(
             new ListAtletasInput(
-                order: '{"dtNascimento": "ASC"}',
+                order: '{"dt_nascimento": "ASC"}',
             )
         );
 
@@ -169,7 +169,7 @@ class ListAtletasUsecaseTest extends TestCase
         $this->assertEquals(count($atletasModel), count($responseUseCase->items));
 
         foreach ($responseUseCase->items as $key => $item) {
-            $this->assertEquals($arrDatas[$key]->format('Y-m-d H:i:s'), $item['dtNascimento']);
+            $this->assertEquals($arrDatas[$key]->format('Y-m-d H:i:s'), $item['dt_nascimento']);
         }
     }
 

@@ -91,7 +91,7 @@ class AtletaControllerTest extends TestCase
         $atleta = AtletaModel::factory()->create();
         $useCase = new UpdateAtletaUsecase($this->repository);
         $nomeAlterado = 'ALTERADO ' . $atleta->nome;
-        $dtNascimentoAlterado = $atleta->dtNascimento;
+        $dtNascimentoAlterado = $atleta->dt_nascimento;
         $dtNascimentoAlterado->modify('+1 days');
 
         $request = new AtletaUpdateRequest();
@@ -130,14 +130,14 @@ class AtletaControllerTest extends TestCase
         $content = json_decode($response->getContent());
         $atletaResponse = $content->data;
         $this->assertEquals($nomeAlterado, $atletaResponse->nome);
-        $this->assertEquals($atleta->dtNascimento->format('Y-m-d'), $atletaResponse->dtNascimento);
+        $this->assertEquals($atleta->dt_nascimento->format('Y-m-d'), $atletaResponse->dtNascimento);
     }
 
     public function test_update_apenas_dtNascimento()
     {
         $atleta = AtletaModel::factory()->create();
         $useCase = new UpdateAtletaUsecase($this->repository);
-        $dtNascimentoAlterado = $atleta->dtNascimento;
+        $dtNascimentoAlterado = $atleta->dt_nascimento;
         $dtNascimentoAlterado->modify('+1 days');
 
         $request = new AtletaUpdateRequest();

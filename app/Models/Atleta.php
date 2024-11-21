@@ -13,7 +13,7 @@ class Atleta extends Model
     protected $fillable = [
         'id',
         'nome',
-        'dtNascimento',
+        'dt_nascimento',
     ];
 
     protected $casts = [

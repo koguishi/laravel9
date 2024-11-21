@@ -29,7 +29,7 @@ class PaginateAtletasUsecase
                 return [
                     'id' => $data->id,
                     'nome' => $data->nome,
-                    'dtNascimento' => $data->dtNascimento,
+                    'dtNascimento' => $data->dt_nascimento,
                     'criadoEm' => $data->created_at,
                 ];
             }, $atletas->items()),
