@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('categorias', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nome');
+            $table->string('nome')->unique();
             $table->string('descricao')->nullable();
             $table->boolean('ativo')->default(true);
             $table->softDeletes();
