@@ -2,9 +2,9 @@
 
 namespace core\domain\enum;
 
-enum MediaStatus: int
+enum MediaStatus: string
 {
-    case PROCESSING = 0;
-    case COMPLETE = 1;
-    case PENDING = 2;
+    case PROCESSING = 'PROCESSING';
+    case COMPLETE = 'COMPLETE';
+    case PENDING = 'PENDING';
 }
