@@ -47,6 +47,7 @@ class Video extends Entity
         VideoValidationFactory::create()->validate($this);
 
         if ($this->notification->hasError()) {
+            // dúvida: deveria ser NotificationException() ?
             throw new EntityValidationException(
                 $this->notification->getMessage('video')
             );
