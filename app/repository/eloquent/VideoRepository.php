@@ -113,13 +113,20 @@ class VideoRepository implements VideoRepositoryInterface
         return $video;
     }
 
-    private function toEntity(object $object): Video {
+    private function toEntity(object $model): Video {
         $entity = new Video(
-            id: new Uuid($object->id),
-            titulo: $object->titulo,
-            descricao: $object->descricao,
-            dtFilmagem: new DateTime($object->dt_filmagem),
+            id: new Uuid($model->id),
+            titulo: $model->titulo,
+            descricao: $model->descricao,
+            dtFilmagem: new DateTime($model->dt_filmagem),
         );
+
+        foreach ($model->categorias as $key => $categoria) {
+            $entity->vincularCategoria($categoria->id);
+        }
+        foreach ($model->atletas as $key => $atleta) {
+            $entity->vincularAtleta($atleta->id);
+        }
 
         return $entity;
     } 

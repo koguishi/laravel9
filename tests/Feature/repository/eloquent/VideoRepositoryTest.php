@@ -73,7 +73,7 @@ class VideoRepositoryTest extends TestCase
         foreach ($atletas as $key => $atleta) {
             $entity->vincularAtleta($atleta->id);
         }
-        
+
         $response = $this->repository->create($entity);
 
         $this->assertInstanceOf(Video::class, $response);
@@ -82,8 +82,22 @@ class VideoRepositoryTest extends TestCase
             'dt_filmagem' => $entity->dtFilmagem(),
             'created_at' => $entity->criadoEm(),
         ]);
-        $this->assertDatabaseCount('video_categoria', 4);
-        $this->assertDatabaseCount('video_atleta', 4);
+        $this->assertCount(4, $response->categoriaIds);
+        $this->assertCount(4, $response->atletaIds);
+
+        $orderedCategoriaIds = $response->categoriaIds;
+        sort($orderedCategoriaIds);
+        $orderedAltetaIds = $response->atletaIds;
+        sort($orderedAltetaIds);
+
+        $this->assertEquals(
+            $categorias->sortBy('id')->pluck('id')->toArray(),
+            $orderedCategoriaIds
+        );
+        $this->assertEquals(
+            $atletas->sortBy('id')->pluck('id')->toArray(),
+            $orderedAltetaIds
+        );
     }
 
     public function testRead()
