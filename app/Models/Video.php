@@ -28,13 +28,19 @@ class Video extends Model
 
     public function categorias()
     {
-        return $this->belongsToMany(Categoria::class);
+        return $this->belongsToMany(
+            related: Categoria::class,
+            table: 'video_categoria',
+        );
     }
 
-    // public function atletas()
-    // {
-    //     return $this->belongsToMany(Atleta::class, 'cast_member_video');
-    // }
+    public function atletas()
+    {
+        return $this->belongsToMany(
+            related: Atleta::class,
+            table: 'video_atleta',
+        );
+    }
 
     // public function media()
     // {

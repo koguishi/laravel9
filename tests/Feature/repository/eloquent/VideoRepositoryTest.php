@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\repository\eloquent;
 
+use App\Models\ {
+    Atleta as AtletaModel,
+    Categoria as CategoriaModel,
+};
 use App\Models\Video as VideoModel;
 use app\repository\eloquent\VideoRepository;
 use core\domain\entity\Video;
@@ -51,6 +55,37 @@ class VideoRepositoryTest extends TestCase
             'created_at' => $entity->criadoEm(),
         ]);
     }
+
+    public function testCreateWithRelationships()
+    {
+        $categorias = CategoriaModel::factory(count: 4)->create();
+        $atletas = AtletaModel::factory(count: 4)->create();
+
+        $entity = New Video(
+            titulo: 'ÁÉÊ Çção',
+            descricao: 'filme de ação',
+            dtFilmagem: new DateTime('2001-01-01'),
+        );
+
+        foreach ($categorias as $key => $categoria) {
+            $entity->vincularCategoria($categoria->id);
+        }
+        foreach ($atletas as $key => $atleta) {
+            $entity->vincularAtleta($atleta->id);
+        }
+        
+        $response = $this->repository->create($entity);
+
+        $this->assertInstanceOf(Video::class, $response);
+        $this->assertDatabaseHas('videos', [
+            'titulo' => $entity->titulo,
+            'dt_filmagem' => $entity->dtFilmagem(),
+            'created_at' => $entity->criadoEm(),
+        ]);
+        $this->assertDatabaseCount('video_categoria', 4);
+        $this->assertDatabaseCount('video_atleta', 4);
+    }
+
     public function testRead()
     {
         $videoA = VideoModel::factory()->create();

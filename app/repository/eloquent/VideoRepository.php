@@ -2,7 +2,7 @@
 
 namespace app\repository\eloquent;
 
-use app\Models\Video as Model;
+use app\Models\Video as VideoModel;
 use app\repository\PaginationPresenter;
 use core\domain\entity\Entity;
 use core\domain\entity\Video;
@@ -17,20 +17,10 @@ class VideoRepository implements VideoRepositoryInterface
 {
     protected $model;
     
-    public function __construct(Model $model) {
+    public function __construct(VideoModel $model) {
         $this->model = $model;
     }
 
-    private function toEntity(object $object): Video {
-        $entity = new Video(
-            id: new Uuid($object->id),
-            titulo: $object->titulo,
-            descricao: $object->descricao,
-            dtFilmagem: new DateTime($object->dt_filmagem),
-        );
-
-        return $entity;
-    }     
     public function create(Entity $entity): Video
     {
         $videoDb = $this->model->create([
@@ -39,6 +29,8 @@ class VideoRepository implements VideoRepositoryInterface
             'descricao' => $entity->descricao,
             'dt_filmagem' => $entity->dtFilmagem->format('Y-m-d'),
         ]);
+
+        $this->syncRelationships($videoDb, $entity);
 
         return $this->toEntity($videoDb);
     }
@@ -120,4 +112,22 @@ class VideoRepository implements VideoRepositoryInterface
     {
         return $video;
     }
+
+    private function toEntity(object $object): Video {
+        $entity = new Video(
+            id: new Uuid($object->id),
+            titulo: $object->titulo,
+            descricao: $object->descricao,
+            dtFilmagem: new DateTime($object->dt_filmagem),
+        );
+
+        return $entity;
+    } 
+
+    private function syncRelationships(VideoModel $model, Video $video)
+    {
+        $model->categorias()->sync($video->categoriaIds);
+        $model->atletas()->sync($video->atletaIds);
+    }
+
 }
