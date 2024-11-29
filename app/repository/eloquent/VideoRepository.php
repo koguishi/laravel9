@@ -56,6 +56,8 @@ class VideoRepository implements VideoRepositoryInterface
             'dt_filmagem' => $entity->dtFilmagem,
         ]);
 
+        $this->syncRelationships($videoDb, $entity);
+
         $videoDb->refresh();
 
         return $this->toEntity($videoDb);

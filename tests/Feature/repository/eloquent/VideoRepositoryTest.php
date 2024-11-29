@@ -171,6 +171,58 @@ class VideoRepositoryTest extends TestCase
         }
     }
 
+    public function testUpdateWithRelationships()
+    {
+        $categorias = CategoriaModel::factory(count: 5)->create();
+        $atletas = AtletaModel::factory(count: 5)->create();
+
+        $entity = New Video(
+            titulo: 'ÁÉÊ Çção',
+            descricao: 'filme de ação',
+            dtFilmagem: new DateTime('2001-01-01'),
+        );
+
+        $created = $this->repository->create($entity);
+
+        $this->assertDatabaseHas('videos', [
+            'titulo' => $entity->titulo,
+            'dt_filmagem' => $entity->dtFilmagem(),
+            'created_at' => $entity->criadoEm(),
+        ]);
+        $this->assertCount(0, $created->categoriaIds);
+        $this->assertCount(0, $created->atletaIds);
+        $this->assertDatabaseCount('video_categoria', 0);
+        $this->assertDatabaseCount('video_atleta', 0);
+
+        foreach ($categorias as $key => $categoria) {
+            $entity->vincularCategoria($categoria->id);
+        }
+        foreach ($atletas as $key => $atleta) {
+            $entity->vincularAtleta($atleta->id);
+        }
+
+        $updated = $this->repository->update($entity);
+
+        $this->assertCount(5, $updated->categoriaIds);
+        $this->assertCount(5, $updated->atletaIds);
+        $this->assertDatabaseCount('video_categoria', 5);
+        $this->assertDatabaseCount('video_atleta', 5);
+
+        $orderedCategoriaIds = $updated->categoriaIds;
+        sort($orderedCategoriaIds);
+        $orderedAltetaIds = $updated->atletaIds;
+        sort($orderedAltetaIds);
+
+        $this->assertEquals(
+            $categorias->sortBy('id')->pluck('id')->toArray(),
+            $orderedCategoriaIds
+        );
+        $this->assertEquals(
+            $atletas->sortBy('id')->pluck('id')->toArray(),
+            $orderedAltetaIds
+        );
+    }    
+
     public function testDelete()
     {
         $videoA = VideoModel::factory()->create();
