@@ -246,14 +246,98 @@ class VideoRepositoryTest extends TestCase
         }
     }
 
-    public function testPaginate()
+    /**
+     * @dataProvider DataProviderPaginate
+     */
+    public function testPaginate(
+        int $page,
+        int $perPage,
+        int $totalItems,
+    )
     {
-        VideoModel::factory(count: 20)->create();
+        $lastPage = intdiv($totalItems, $perPage);
+        $lastPage += ($totalItems % $perPage) > 0 ? 1 : 0;
+        $itemsOnLastPage = $totalItems % $perPage;
+        $itemsOnLastPage = $itemsOnLastPage == 0 ? $perPage : $itemsOnLastPage;
+        $itemsCount = $page == $lastPage ? $itemsOnLastPage : $perPage;
 
-        $response = $this->repository->paginate();
+        VideoModel::factory(count: $totalItems)->create();
 
+        $response = $this->repository->paginate(
+            page: $page,
+            perPage: $perPage,
+        );
         $this->assertInstanceOf(PaginationInterface::class, $response);
-        $this->assertCount(15, $response->items());
+        $this->assertCount($itemsCount, $response->items());
+        $this->assertEquals($totalItems, $response->total());
+        $this->assertEquals($page, $response->currentPage());
+        $this->assertEquals($lastPage, $response->lastPage());
+        $this->assertEquals($perPage, $response->perPage());
     }
 
+    public function dataProviderPaginate()
+    {
+        return [
+            ['page' => 1, 'perPage' => 7, 'totalItems' => 7],
+            ['page' => 1, 'perPage' => 6, 'totalItems' => 7],
+            ['page' => 1, 'perPage' => 5, 'totalItems' => 7],
+            ['page' => 1, 'perPage' => 4, 'totalItems' => 7],
+            ['page' => 1, 'perPage' => 3, 'totalItems' => 7],
+            ['page' => 1, 'perPage' => 2, 'totalItems' => 7],
+            ['page' => 1, 'perPage' => 1, 'totalItems' => 7],
+
+            ['page' => 2, 'perPage' => 6, 'totalItems' => 7],
+            ['page' => 2, 'perPage' => 5, 'totalItems' => 7],
+            ['page' => 2, 'perPage' => 4, 'totalItems' => 7],
+            ['page' => 2, 'perPage' => 3, 'totalItems' => 7],
+            ['page' => 2, 'perPage' => 2, 'totalItems' => 7],
+            ['page' => 2, 'perPage' => 1, 'totalItems' => 7],
+
+            ['page' => 3, 'perPage' => 3, 'totalItems' => 7],
+            ['page' => 3, 'perPage' => 2, 'totalItems' => 7],
+            ['page' => 3, 'perPage' => 1, 'totalItems' => 7],
+
+            ['page' => 4, 'perPage' => 2, 'totalItems' => 7],
+            ['page' => 4, 'perPage' => 1, 'totalItems' => 7],
+
+            ['page' => 5, 'perPage' => 1, 'totalItems' => 7],
+            ['page' => 6, 'perPage' => 1, 'totalItems' => 7],
+            ['page' => 7, 'perPage' => 1, 'totalItems' => 7],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderPaginatePageWithoutItems
+     */
+    public function testPaginatePageWithoutItems(
+        int $page,
+        int $perPage,
+        int $totalItems,
+    )
+    {
+        $lastPage = intdiv($totalItems, $perPage);
+        $lastPage += ($totalItems % $perPage) > 0 ? 1 : 0;
+
+        VideoModel::factory(count: $totalItems)->create();
+
+        $response = $this->repository->paginate(
+            page: $page,
+            perPage: $perPage,
+        );
+        $this->assertInstanceOf(PaginationInterface::class, $response);
+        $this->assertCount(0, $response->items());
+        $this->assertEquals($totalItems, $response->total());
+        $this->assertEquals($page, $response->currentPage());
+        $this->assertEquals($lastPage, $response->lastPage());
+        $this->assertEquals($perPage, $response->perPage());
+    }
+
+    public function dataProviderPaginatePageWithoutItems()
+    {
+        return [
+            ['page' => 2, 'perPage' => 7, 'totalItems' => 7],
+            ['page' => 3, 'perPage' => 6, 'totalItems' => 7],
+            ['page' => 8, 'perPage' => 1, 'totalItems' => 7],
+        ];
+    }
 }
