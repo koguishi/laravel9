@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('video_medias', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('video_id')->index();
+            $table->uuid('video_id')->unique();
             $table->foreign('video_id')->references('id')->on('videos');
             $table->string('file_path');
             $table->string('encoded_path')->nullable();
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('medias_video');
+        Schema::dropIfExists('video_medias');
     }
 };
