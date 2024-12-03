@@ -112,7 +112,34 @@ class VideoRepository implements VideoRepositoryInterface
 
     public function updateMedia(Video $video): Video
     {
-        return $video;
+        $videoDb = $this->model->find($video->id());
+        if (! $videoDb) {
+            throw new NotFoundException('Video not found');
+        }
+
+        // Opção para o método updateOrCreate do Laravel
+        // if ($video->videoFile()) {
+        //     $action = $videoDb->media()->first() ? 'update' : 'create';
+        //     $videoDb->media()->{$action}([
+        //         'file_path' => $video->videoFile()->filePath,
+        //         'encoded_path' => $video->videoFile()->encodedPath,
+        //         'media_status' => $video->videoFile()->mediaStatus,
+        //     ]);
+        // }
+        
+        // método updateOrCretae é do Laravel
+        $videoDb->media()->updateOrCreate(
+            [ 'video_id' => $video->id() ],
+            [
+                'file_path' => $video->videoFile()->filePath,
+                'encoded_path' => $video->videoFile()->encodedPath,
+                'media_status' => $video->videoFile()->mediaStatus,
+            ],
+        );
+
+        // $videoDb->refresh();
+
+        return $this->toEntity($videoDb);
     }
 
     private function toEntity(object $model): Video {

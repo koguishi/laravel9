@@ -9,9 +9,11 @@ use App\Models\ {
 use App\Models\Video as VideoModel;
 use app\repository\eloquent\VideoRepository;
 use core\domain\entity\Video;
+use core\domain\enum\MediaStatus;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\PaginationInterface;
 use core\domain\repository\VideoRepositoryInterface;
+use core\domain\valueobject\Media;
 use DateTime;
 use Tests\TestCase;
 use Throwable;
@@ -244,6 +246,59 @@ class VideoRepositoryTest extends TestCase
         } catch (Throwable $th) {
             $this->assertInstanceOf(NotFoundException::class, $th);
         }
+    }
+
+    public function testUpdateMedia()
+    {
+        $videoModel = VideoModel::factory()->create();
+        $this->assertDatabaseHas('videos', [
+            'titulo' => $videoModel->titulo,
+            'dt_filmagem' => $videoModel->dt_filmagem,
+        ]);
+        $this->assertDatabaseMissing('video_medias', [
+            'video_id' => $videoModel->id,
+        ]);
+
+        $video = $this->repository->read($videoModel->id);
+        $this->assertNull($video->videoFile());
+
+        $media = new Media(
+            filePath: 'caminhoDoArquivo',
+            mediaStatus: MediaStatus::PENDING,
+        );
+        $video->setVideoFile($media);
+        $this->repository->updateMedia($video);
+        $this->assertDatabaseCount('video_medias', 1);
+        $this->assertDatabaseHas('video_medias', [
+            'video_id' => $videoModel->id,
+            'file_path' => 'caminhoDoArquivo',
+            'media_status' => MediaStatus::PENDING,
+
+        ]);
+
+        $media = new Media(
+            filePath: 'outroCaminhoDoArquivo',
+            mediaStatus: MediaStatus::PROCESSING,
+        );
+        $video->setVideoFile($media);
+        $this->repository->updateMedia($video);
+        $this->assertDatabaseCount('video_medias', 1);
+        $this->assertDatabaseHas('video_medias', [
+            'file_path' => 'outroCaminhoDoArquivo',
+            'media_status' => MediaStatus::PROCESSING,
+        ]);
+
+        $media = new Media(
+            filePath: 'outroCaminhoDoArquivo',
+            mediaStatus: MediaStatus::COMPLETE,
+        );
+        $video->setVideoFile($media);
+        $this->repository->updateMedia($video);
+        $this->assertDatabaseCount('video_medias', 1);
+        $this->assertDatabaseHas('video_medias', [
+            'file_path' => 'outroCaminhoDoArquivo',
+            'media_status' => MediaStatus::COMPLETE,
+        ]);
     }
 
     /**
