@@ -42,9 +42,9 @@ class Video extends Model
         );
     }
 
-    // public function media()
-    // {
-    //     return $this->hasOne(Media::class)
-    //                     ->where('type', (string) MediaTypes::VIDEO->value);
-    // }
+    public function media()
+    {
+        return $this->hasOne(Media::class);
+        // ->where('type', (string) MediaTypes::VIDEO->value);
+    }
 }
