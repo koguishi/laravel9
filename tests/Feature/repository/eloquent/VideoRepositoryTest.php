@@ -56,6 +56,10 @@ class VideoRepositoryTest extends TestCase
             'dt_filmagem' => $entity->dtFilmagem(),
             'created_at' => $entity->criadoEm(),
         ]);
+
+        $this->assertEquals($entity->titulo, $response->titulo);
+        $this->assertEquals($entity->descricao, $response->descricao);
+        $this->assertEquals($entity->dtFilmagem(), $response->dtFilmagem());
     }
 
     public function testCreateWithRelationships()
@@ -139,15 +143,20 @@ class VideoRepositoryTest extends TestCase
             'dt_filmagem' => $videoA->dt_filmagem
         ]);
 
-        $responseA = $this->repository->read($videoA->id);
-        $responseA->alterar(
-            titulo: $responseA->titulo . 'ALTERADO',
+        $entity = $this->repository->read($videoA->id);
+        $entity->alterar(
+            titulo: $entity->titulo . 'ALTERADO',
             dtFilmagem: VideoModel::factory()->valid_dtFilmagem(),
         );
-        $this->repository->update($responseA);
+        $updated = $this->repository->update($entity);
+
+        $this->assertEquals($entity->titulo, $updated->titulo);
+        $this->assertEquals($entity->descricao, $updated->descricao);
+        $this->assertEquals($entity->dtFilmagem(), $updated->dtFilmagem());
+
         $this->assertDatabaseHas('videos', [
-            'titulo' => $responseA->titulo,
-            'dt_filmagem' => $responseA->dtFilmagem,
+            'titulo' => $entity->titulo,
+            'dt_filmagem' => $entity->dtFilmagem,
         ]);
 
         $this->assertDatabaseMissing('videos', [
@@ -267,7 +276,10 @@ class VideoRepositoryTest extends TestCase
             mediaStatus: MediaStatus::PENDING,
         );
         $video->setVideoFile($media);
-        $this->repository->updateMedia($video);
+        // dd($video);
+        $videoDb = $this->repository->updateMedia($video);
+        dd('ponto final.');
+
         $this->assertDatabaseCount('video_medias', 1);
         $this->assertDatabaseHas('video_medias', [
             'video_id' => $videoModel->id,
@@ -281,12 +293,15 @@ class VideoRepositoryTest extends TestCase
             mediaStatus: MediaStatus::PROCESSING,
         );
         $video->setVideoFile($media);
-        $this->repository->updateMedia($video);
+        $videoDb = $this->repository->updateMedia($video);
         $this->assertDatabaseCount('video_medias', 1);
         $this->assertDatabaseHas('video_medias', [
             'file_path' => 'outroCaminhoDoArquivo',
             'media_status' => MediaStatus::PROCESSING,
         ]);
+        // dump($videoModel->titulo);
+        // dd($videoDb);
+        // $this->assertNotNull($videoDb->videoFile());
 
         $media = new Media(
             filePath: 'outroCaminhoDoArquivo',

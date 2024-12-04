@@ -9,6 +9,7 @@ use core\domain\entity\Video;
 use core\domain\exception\NotFoundException;
 use core\domain\repository\PaginationInterface;
 use core\domain\repository\VideoRepositoryInterface;
+use core\domain\valueobject\Media;
 use core\domain\valueobject\Uuid;
 use DateTime;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -118,26 +119,28 @@ class VideoRepository implements VideoRepositoryInterface
         }
 
         // Opção para o método updateOrCreate do Laravel
-        // if ($video->videoFile()) {
-        //     $action = $videoDb->media()->first() ? 'update' : 'create';
-        //     $videoDb->media()->{$action}([
-        //         'file_path' => $video->videoFile()->filePath,
-        //         'encoded_path' => $video->videoFile()->encodedPath,
-        //         'media_status' => $video->videoFile()->mediaStatus,
-        //     ]);
-        // }
-        
-        // método updateOrCretae é do Laravel
-        $videoDb->media()->updateOrCreate(
-            [ 'video_id' => $video->id() ],
-            [
+        if ($video->videoFile()) {
+            $action = $videoDb->media()->first() ? 'update' : 'create';
+            $videoDb->media()->{$action}([
                 'file_path' => $video->videoFile()->filePath,
                 'encoded_path' => $video->videoFile()->encodedPath,
                 'media_status' => $video->videoFile()->mediaStatus,
-            ],
-        );
+            ]);
+        }
 
-        // $videoDb->refresh();
+        // método updateOrCreate é do Laravel
+        // $xyz = $videoDb->media()->updateOrCreate(
+        //     [ 'video_id' => $video->id() ],
+        //     [
+        //         'file_path' => $video->videoFile()->filePath,
+        //         'encoded_path' => $video->videoFile()->encodedPath,
+        //         'media_status' => $video->videoFile()->mediaStatus,
+        //     ],
+        // );
+        // dd($xyz);
+
+        $videoDb->refresh();
+        dd($videoDb);
 
         return $this->toEntity($videoDb);
     }
@@ -156,6 +159,20 @@ class VideoRepository implements VideoRepositoryInterface
         foreach ($model->atletas as $key => $atleta) {
             $entity->vincularAtleta($atleta->id);
         }
+
+        // $videoFile = $model;
+        // dd($videoFile);
+
+        // if ($videoFile = $model->media())
+        // {
+        //     $entity->setVideoFile(
+        //         videoFile: new Media(
+        //             filePath: $videoFile->filePath(),
+        //             mediaStatus: $videoFile->mediaStatus,
+        //             encodedPath: $videoFile->encodedPath,
+        //         )
+        //     );
+        // }
 
         return $entity;
     } 
