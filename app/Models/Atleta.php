@@ -10,6 +10,8 @@ class Atleta extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'atletas';
+
     protected $fillable = [
         'id',
         'nome',
