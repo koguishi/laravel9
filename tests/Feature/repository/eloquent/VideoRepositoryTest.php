@@ -276,9 +276,8 @@ class VideoRepositoryTest extends TestCase
             mediaStatus: MediaStatus::PENDING,
         );
         $video->setVideoFile($media);
-        // dd($video);
         $videoDb = $this->repository->updateMedia($video);
-        dd('ponto final.');
+        // dd($videoDb);
 
         $this->assertDatabaseCount('video_medias', 1);
         $this->assertDatabaseHas('video_medias', [
@@ -299,8 +298,6 @@ class VideoRepositoryTest extends TestCase
             'file_path' => 'outroCaminhoDoArquivo',
             'media_status' => MediaStatus::PROCESSING,
         ]);
-        // dump($videoModel->titulo);
-        // dd($videoDb);
         // $this->assertNotNull($videoDb->videoFile());
 
         $media = new Media(

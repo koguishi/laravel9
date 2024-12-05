@@ -119,15 +119,16 @@ class VideoRepository implements VideoRepositoryInterface
         }
 
         // Opção para o método updateOrCreate do Laravel
-        if ($video->videoFile()) {
+        if ($media = $video->videoFile()) {
             $action = $videoDb->media()->first() ? 'update' : 'create';
             $videoDb->media()->{$action}([
-                'file_path' => $video->videoFile()->filePath,
-                'encoded_path' => $video->videoFile()->encodedPath,
-                'media_status' => $video->videoFile()->mediaStatus,
+                'video_id' => $video->id(),
+                'file_path' => $media->filePath,
+                'encoded_path' => $media->encodedPath,
+                'media_status' => $media->mediaStatus,
             ]);
+            $videoDb->refresh();
         }
-
         // método updateOrCreate é do Laravel
         // $xyz = $videoDb->media()->updateOrCreate(
         //     [ 'video_id' => $video->id() ],
@@ -137,10 +138,6 @@ class VideoRepository implements VideoRepositoryInterface
         //         'media_status' => $video->videoFile()->mediaStatus,
         //     ],
         // );
-        // dd($xyz);
-
-        $videoDb->refresh();
-        dd($videoDb);
 
         return $this->toEntity($videoDb);
     }

@@ -26,7 +26,7 @@ return new class extends Migration
                     fn($mediaStatus) => $mediaStatus->value, MediaStatus::cases()
                 )
             )->default(MediaStatus::PENDING->value);
-            $table->softDeletes();
+            // $table->softDeletes();
             $table->timestamps();
         });
     }
