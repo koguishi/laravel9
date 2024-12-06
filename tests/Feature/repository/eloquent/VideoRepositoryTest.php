@@ -62,6 +62,37 @@ class VideoRepositoryTest extends TestCase
         $this->assertEquals($entity->dtFilmagem(), $response->dtFilmagem());
     }
 
+    public function testCreateWithMedia()
+    {
+        $entity = New Video(
+            titulo: 'ÁÉÊ Çção',
+            descricao: 'filme de ação',
+            dtFilmagem: new DateTime('2001-01-01'),
+            videoFile: new Media(
+                filePath: 'filePath...',
+                mediaStatus: MediaStatus::PENDING,
+                encodedPath: 'encodedPath...',
+            )
+        );
+
+        $this->repository->create($entity);
+        $response = $this->repository->updateMedia($entity);
+
+        $this->assertInstanceOf(Video::class, $response);
+        $this->assertDatabaseHas('videos', [
+            'id' => $entity->id(),
+            'titulo' => $entity->titulo,
+            'dt_filmagem' => $entity->dtFilmagem(),
+            'created_at' => $entity->criadoEm(),
+        ]);
+        $this->assertDatabaseHas('video_medias', [
+            'video_id' => $entity->id(),
+            'file_path' => $entity->videoFile()->filePath,
+            'media_status' => $entity->videoFile()->mediaStatus,
+            'encoded_path' => $entity->videoFile()->encodedPath,
+        ]);
+    }
+
     public function testCreateWithRelationships()
     {
         $categorias = CategoriaModel::factory(count: 4)->create();
