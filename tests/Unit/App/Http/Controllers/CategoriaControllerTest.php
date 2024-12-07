@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\app\Http\Controllers;
+namespace Tests\Unit\App\Http\Controllers;
 
 use App\Http\Controllers\CategoriaController;
 use core\usecase\categoria\PaginateCategoriasOutput;
