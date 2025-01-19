@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\UuidTrait;
+use core\domain\enum\MediaStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,8 +24,8 @@ class Media extends Model
 
     protected $casts = [
         'id' => 'string',
-        // 'video_id' => 'string',
-        'deleted_at' => 'datetime',
+        'video_id' => 'string',
+        'media_status' =>  MediaStatus::class,
     ];
 
     public $incrementing = false;

@@ -75,10 +75,10 @@ class VideoRepositoryTest extends TestCase
             )
         );
 
-        $this->repository->create($entity);
-        $this->assertDatabaseCount('video_medias', 0);
-
+        $response = $this->repository->create($entity);
+        $this->assertNull($response->videoFile());
         $response = $this->repository->updateMedia($entity);
+        $this->assertNotNull($response->videoFile());
 
         $this->assertInstanceOf(Video::class, $response);
         $this->assertDatabaseHas('videos', [
@@ -337,19 +337,20 @@ class VideoRepositoryTest extends TestCase
             'file_path' => 'outroCaminhoDoArquivo',
             'media_status' => MediaStatus::PROCESSING,
         ]);
-        // $this->assertNotNull($videoDb->videoFile());
+        $this->assertNotNull($videoDb->videoFile());
 
         $media = new Media(
             filePath: 'outroCaminhoDoArquivo',
             mediaStatus: MediaStatus::COMPLETE,
         );
         $video->setVideoFile($media);
-        $this->repository->updateMedia($video);
+        $videoDb = $this->repository->updateMedia($video);
         $this->assertDatabaseCount('video_medias', 1);
         $this->assertDatabaseHas('video_medias', [
             'file_path' => 'outroCaminhoDoArquivo',
             'media_status' => MediaStatus::COMPLETE,
         ]);
+        $this->assertNotNull($videoDb->videoFile());
     }
 
     /**

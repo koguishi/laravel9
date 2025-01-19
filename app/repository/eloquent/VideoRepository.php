@@ -142,34 +142,31 @@ class VideoRepository implements VideoRepositoryInterface
         return $this->toEntity($videoDb);
     }
 
-    private function toEntity(object $model): Video {
+    private function toEntity(object $modelVideo): Video {
         $entity = new Video(
-            id: new Uuid($model->id),
-            titulo: $model->titulo,
-            descricao: $model->descricao,
-            dtFilmagem: new DateTime($model->dt_filmagem),
+            id: new Uuid($modelVideo->id),
+            titulo: $modelVideo->titulo,
+            descricao: $modelVideo->descricao,
+            dtFilmagem: new DateTime($modelVideo->dt_filmagem),
         );
 
-        foreach ($model->categorias as $key => $categoria) {
+        foreach ($modelVideo->categorias as $key => $categoria) {
             $entity->vincularCategoria($categoria->id);
         }
-        foreach ($model->atletas as $key => $atleta) {
+        foreach ($modelVideo->atletas as $key => $atleta) {
             $entity->vincularAtleta($atleta->id);
         }
 
-        // $videoFile = $model;
-        // dd($videoFile);
-
-        // if ($videoFile = $model->media())
-        // {
-        //     $entity->setVideoFile(
-        //         videoFile: new Media(
-        //             filePath: $videoFile->filePath(),
-        //             mediaStatus: $videoFile->mediaStatus,
-        //             encodedPath: $videoFile->encodedPath,
-        //         )
-        //     );
-        // }
+        if ($media = $modelVideo->media()->first())
+        {
+            $entity->setVideoFile(
+                videoFile: new Media(
+                    filePath: $media->file_path,
+                    mediaStatus: $media->media_status,
+                    encodedPath: $media->encoded_path,
+                )
+            );
+        }
 
         return $entity;
     } 
