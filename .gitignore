@@ -18,5 +18,4 @@ yarn-error.log
 .config/
 teste.php
 storage/cloud
-.composer
-.composer/cache/files/
+.composer/
