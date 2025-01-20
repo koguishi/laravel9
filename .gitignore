@@ -17,3 +17,4 @@ yarn-error.log
 .docker/dbdata/
 .config/
 teste.php
+storage/cloud
