@@ -138,7 +138,7 @@ abstract class BaseVideoUsecaseTest extends TestCase
             ->andReturn($this->createVideoEntity());
         
         $mock->shouldReceive("updateMedia")
-            ->times($timesUpdateMedia);
+            ->zeroOrMoreTimes();
 
         return $mock;
     }

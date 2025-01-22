@@ -38,7 +38,9 @@ class CreateVideoUsecase extends BaseVideoUsecase
             // armazenar a media usando o id da entity do video para o path usando o $fileStorage
             $this->addVideoMedia($input);
 
-            $this->repository->updateMedia($this->builder->getEntity());
+            if ($input->videoFile != null) {
+                $this->repository->updateMedia($this->builder->getEntity());
+            }
 
             // comitar a transação usando o $transaction
             $this->transaction->commit();
