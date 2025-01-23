@@ -15,6 +15,7 @@ use core\usecase\video\VideoEventManagerInterface;
 use DateTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class CreateVideoUsecaseTest extends TestCase
@@ -40,13 +41,22 @@ class CreateVideoUsecaseTest extends TestCase
         $idsCategorias = CategoriaModel::factory(3)->create()->pluck('id')->toArray();
         $idsAtletas = AtletaModel::factory(3)->create()->pluck('id')->toArray();
 
+        $fakeFile = UploadedFile::fake()->create('video.mp4', 1, 'video/mp4');
+        $file = [
+            'tmp_name' => $fakeFile->getPathname(),
+            'name' => $fakeFile->getFileName(),
+            'type' => $fakeFile->getMimeType(),
+            'error' => $fakeFile->getError(),
+            //'size' => $fakeFile->getSize(),
+        ];
+
         $input = new CreateVideoInput(
             titulo: 'titulo',
             descricao: 'descrição',
             dtFilmagem: new DateTime('2001-01-01'),
             categoriasIds: $idsCategorias,
             atletasIds: $idsAtletas,
-            videoFile: null,
+            videoFile: $file,
         );
 
         $response = $usecase->execute($input);
@@ -55,6 +65,7 @@ class CreateVideoUsecaseTest extends TestCase
         $this->assertEquals('descrição', $response->descricao);
         // $this->assertEquals('dtFilmagem', $response->dtFilmagem);
         $this->assertCount(3, $response->categorias);
-     
+        $this->assertCount(3, $response->atletas);
+        $this->assertNotNull($response->pathVideoFile);
     }
 }
