@@ -2,33 +2,32 @@
 
 namespace Tests\Unit\App\Models;
 
-use App\Models\Categoria;
+use App\Models\Media;
+use App\Models\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CategoriaTest extends ModelTestCase
+class MediaTest extends ModelTestCase
 {
     protected function model(): Model
     {
-        return new Categoria();
+        return new Media();
     }
 
     protected function traits(): array
     {
         return [
             HasFactory::class,
-            SoftDeletes::class,
+            UuidTrait::class,
         ];
     }
 
     protected function fillables(): array
     {
         return [
-            'id',
-            'nome',
-            'descricao',
-            'ativo',
+            'file_path',
+            'encoded_path',
+            'media_status',
         ];
     }
 
@@ -36,7 +35,7 @@ class CategoriaTest extends ModelTestCase
     {
         return [
             'id' => 'string',
-            'ativo' => 'boolean',
+            // 'ativo' => 'boolean',
             'deleted_at' => 'datetime',
         ];
     }    

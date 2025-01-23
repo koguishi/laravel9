@@ -76,6 +76,8 @@ class VideoRepositoryTest extends TestCase
         );
 
         $this->repository->create($entity);
+        $this->assertDatabaseCount('video_medias', 0);
+
         $response = $this->repository->updateMedia($entity);
 
         $this->assertInstanceOf(Video::class, $response);
@@ -110,6 +112,8 @@ class VideoRepositoryTest extends TestCase
         foreach ($atletas as $key => $atleta) {
             $entity->vincularAtleta($atleta->id);
         }
+        $this->assertDatabaseCount('video_categoria', 0);
+        $this->assertDatabaseCount('video_atleta', 0);
 
         $response = $this->repository->create($entity);
 
@@ -119,6 +123,10 @@ class VideoRepositoryTest extends TestCase
             'dt_filmagem' => $entity->dtFilmagem(),
             'created_at' => $entity->criadoEm(),
         ]);
+
+        $this->assertDatabaseCount('video_categoria', 4);
+        $this->assertDatabaseCount('video_atleta', 4);
+
         $this->assertCount(4, $response->categoriaIds);
         $this->assertCount(4, $response->atletaIds);
 

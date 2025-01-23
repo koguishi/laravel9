@@ -14,8 +14,8 @@ class Media extends Model
     protected $table = 'video_medias';    
 
     protected $fillable = [
-        'id',
-        'video_id',
+        // 'id',
+        // 'video_id',
         'file_path',
         'encoded_path',
         'media_status',
@@ -23,7 +23,8 @@ class Media extends Model
 
     protected $casts = [
         'id' => 'string',
-        'video_id' => 'string',
+        // 'video_id' => 'string',
+        'deleted_at' => 'datetime',
     ];
 
     public $incrementing = false;
