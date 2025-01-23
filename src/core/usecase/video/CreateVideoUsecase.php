@@ -62,7 +62,9 @@ class CreateVideoUsecase extends BaseVideoUsecase
             titulo: $video->titulo,
             descricao: $video->descricao,
             dtFilmagem: $video->dtFilmagem,
-            pathVideoFile: $video->videoFile()?->filePath
+            pathVideoFile: $video->videoFile()?->filePath,
+            categorias: $video->categoriaIds,
+            atletas: $video->atletaIds,
         );
     }
 }

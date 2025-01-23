@@ -12,6 +12,8 @@ class CreateVideoOutput
         public string $descricao,
         public ?DateTime $dtFilmagem = null,
         public ?string $pathVideoFile = null,
-        public ?string $criadoEm = null
+        public ?string $criadoEm = null,
+        public ?array $categorias = null,
+        public ?array $atletas = null,
     ) { }
 }
