@@ -2,7 +2,7 @@
 
 namespace app\repository\eloquent;
 
-use app\Models\Video as VideoModel;
+use App\Models\Video as VideoModel;
 use app\repository\PaginationPresenter;
 use core\domain\entity\Entity;
 use core\domain\entity\Video;
