@@ -16,6 +16,7 @@ use DateTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Tests\Stubs\UploadFilesStub;
 use Tests\TestCase;
 
 class CreateVideoUsecaseTest extends TestCase
@@ -26,7 +27,15 @@ class CreateVideoUsecaseTest extends TestCase
         $categoriaRepository = $this->app->make(CategoriaRepositoryInterface::class);
         $atletaRepository = $this->app->make(AtletaRepositoryInterface::class);
         $transaction = $this->app->make(TransactionInterface::class);
-        $fileStorage = $this->app->make(FileStorageInterface::class);
+
+        /**
+         * usar um stub para não encher a storage/app/ com arquivos de teste
+         * para ver gerar os arquivos usar a FileStorageInterface
+         *   $fileStorage = $this->app->make(FileStorageInterface::class);
+         * o local dos arquivos depende da variável FILESYSTEM_DISK em phpunit.xml ou .env
+         */
+        $fileStorage = new UploadFilesStub();
+
         $eventManager = $this->app->make(VideoEventManagerInterface::class);
 
         $usecase = new CreateVideoUsecase(
