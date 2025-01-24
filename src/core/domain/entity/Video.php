@@ -80,6 +80,11 @@ class Video extends Entity
         unset($this->categoriaIds[$index]);
     }
 
+    public function desvincularCategorias()
+    {
+        $this->categoriaIds = [];
+    }
+
     public function vincularAtleta(string $atletaId)
     {
         // throw new EntityValidationException('Atleta {$atletaId} já está vinculado');
@@ -92,5 +97,10 @@ class Video extends Entity
     {
         $index = array_search($atletaId, $this->atletaIds);
         unset($this->atletaIds[$index]);
+    }
+
+    public function desvincularAtletas()
+    {
+        $this->atletaIds = [];
     }
 }
