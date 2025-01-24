@@ -33,13 +33,15 @@ class UpdateVideoUsecase extends BaseVideoUsecase
         $video->alterar(
             titulo: $input->titulo,
             descricao: $input->descricao,
-        );        
+        );
 
         /**
          * @var UpdateVideoBuilder
          */
         $builder = $this->builder;
-        $builder->setEntity($video);
+        $builder->setEntity($video)
+            ->addCategoriasIds($input)
+            ->addAtletasIds($input);
 
         try {
             // persitir a entity do video usando $repository
@@ -70,7 +72,9 @@ class UpdateVideoUsecase extends BaseVideoUsecase
             titulo: $video->titulo,
             descricao: $video->descricao,
             dtFilmagem: $video->dtFilmagem,
-            pathVideoFile: $video->videoFile()?->filePath
+            pathVideoFile: $video->videoFile()?->filePath,
+            categorias: $video->categoriaIds,
+            atletas: $video->atletaIds,
         );
     }
 }
