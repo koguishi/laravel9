@@ -17,6 +17,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Tests\Stubs\UploadFilesStub;
+use Tests\Stubs\VideoEventStub;
 use Tests\TestCase;
 
 class CreateVideoUsecaseTest extends TestCase
@@ -36,7 +37,12 @@ class CreateVideoUsecaseTest extends TestCase
          */
         $fileStorage = new UploadFilesStub();
 
-        $eventManager = $this->app->make(VideoEventManagerInterface::class);
+        /**
+         * usar um stub para não disparar, nos testes, os eventos de Video
+         * para dispara os eventos de Video usar a VideoEventManagerInterface
+         *   $eventManager = $this->app->make(VideoEventManagerInterface::class);
+         */
+        $eventManager = new VideoEventStub();
 
         $usecase = new CreateVideoUsecase(
             $videoRepository,
