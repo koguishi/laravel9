@@ -4,6 +4,7 @@ namespace Tests\Unit\App\Models;
 
 use App\Models\Media;
 use App\Models\Traits\UuidTrait;
+use core\domain\enum\MediaStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,7 +37,9 @@ class MediaTest extends ModelTestCase
         return [
             'id' => 'string',
             // 'ativo' => 'boolean',
-            'deleted_at' => 'datetime',
+            'video_id' => 'string',            
+            'media_status' =>  MediaStatus::class,
+            // 'deleted_at' => 'datetime',
         ];
     }    
 }
