@@ -271,7 +271,26 @@ class VideoRepositoryTest extends TestCase
             $atletas->sortBy('id')->pluck('id')->toArray(),
             $orderedAltetaIds
         );
-    }    
+
+        $entity->desvincularCategorias();
+        $entity->desvincularAtletas();
+
+        $categorias = CategoriaModel::factory(count: 3)->create();
+        $atletas = AtletaModel::factory(count: 3)->create();
+        foreach ($categorias as $key => $categoria) {
+            $entity->vincularCategoria($categoria->id);
+        }
+        foreach ($atletas as $key => $atleta) {
+            $entity->vincularAtleta($atleta->id);
+        }
+
+        $updated = $this->repository->update($entity);
+
+        $this->assertCount(3, $updated->categoriaIds);
+        $this->assertCount(3, $updated->atletaIds);
+        $this->assertDatabaseCount('video_categoria', 3);
+        $this->assertDatabaseCount('video_atleta', 3);
+    }
 
     public function testDelete()
     {
