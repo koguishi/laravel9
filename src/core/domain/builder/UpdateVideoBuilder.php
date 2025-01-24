@@ -26,4 +26,23 @@ class UpdateVideoBuilder extends CreateVideoBuilder
 
         return $this;
     }
+
+    public function addCategoriasIds(object $input): VideoBuilderInterface
+    {
+        $this->video->desvincularCategorias();
+        foreach ($input->categoriasIds as $categoriaId) {
+            $this->video->vincularCategoria($categoriaId);
+        }
+        return $this;
+    }
+
+    public function addAtletasIds(object $input): VideoBuilderInterface
+    {
+        $this->video->desvincularAtletas();
+        foreach ($input->atletasIds as $atletaId) {
+            $this->video->vincularAtleta($atletaId);
+        }
+        return $this;
+    }
+
 }
